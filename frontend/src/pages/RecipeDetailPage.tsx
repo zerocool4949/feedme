@@ -37,10 +37,7 @@ export function RecipeDetailPage() {
       {recipe.imageUrl && <img src={recipe.imageUrl} alt="" style={{ width: '100%', maxHeight: 360, objectFit: 'cover', borderRadius: 8 }} />}
 
       <Stack direction="row" gap={1} flexWrap="wrap">
-        <Chip label={recipe.status.replace('_', ' ')} />
         <Chip label={recipe.visibility} />
-        {recipe.difficulty && <Chip label={recipe.difficulty} />}
-        {recipe.rating && <Chip label={`${recipe.rating}/5`} />}
         {recipe.tags.map((tag) => (
           <Chip key={tag.id} label={tag.tag} />
         ))}

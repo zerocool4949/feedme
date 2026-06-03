@@ -22,7 +22,6 @@ const emptyRecipe: RecipeInput = {
   notes: '',
   instructions: '',
   visibility: 'private',
-  status: 'to_try',
   ingredients: [{ name: '', quantity: '', unit: '', originalText: '' }],
   tags: [],
 };
@@ -54,15 +53,9 @@ export function RecipeFormPage() {
         description: recipeQuery.data.description ?? '',
         notes: recipeQuery.data.notes ?? '',
         instructions: recipeQuery.data.instructions,
-        prepTimeMinutes: recipeQuery.data.prepTimeMinutes ?? undefined,
-        cookTimeMinutes: recipeQuery.data.cookTimeMinutes ?? undefined,
-        servings: recipeQuery.data.servings ?? undefined,
         sourceUrl: recipeQuery.data.sourceUrl ?? '',
         imageUrl: recipeQuery.data.imageUrl ?? '',
         visibility: recipeQuery.data.visibility,
-        status: recipeQuery.data.status,
-        rating: recipeQuery.data.rating ?? undefined,
-        difficulty: recipeQuery.data.difficulty ?? undefined,
         ingredients: recipeQuery.data.ingredients.map((ingredient) => ({
           name: ingredient.name,
           quantity: ingredient.quantity ?? '',
@@ -108,50 +101,14 @@ export function RecipeFormPage() {
           <TextField required multiline minRows={5} label="Instructions" value={recipe.instructions} onChange={(event) => updateField('instructions', event.target.value)} />
           <TextField multiline minRows={3} label="Notes" value={recipe.notes ?? ''} onChange={(event) => updateField('notes', event.target.value)} />
 
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <FormControl fullWidth>
-              <InputLabel>Visibility</InputLabel>
-              <Select label="Visibility" value={recipe.visibility} onChange={(event) => updateField('visibility', event.target.value as RecipeInput['visibility'])}>
-                <MenuItem value="private">Private</MenuItem>
-                <MenuItem value="public">Public</MenuItem>
-                <MenuItem value="shared">Shared</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select label="Status" value={recipe.status} onChange={(event) => updateField('status', event.target.value as RecipeInput['status'])}>
-                <MenuItem value="to_try">To try</MenuItem>
-                <MenuItem value="tested">Tested</MenuItem>
-                <MenuItem value="favorite">Favorite</MenuItem>
-              </Select>
-            </FormControl>
-          </Stack>
-
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <FormControl fullWidth>
-              <InputLabel>Difficulty</InputLabel>
-              <Select label="Difficulty" value={recipe.difficulty ?? ''} onChange={(event) => updateField('difficulty', (event.target.value as RecipeInput['difficulty']) || undefined)}>
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value="easy">Easy</MenuItem>
-                <MenuItem value="medium">Medium</MenuItem>
-                <MenuItem value="hard">Hard</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              type="number"
-              label="Rating (1–5)"
-              value={recipe.rating ?? ''}
-              inputProps={{ min: 1, max: 5 }}
-              onChange={(event) => updateField('rating', toNumber(event.target.value))}
-              fullWidth
-            />
-          </Stack>
-
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField type="number" label="Prep minutes" value={recipe.prepTimeMinutes ?? ''} onChange={(event) => updateField('prepTimeMinutes', toNumber(event.target.value))} />
-            <TextField type="number" label="Cook minutes" value={recipe.cookTimeMinutes ?? ''} onChange={(event) => updateField('cookTimeMinutes', toNumber(event.target.value))} />
-            <TextField type="number" label="Servings" value={recipe.servings ?? ''} onChange={(event) => updateField('servings', toNumber(event.target.value))} />
-          </Stack>
+          <FormControl>
+            <InputLabel>Visibility</InputLabel>
+            <Select label="Visibility" value={recipe.visibility} onChange={(event) => updateField('visibility', event.target.value as RecipeInput['visibility'])}>
+              <MenuItem value="private">Private</MenuItem>
+              <MenuItem value="public">Public</MenuItem>
+              <MenuItem value="shared">Shared</MenuItem>
+            </Select>
+          </FormControl>
 
           <TextField label="Image URL" value={recipe.imageUrl ?? ''} onChange={(event) => updateField('imageUrl', event.target.value)} />
           <TextField label="Source URL" value={recipe.sourceUrl ?? ''} onChange={(event) => updateField('sourceUrl', event.target.value)} />
@@ -188,8 +145,4 @@ export function RecipeFormPage() {
       </CardContent>
     </Card>
   );
-}
-
-function toNumber(value: string): number | undefined {
-  return value.trim() ? Number(value) : undefined;
 }

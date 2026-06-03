@@ -13,18 +13,6 @@ enum RecipeVisibility {
   shared
 }
 
-enum RecipeStatus {
-  to_try
-  tested
-  favorite
-}
-
-enum RecipeDifficulty {
-  easy
-  medium
-  hard
-}
-
 model User {
   id           String   @id @default(uuid())
   username     String   @unique
@@ -45,15 +33,9 @@ model Recipe {
   description     String?
   notes           String?
   instructions    String
-  prepTimeMinutes Int?               @map("prep_time_minutes")
-  cookTimeMinutes Int?               @map("cook_time_minutes")
-  servings        Int?
   sourceUrl       String?            @map("source_url")
   imageUrl        String?            @map("image_url")
   visibility      RecipeVisibility   @default(private)
-  status          RecipeStatus       @default(to_try)
-  rating          Int?
-  difficulty      RecipeDifficulty?
   createdAt       DateTime           @default(now()) @map("created_at")
   updatedAt       DateTime           @updatedAt @map("updated_at")
 

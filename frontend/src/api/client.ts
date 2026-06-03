@@ -60,18 +60,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 function cleanRecipeInput(input: RecipeInput) {
   return {
     ...input,
-    prepTimeMinutes: numberOrUndefined(input.prepTimeMinutes),
-    cookTimeMinutes: numberOrUndefined(input.cookTimeMinutes),
-    servings: numberOrUndefined(input.servings),
-    rating: numberOrUndefined(input.rating),
-    difficulty: input.difficulty || undefined,
     sourceUrl: input.sourceUrl?.trim() || undefined,
     imageUrl: input.imageUrl?.trim() || undefined,
     ingredients: input.ingredients.filter((ingredient) => ingredient.name.trim()),
     tags: input.tags.filter((tag) => tag.trim()),
   };
-}
-
-function numberOrUndefined(value?: number): number | undefined {
-  return value === undefined || Number.isNaN(value) ? undefined : value;
 }

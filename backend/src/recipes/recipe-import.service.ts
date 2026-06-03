@@ -8,9 +8,6 @@ export interface RecipeDraft {
   instructions: string;
   sourceUrl: string;
   imageUrl: string;
-  prepTimeMinutes: number | null;
-  cookTimeMinutes: number | null;
-  servings: number | null;
   ingredients: IngredientDto[];
   tags: string[];
 }
@@ -26,11 +23,6 @@ interface RecipeJson {
   image?: JsonValue;
   recipeIngredient?: JsonValue;
   recipeInstructions?: JsonValue;
-  prepTime?: JsonValue;
-  cookTime?: JsonValue;
-  totalTime?: JsonValue;
-  recipeYield?: JsonValue;
-  yield?: JsonValue;
   keywords?: JsonValue;
   recipeCategory?: JsonValue;
   recipeCuisine?: JsonValue;
@@ -71,9 +63,6 @@ function draftFromJson(recipe: RecipeJson, url: string): RecipeDraft {
     name: ingredient,
     originalText: ingredient,
   }));
-  const prepTimeMinutes = parseDuration(recipe.prepTime);
-  const cookTimeMinutes = parseDuration(recipe.cookTime);
-  const totalTimeMinutes = parseDuration(recipe.totalTime);
 
   return {
     title: firstString(recipe.name) || firstString(recipe.headline),
@@ -82,9 +71,6 @@ function draftFromJson(recipe: RecipeJson, url: string): RecipeDraft {
     instructions: toInstructions(recipe.recipeInstructions),
     sourceUrl: url,
     imageUrl: firstImage(recipe.image),
-    prepTimeMinutes,
-    cookTimeMinutes: cookTimeMinutes ?? (prepTimeMinutes ? subtractPositive(totalTimeMinutes, prepTimeMinutes) : totalTimeMinutes),
-    servings: parseServings(recipe.recipeYield ?? recipe.yield),
     ingredients,
     tags: unique([
       ...toStringArray(recipe.keywords).flatMap((keyword) => keyword.split(',')),
@@ -113,9 +99,6 @@ function draftFromHtml(html: string, url: string): RecipeDraft {
     instructions: instructionLines.join('\n'),
     sourceUrl: url,
     imageUrl: metaContent(html, 'og:image'),
-    prepTimeMinutes: parseVisibleMinutes(text, 'Préparation'),
-    cookTimeMinutes: null,
-    servings: parseServings(linesBetween(text, 'Ingrédients', 'Préparation')[0]),
     ingredients: ingredientLines,
     tags: [],
   };
@@ -238,43 +221,6 @@ function firstImage(value: JsonValue | undefined): string {
   return '';
 }
 
-function parseDuration(value: JsonValue | undefined): number | null {
-  const text = firstString(value);
-
-  if (!text) {
-    return null;
-  }
-
-  const isoMatch = text.match(/^P(?:T)?(?:(\d+)H)?(?:(\d+)M)?/i);
-  if (isoMatch && (isoMatch[1] || isoMatch[2])) {
-    return Number(isoMatch[1] ?? 0) * 60 + Number(isoMatch[2] ?? 0);
-  }
-
-  const hourMatch = text.match(/(\d+)\s*h/i);
-  const minuteMatch = text.match(/(\d+)\s*min/i);
-  const minutes = Number(hourMatch?.[1] ?? 0) * 60 + Number(minuteMatch?.[1] ?? 0);
-
-  return minutes || null;
-}
-
-function parseVisibleMinutes(text: string, label: string): number | null {
-  const match = text.match(new RegExp(`${escapeRegExp(label)}\\s*:?\\s*(\\d+)\\s*min`, 'i'));
-  return match ? Number(match[1]) : null;
-}
-
-function subtractPositive(total: number | null, part: number): number | null {
-  if (!total || total < part) {
-    return null;
-  }
-
-  return total - part;
-}
-
-function parseServings(value: JsonValue | undefined): number | null {
-  const text = firstString(value);
-  const match = text.match(/\d+/);
-  return match ? Number(match[0]) : null;
-}
 
 function htmlToText(html: string): string {
   return decodeHtml(

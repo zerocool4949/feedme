@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, RecipeDifficulty, RecipeStatus, RecipeVisibility } from '@prisma/client';
+import { Prisma, RecipeVisibility } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRecipeDto, IngredientDto, UpdateRecipeDto } from './dto';
 import { normalizeIngredientName } from './ingredient-normalizer';
@@ -19,15 +19,9 @@ interface RecipeScalarData {
   description?: string | null;
   notes?: string | null;
   instructions?: string;
-  prepTimeMinutes?: number;
-  cookTimeMinutes?: number;
-  servings?: number;
   sourceUrl?: string | null;
   imageUrl?: string | null;
   visibility?: RecipeVisibility;
-  status?: RecipeStatus;
-  rating?: number;
-  difficulty?: RecipeDifficulty;
 }
 
 @Injectable()
@@ -156,15 +150,9 @@ export class RecipesService {
       ...(dto.description !== undefined ? { description: emptyToNull(dto.description) } : {}),
       ...(dto.notes !== undefined ? { notes: emptyToNull(dto.notes) } : {}),
       ...(dto.instructions !== undefined ? { instructions: dto.instructions.trim() } : {}),
-      ...(dto.prepTimeMinutes !== undefined ? { prepTimeMinutes: dto.prepTimeMinutes } : {}),
-      ...(dto.cookTimeMinutes !== undefined ? { cookTimeMinutes: dto.cookTimeMinutes } : {}),
-      ...(dto.servings !== undefined ? { servings: dto.servings } : {}),
       ...(dto.sourceUrl !== undefined ? { sourceUrl: emptyToNull(dto.sourceUrl) } : {}),
       ...(dto.imageUrl !== undefined ? { imageUrl: emptyToNull(dto.imageUrl) } : {}),
       ...(dto.visibility !== undefined ? { visibility: dto.visibility } : {}),
-      ...(dto.status !== undefined ? { status: dto.status } : {}),
-      ...(dto.rating !== undefined ? { rating: dto.rating } : {}),
-      ...(dto.difficulty !== undefined ? { difficulty: dto.difficulty } : {}),
     };
   }
 

@@ -62,7 +62,6 @@ export function RecipeListPage() {
                   {recipe.description || recipe.notes || 'No notes yet'}
                 </Typography>
                 <Stack direction="row" gap={1} flexWrap="wrap">
-                  <Chip size="small" label={recipe.status.replace('_', ' ')} />
                   <Chip size="small" label={recipe.visibility} />
                   {recipe.tags.map((tag) => (
                     <Chip key={tag.id} size="small" label={tag.tag} />
