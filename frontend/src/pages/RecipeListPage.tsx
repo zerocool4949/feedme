@@ -112,30 +112,25 @@ export function RecipeListPage() {
 
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 2 }}>
         {recipes.map((recipe) => (
-          <Card key={recipe.id} variant="outlined">
-            <CardActionArea component={Link} to={`/recipes/${recipe.id}`} sx={{ height: '100%' }}>
-              <Stack direction="row" sx={{ minHeight: 132 }}>
-                {recipe.imageUrl ? (
-                  <CardMedia
-                    component="img"
-                    image={recipe.imageUrl}
-                    alt=""
-                    sx={{ width: { xs: 112, sm: 148 }, objectFit: 'cover', flexShrink: 0 }}
-                  />
-                ) : (
-                  <Box sx={{ width: { xs: 112, sm: 148 }, flexShrink: 0, bgcolor: 'action.hover' }} />
-                )}
-                <CardContent sx={{ minWidth: 0, flex: 1 }}>
-                  <Stack spacing={1}>
-                    <Typography variant="h6" color="inherit">
-                      {recipe.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {recipe.description || recipe.notes || 'Aucune note pour le moment'}
-                    </Typography>
-                  </Stack>
-                </CardContent>
-              </Stack>
+          <Card key={recipe.id} variant="outlined" sx={{ height: '100%' }}>
+            <CardActionArea component={Link} to={`/recipes/${recipe.id}`} sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+              {recipe.imageUrl ? (
+                <CardMedia component="img" image={recipe.imageUrl} alt="" sx={{ aspectRatio: '4 / 3', objectFit: 'cover' }} />
+              ) : (
+                <Box sx={{ aspectRatio: '4 / 3', bgcolor: 'action.hover' }} />
+              )}
+              <CardContent sx={{ flex: 1 }}>
+                <Typography variant="subtitle1" fontWeight={700} gutterBottom noWrap title={recipe.title}>
+                  {recipe.title}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
+                >
+                  {recipe.description || recipe.notes || ''}
+                </Typography>
+              </CardContent>
             </CardActionArea>
           </Card>
         ))}
