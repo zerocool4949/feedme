@@ -94,7 +94,7 @@ Les recettes peuvent être privées ou partagées.
 
 Seul le propriétaire peut modifier ou supprimer une recette partagée. L'ancien type `public` reste accepté pour les anciennes données, mais il n'est plus proposé dans l'interface.
 
-Si une recette partagée ne t'intéresse pas, tu peux la masquer. Le masquage ne concerne que ton compte : la recette reste disponible pour son propriétaire et les autres utilisateurs.
+Si une recette partagée ne t'intéresse pas, tu peux la masquer. Le masquage ne concerne que ton compte : la recette reste disponible pour son propriétaire et les autres utilisateurs. Les recettes masquées peuvent être restaurées depuis la page **Masquées**.
 
 ---
 

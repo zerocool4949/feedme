@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { hideRecipe, listRecipes, shuffleRecipes } from '../api/client';
 import { getCurrentUserId } from '../auth/current-user';
 import type { Recipe } from '../types/recipe';
@@ -182,6 +182,15 @@ export function RecipeListPage() {
         }}
       />
 
+      <Button
+        component={Link}
+        to="/recipes/hidden"
+        variant="outlined"
+        startIcon={<VisibilityOffIcon />}
+        sx={{ borderRadius: '100px', alignSelf: 'flex-start' }}
+      >
+        Masquées
+      </Button>
       {/* Shuffle — visual centerpiece */}
       <Box
         sx={{

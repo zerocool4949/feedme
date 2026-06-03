@@ -140,6 +140,25 @@ export class RecipesService {
     return { hidden: true };
   }
 
+  async findHidden(userId: string) {
+    return prisma.recipe.findMany({
+      where: {
+        hiddenBy: { some: { userId } },
+        OR: [{ visibility: RecipeVisibility.shared }, { visibility: RecipeVisibility.public }],
+      },
+      include: includeRecipeRelations,
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
+  async unhide(userId: string, id: string) {
+    await prisma.hiddenRecipe.deleteMany({
+      where: { userId, recipeId: id },
+    });
+
+    return { hidden: false };
+  }
+
   private async findOwned(userId: string, id: string) {
     const recipe = await prisma.recipe.findFirst({
       where: { id, ownerUserId: userId },

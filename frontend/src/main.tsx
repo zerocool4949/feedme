@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { App } from './pages/App';
+import { HiddenRecipesPage } from './pages/HiddenRecipesPage';
 import { ImportPage } from './pages/ImportPage';
 import { LoginPage } from './pages/LoginPage';
 import { RecipeDetailPage } from './pages/RecipeDetailPage';
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
     element: <RootApp />,
     children: [
       { index: true, element: <RecipeListPage /> },
+      { path: 'recipes/hidden', element: <HiddenRecipesPage /> },
       { path: 'recipes/new', element: <RecipeFormPage /> },
       { path: 'recipes/:id', element: <RecipeDetailPage /> },
       { path: 'recipes/:id/edit', element: <RecipeFormPage /> },

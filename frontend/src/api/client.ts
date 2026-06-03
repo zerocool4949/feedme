@@ -18,6 +18,10 @@ export async function listRecipes(search: string): Promise<Recipe[]> {
   return request<Recipe[]>(`/recipes${query}`);
 }
 
+export async function listHiddenRecipes(): Promise<Recipe[]> {
+  return request<Recipe[]>('/recipes/hidden');
+}
+
 export async function getRecipe(id: string): Promise<Recipe> {
   return request<Recipe>(`/recipes/${id}`);
 }
@@ -42,6 +46,10 @@ export async function deleteRecipe(id: string): Promise<void> {
 
 export async function hideRecipe(id: string): Promise<void> {
   await request(`/recipes/${id}/hide`, { method: 'POST' });
+}
+
+export async function unhideRecipe(id: string): Promise<void> {
+  await request(`/recipes/${id}/hide`, { method: 'DELETE' });
 }
 
 export async function shuffleRecipes(count: number): Promise<Recipe[]> {

@@ -23,6 +23,11 @@ recipes.get('/shuffle', async (c) => {
   return c.json(await recipesService.shuffle(userId, count));
 });
 
+recipes.get('/hidden', async (c) => {
+  const userId = c.get('jwtPayload').sub;
+  return c.json(await recipesService.findHidden(userId));
+});
+
 recipes.post('/import', zValidator('json', importRecipeSchema), async (c) => {
   const { url } = c.req.valid('json');
   return c.json(await recipeImportService.createDraft(url));
@@ -37,6 +42,11 @@ recipes.post('/', zValidator('json', createRecipeSchema), async (c) => {
 recipes.post('/:id/hide', async (c) => {
   const userId = c.get('jwtPayload').sub;
   return c.json(await recipesService.hide(userId, c.req.param('id')));
+});
+
+recipes.delete('/:id/hide', async (c) => {
+  const userId = c.get('jwtPayload').sub;
+  return c.json(await recipesService.unhide(userId, c.req.param('id')));
 });
 
 recipes.get('/:id', async (c) => {
