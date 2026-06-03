@@ -10,7 +10,7 @@ Done:
 * React + Vite + TypeScript frontend
 * React Router routes for list, detail, create, edit, and import pages
 * TanStack Query API integration
-* Material UI responsive layout
+* Material UI responsive layout with persistent dark mode
 * NestJS REST API
 * Prisma schema and migrations
 * PostgreSQL Docker service with persistent volume
@@ -284,6 +284,7 @@ Requirements:
 * case insensitive
 * partial matching
 * fast response time
+* UI remains usable in light and dark color modes
 
 Examples:
 

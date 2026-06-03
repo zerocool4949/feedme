@@ -1,3 +1,6 @@
+import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import SaveIcon from '@mui/icons-material/Save';
 import {
   Button,
   Card,
@@ -92,8 +95,8 @@ export function RecipeFormPage() {
   }
 
   return (
-    <Card>
-      <CardContent>
+    <Card variant="outlined">
+      <CardContent sx={{ p: { xs: 2, md: 3 } }}>
         <Stack component="form" spacing={2} onSubmit={handleSubmit}>
           <Typography variant="h5">{id ? 'Edit Recipe' : 'New Recipe'}</Typography>
           <TextField required label="Title" value={recipe.title} onChange={(event) => updateField('title', event.target.value)} />
@@ -124,6 +127,8 @@ export function RecipeFormPage() {
               <Button
                 type="button"
                 color="error"
+                variant="outlined"
+                startIcon={<DeleteOutlineIcon />}
                 disabled={recipe.ingredients.length === 1}
                 onClick={() => updateField('ingredients', recipe.ingredients.filter((_, i) => i !== index))}
               >
@@ -134,11 +139,12 @@ export function RecipeFormPage() {
           <Button
             type="button"
             variant="outlined"
+            startIcon={<AddIcon />}
             onClick={() => updateField('ingredients', [...recipe.ingredients, { name: '', quantity: '', unit: '', originalText: '' }])}
           >
             Add Ingredient
           </Button>
-          <Button type="submit" variant="contained" disabled={createMutation.isPending || updateMutation.isPending}>
+          <Button type="submit" variant="contained" startIcon={<SaveIcon />} disabled={createMutation.isPending || updateMutation.isPending}>
             Save Recipe
           </Button>
         </Stack>

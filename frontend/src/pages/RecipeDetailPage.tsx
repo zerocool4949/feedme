@@ -1,4 +1,6 @@
-import { Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditIcon from '@mui/icons-material/Edit';
+import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deleteRecipe, getRecipe } from '../api/client';
@@ -23,12 +25,19 @@ export function RecipeDetailPage() {
   return (
     <Stack spacing={2}>
       <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" gap={1}>
-        <Typography variant="h4">{recipe.title}</Typography>
+        <Box>
+          <Typography variant="h4">{recipe.title}</Typography>
+          {recipe.description && (
+            <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+              {recipe.description}
+            </Typography>
+          )}
+        </Box>
         <Stack direction="row" spacing={1}>
-          <Button component={Link} to={`/recipes/${recipe.id}/edit`} variant="outlined">
+          <Button component={Link} to={`/recipes/${recipe.id}/edit`} variant="outlined" startIcon={<EditIcon />}>
             Edit
           </Button>
-          <Button color="error" variant="outlined" onClick={() => deleteMutation.mutate()}>
+          <Button color="error" variant="outlined" onClick={() => deleteMutation.mutate()} startIcon={<DeleteOutlineIcon />}>
             Delete
           </Button>
         </Stack>
@@ -43,20 +52,24 @@ export function RecipeDetailPage() {
         ))}
       </Stack>
 
-      <Card>
+      <Card variant="outlined">
         <CardContent>
-          <Typography variant="h6">Ingredients</Typography>
-          <ul>
+          <Typography variant="h6" gutterBottom>
+            Ingredients
+          </Typography>
+          <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
             {recipe.ingredients.map((ingredient) => (
               <li key={ingredient.id}>{ingredient.originalText || [ingredient.quantity, ingredient.unit, ingredient.name].filter(Boolean).join(' ')}</li>
             ))}
-          </ul>
+          </Box>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card variant="outlined">
         <CardContent>
-          <Typography variant="h6">Instructions</Typography>
+          <Typography variant="h6" gutterBottom>
+            Instructions
+          </Typography>
           <Typography whiteSpace="pre-wrap">{recipe.instructions}</Typography>
         </CardContent>
       </Card>
