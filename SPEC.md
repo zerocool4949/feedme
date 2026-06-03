@@ -343,7 +343,7 @@ Display:
 * search bar
 * shuffle section with image previews
 * recipe grid (1 column on mobile, 2 on tablet, 3 on desktop)
-* each card shows: thumbnail image, title, description or notes
+* each card shows: thumbnail image, title only
 
 Tags are not shown on the list page. Full details including tags are on the detail page.
 

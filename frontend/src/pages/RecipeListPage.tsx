@@ -120,15 +120,8 @@ export function RecipeListPage() {
                 <Box sx={{ aspectRatio: '4 / 3', bgcolor: 'action.hover' }} />
               )}
               <CardContent sx={{ flex: 1 }}>
-                <Typography variant="subtitle1" fontWeight={700} gutterBottom noWrap title={recipe.title}>
+                <Typography variant="subtitle1" fontWeight={700} noWrap title={recipe.title}>
                   {recipe.title}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
-                >
-                  {recipe.notes || ''}
                 </Typography>
               </CardContent>
             </CardActionArea>

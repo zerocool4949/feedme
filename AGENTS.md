@@ -175,7 +175,7 @@ Theme uses a blue pastel palette (light and dark mode) defined in `frontend/src/
 
 Do not change the color scheme without being asked.
 
-List pages show minimal card content (title, description). Tags and metadata belong on the detail page only.
+List pages show only the title and image on each card. All other content belongs on the detail page.
 
 Responsive breakpoints follow MUI defaults: xs mobile, sm tablet, lg desktop.
 
