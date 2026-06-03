@@ -28,7 +28,7 @@ export function RecipeListPage() {
     <Stack spacing={3}>
       <Box>
         <TextField
-          label="Search recipes, notes, tags, ingredients"
+          label="Rechercher une recette, une note, un tag ou un ingrédient"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           fullWidth
@@ -54,26 +54,26 @@ export function RecipeListPage() {
         <Stack spacing={1.5}>
           <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" gap={1}>
             <Box>
-              <Typography variant="h6">Shuffle FeedMe Ideas</Typography>
+              <Typography variant="h6">Idées de repas au hasard</Typography>
               <Typography variant="body2" color="text.secondary">
-                Pick a few recipes when you do not want to decide.
+                Laisse FeedMe choisir quand tu ne sais pas quoi cuisiner.
               </Typography>
             </Box>
             <Stack direction="row" spacing={1} flexWrap="wrap">
-          {[1, 4, 7].map((count) => (
-            <Button
-              key={count}
-              variant={shuffleCount === count ? 'contained' : 'outlined'}
-              onClick={() => handleShuffle(count)}
-              startIcon={<CasinoIcon />}
-              disabled={shuffleMutation.isPending}
-            >
-              Shuffle {count}
-            </Button>
-          ))}
+              {[1, 4, 7].map((count) => (
+                <Button
+                  key={count}
+                  variant={shuffleCount === count ? 'contained' : 'outlined'}
+                  onClick={() => handleShuffle(count)}
+                  startIcon={<CasinoIcon />}
+                  disabled={shuffleMutation.isPending}
+                >
+              Tirer {count}
+                </Button>
+              ))}
             </Stack>
           </Stack>
-          {shuffleMutation.isError && <Typography color="error">Failed to shuffle recipes.</Typography>}
+          {shuffleMutation.isError && <Typography color="error">Impossible de tirer des recettes au hasard.</Typography>}
           {shuffled.length > 0 && (
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(auto-fit, minmax(190px, 1fr))' }, gap: 1.5 }}>
               {shuffled.map((recipe) => (
@@ -118,7 +118,7 @@ export function RecipeListPage() {
                       {recipe.title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {recipe.description || recipe.notes || 'No notes yet'}
+                      {recipe.description || recipe.notes || 'Aucune note pour le moment'}
                     </Typography>
                     <Stack direction="row" gap={1} flexWrap="wrap">
                       <Chip size="small" label={recipe.visibility} />
@@ -133,7 +133,7 @@ export function RecipeListPage() {
           </Card>
         ))}
       </Box>
-      {!recipesQuery.isLoading && recipes.length === 0 && <Typography>No recipes found.</Typography>}
+      {!recipesQuery.isLoading && recipes.length === 0 && <Typography>Aucune recette trouvée.</Typography>}
     </Stack>
   );
 }
