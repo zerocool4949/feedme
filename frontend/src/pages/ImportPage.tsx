@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,11 +21,12 @@ export function ImportPage() {
         <Stack spacing={2}>
           <Typography variant="h5">Import Recipe</Typography>
           <Typography color="text.secondary">
-            The MVP includes the import endpoint and editable draft flow. Extraction logic is intentionally a skeleton.
+            Paste a recipe URL to create an editable draft before saving it.
           </Typography>
           <TextField label="Recipe URL" value={url} onChange={(event) => setUrl(event.target.value)} fullWidth />
-          <Button variant="contained" onClick={() => importMutation.mutate(url)} disabled={!url.trim()}>
-            Create Draft
+          {importMutation.isError ? <Alert severity="error">{importMutation.error.message}</Alert> : null}
+          <Button variant="contained" onClick={() => importMutation.mutate(url)} disabled={!url.trim() || importMutation.isPending}>
+            {importMutation.isPending ? 'Importing...' : 'Create Draft'}
           </Button>
         </Stack>
       </CardContent>
