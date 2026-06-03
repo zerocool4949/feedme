@@ -12,24 +12,22 @@ Done:
 * TanStack Query API integration
 * Material UI responsive layout
 * NestJS REST API
-* Prisma schema and initial migration
+* Prisma schema and migrations
 * PostgreSQL Docker service with persistent volume
 * Default local user support without authentication
 * Recipe CRUD
 * Ingredient model with normalized ingredient names
 * Tag model
 * Recipe visibility field: `private`, `public`, `shared`
-* Recipe status field: `to_try`, `tested`, `favorite`
-* Recipe difficulty and rating fields
 * Search by title, description, notes, tags, ingredient names, and normalized ingredient names
 * Shuffle meal suggestions with requested counts capped to 1 through 7
-* Recipe import service skeleton and editable draft flow
+* Recipe import with JSON-LD and HTML fallback extraction and editable draft flow
 * Dockerfiles for frontend and backend
+* GitHub Actions CI publishing images to GHCR
 
 Not done:
 
 * Authentication and authorization
-* Real recipe import extraction from JSON-LD, schema.org Recipe, OpenGraph, or HTML fallback
 * Meal planning calendar
 * Shopping lists
 * OCR
@@ -48,12 +46,8 @@ Verified:
 * Backend and frontend production builds succeed with `npm run build`
 * ESLint succeeds with `npm run lint`
 * Prisma schema validates when `DATABASE_URL` is provided
-
-Not verified:
-
-* Docker startup with `docker compose up -d`, because Docker is not installed in the current environment
-* Migrations against a live PostgreSQL container
-* Runtime API and UI behavior in Docker
+* Docker deployment works via `docker compose pull && docker compose up -d`
+* Migrations run on container startup via `prisma migrate deploy`
 
 ---
 
@@ -127,6 +121,7 @@ Do NOT build the following in the MVP:
 
 * Docker
 * Docker Compose
+* GitHub Actions CI publishing images to GHCR
 
 ## Future Mobile Support
 
@@ -167,15 +162,9 @@ Fields:
 * title
 * description
 * instructions
-* prep_time_minutes
-* cook_time_minutes
-* servings
 * source_url
 * image_url
 * visibility
-* status
-* rating
-* difficulty
 * created_at
 * updated_at
 
@@ -186,28 +175,6 @@ Values:
 * private
 * public
 * shared
-
-### Status
-
-Values:
-
-* to_try
-* tested
-* favorite
-
-### Difficulty
-
-Values:
-
-* easy
-* medium
-* hard
-
-### Rating
-
-Range:
-
-* 1 to 5
 
 ---
 
@@ -269,8 +236,7 @@ Supported extraction priority:
 
 1. JSON-LD
 2. schema.org Recipe
-3. OpenGraph
-4. HTML fallback
+3. HTML fallback (meta tags and content parsing)
 
 Imported data:
 
@@ -278,9 +244,7 @@ Imported data:
 * ingredients
 * instructions
 * image
-* prep time
-* cook time
-* servings
+* tags (from keywords, category, cuisine)
 
 Users must be able to review and edit imported recipes before saving.
 
@@ -302,8 +266,7 @@ Optional fields:
 * image
 * source URL
 * tags
-* times
-* servings
+* description
 
 ---
 
@@ -366,7 +329,6 @@ Future filters:
 
 * favorites only
 * vegetarian
-* difficulty
 * tags
 
 ---
@@ -379,12 +341,10 @@ Display:
 * image
 * ingredients
 * instructions
-* servings
-* prep time
-* cook time
 * tags
 * notes
 * source URL
+* visibility
 
 Actions:
 
@@ -440,6 +400,7 @@ Requirements:
 * restart unless-stopped
 * environment variable configuration
 * reverse proxy friendly
+* images published to GHCR via GitHub Actions on push to main
 
 Application should be reachable through:
 
@@ -457,8 +418,6 @@ Must implement:
 * recipe import
 * recipe search
 * ingredient search
-* favorites
-* visibility field
 * shuffle meal ideas
 * Docker deployment
 
