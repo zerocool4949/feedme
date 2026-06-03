@@ -36,7 +36,7 @@ docker compose up postgres -d
 ```bash
 cd backend
 DATABASE_URL="postgresql://feedme:feedme_password@localhost:5432/feedme?schema=public" npx prisma migrate deploy
-npm run start:dev
+DATABASE_URL="postgresql://feedme:feedme_password@localhost:5432/feedme?schema=public" npm run start:dev
 ```
 
 **Terminal 3 — frontend**
@@ -110,6 +110,6 @@ Traduit les titres, descriptions, instructions et ingrédients en français via 
 ## Stack
 
 - **Frontend** : React · Vite · TypeScript · TanStack Query · Material UI
-- **Backend** : NestJS · Prisma ORM
+- **Backend** : Hono · Prisma ORM · Zod
 - **Base de données** : PostgreSQL
 - **Déploiement** : Docker Compose · GitHub Actions CI → GHCR

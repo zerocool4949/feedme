@@ -87,8 +87,9 @@ Frontend:
 
 Backend:
 
-* NestJS
+* Hono
 * Prisma
+* Zod
 
 Database:
 

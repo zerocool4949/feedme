@@ -1,5 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { IngredientDto } from './dto';
+import { HTTPException } from 'hono/http-exception';
+import { IngredientDto } from '../schemas';
 
 export interface RecipeDraft {
   title: string;
@@ -26,7 +26,6 @@ interface RecipeJson {
   recipeCuisine?: JsonValue;
 }
 
-@Injectable()
 export class RecipeImportService {
   async createDraft(url: string): Promise<RecipeDraft> {
     const response = await fetch(url, {
@@ -37,7 +36,7 @@ export class RecipeImportService {
     });
 
     if (!response.ok) {
-      throw new BadRequestException(`Impossible de récupérer l'URL de la recette (${response.status})`);
+      throw new HTTPException(400, { message: `Impossible de récupérer l'URL de la recette (${response.status})` });
     }
 
     const html = await response.text();
@@ -45,7 +44,7 @@ export class RecipeImportService {
     const draft = jsonRecipe ? draftFromJson(jsonRecipe, url) : draftFromHtml(html, url);
 
     if (!draft.title && !draft.instructions && draft.ingredients.length === 0) {
-      throw new BadRequestException("Impossible d'extraire les détails de la recette depuis cette URL");
+      throw new HTTPException(400, { message: "Impossible d'extraire les détails de la recette depuis cette URL" });
     }
 
     return {
@@ -116,37 +115,26 @@ function findRecipeJson(html: string): RecipeJson | null {
 }
 
 function findRecipeNode(value: JsonValue | undefined): RecipeJson | null {
-  if (!value) {
-    return null;
-  }
+  if (!value) return null;
 
   if (Array.isArray(value)) {
     for (const item of value) {
       const recipe = findRecipeNode(item);
-      if (recipe) {
-        return recipe;
-      }
+      if (recipe) return recipe;
     }
     return null;
   }
 
-  if (typeof value !== 'object') {
-    return null;
-  }
+  if (typeof value !== 'object') return null;
 
   const object = value as RecipeJson;
-  if (isRecipeType(object['@type'])) {
-    return object;
-  }
+  if (isRecipeType(object['@type'])) return object;
 
   return findRecipeNode(object['@graph']);
 }
 
 function isRecipeType(type: JsonValue | undefined): boolean {
-  if (typeof type === 'string') {
-    return type.toLowerCase() === 'recipe';
-  }
-
+  if (typeof type === 'string') return type.toLowerCase() === 'recipe';
   return Array.isArray(type) && type.some((item) => typeof item === 'string' && item.toLowerCase() === 'recipe');
 }
 
@@ -167,25 +155,13 @@ function toInstructions(value: JsonValue | undefined): string {
 }
 
 function toStringArray(value: JsonValue | undefined): string[] {
-  if (!value) {
-    return [];
-  }
-
-  if (typeof value === 'string' || typeof value === 'number') {
-    return [String(value).trim()].filter(Boolean);
-  }
-
-  if (Array.isArray(value)) {
-    return value.flatMap(toStringArray);
-  }
+  if (!value) return [];
+  if (typeof value === 'string' || typeof value === 'number') return [String(value).trim()].filter(Boolean);
+  if (Array.isArray(value)) return value.flatMap(toStringArray);
 
   if (typeof value === 'object') {
     const object = value as { text?: JsonValue; name?: JsonValue; itemListElement?: JsonValue };
-    return [
-      ...toStringArray(object.text),
-      ...toStringArray(object.name),
-      ...toStringArray(object.itemListElement),
-    ];
+    return [...toStringArray(object.text), ...toStringArray(object.name), ...toStringArray(object.itemListElement)];
   }
 
   return [];
@@ -196,17 +172,9 @@ function firstString(value: JsonValue | undefined): string {
 }
 
 function firstImage(value: JsonValue | undefined): string {
-  if (!value) {
-    return '';
-  }
-
-  if (typeof value === 'string') {
-    return value;
-  }
-
-  if (Array.isArray(value)) {
-    return firstImage(value[0]);
-  }
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) return firstImage(value[0]);
 
   if (typeof value === 'object') {
     const object = value as { url?: JsonValue; contentUrl?: JsonValue };
@@ -246,17 +214,12 @@ function metaContent(html: string, name: string): string {
 
 function linesBetween(text: string, start: string, end: string): string[] {
   const startIndex = text.indexOf(start);
-  if (startIndex === -1) {
-    return [];
-  }
+  if (startIndex === -1) return [];
 
   const endIndex = text.indexOf(end, startIndex + start.length);
   const section = text.slice(startIndex + start.length, endIndex === -1 ? undefined : endIndex);
 
-  return section
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
+  return section.split('\n').map((line) => line.trim()).filter(Boolean);
 }
 
 function extractInstructionLines(text: string): string[] {
@@ -270,14 +233,8 @@ function extractInstructionLines(text: string): string[] {
 }
 
 function isUsefulIngredientLine(line: string): boolean {
-  if (/^\d+\s+portions?$/i.test(line)) {
-    return false;
-  }
-
-  if (/^(quantité ingrédients|afficher la recette|cuisinez en écoutant|compote de pommes:?|viande hachée:?)$/i.test(line)) {
-    return false;
-  }
-
+  if (/^\d+\s+portions?$/i.test(line)) return false;
+  if (/^(quantité ingrédients|afficher la recette|cuisinez en écoutant|compote de pommes:?|viande hachée:?)$/i.test(line)) return false;
   return line.length > 2;
 }
 
@@ -303,3 +260,5 @@ function decodeHtml(value: string): string {
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+export const recipeImportService = new RecipeImportService();

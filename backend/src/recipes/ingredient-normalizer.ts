@@ -33,7 +33,7 @@ export function normalizeIngredientName(value: string): string {
   const cleaned = value
     .toLowerCase()
     .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9\s-]/g, ' ')
     .replace(/\b(fresh|dried|large|small|medium|red|white|green|yellow)\b/g, ' ')
     .replace(/\s+/g, ' ')

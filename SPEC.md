@@ -12,7 +12,7 @@ Done:
 * TanStack Query API integration
 * Material UI responsive layout with persistent dark/light mode (blue pastel palette)
 * Recipe list page with 3-column responsive grid (1 on mobile, 2 on tablet, 3 on desktop)
-* NestJS REST API
+* Hono REST API
 * Prisma schema and migrations
 * PostgreSQL Docker service with persistent volume
 * Default local user support without authentication
@@ -61,7 +61,7 @@ The application starts as a single-user application running on a self-hosted ser
 
 Recipes are primarily imported from websites or manually created. The application helps users discover meals by searching ingredients, tags, text content, and through random meal suggestions.
 
-The application will initially run as a web application hosted on a NUC using Docker and must later be convertible into an Android APK using Capacitor.
+The application runs as a web application hosted on a NUC using Docker and must later be convertible into an Android APK using Capacitor.
 
 ---
 
@@ -111,8 +111,9 @@ Do NOT build the following in the MVP:
 ## Backend
 
 * Node.js
-* NestJS
+* Hono
 * Prisma ORM
+* Zod
 
 ## Database
 

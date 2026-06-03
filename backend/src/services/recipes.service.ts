@@ -1,8 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { HTTPException } from 'hono/http-exception';
 import { Prisma, RecipeVisibility } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateRecipeDto, IngredientDto, UpdateRecipeDto } from './dto';
-import { normalizeIngredientName, parseIngredientLine } from './ingredient-normalizer';
+import { prisma } from '../db';
+import { CreateRecipeDto, IngredientDto, UpdateRecipeDto } from '../schemas';
+import { normalizeIngredientName, parseIngredientLine } from '../recipes/ingredient-normalizer';
 
 const includeRecipeRelations = {
   ingredients: true,
@@ -18,17 +18,14 @@ interface RecipeScalarData {
   visibility?: RecipeVisibility;
 }
 
-@Injectable()
 export class RecipesService {
-  constructor(private readonly prisma: PrismaService) {}
-
   async findAll(userId: string, search?: string) {
     const where: Prisma.RecipeWhereInput = {
       ownerUserId: userId,
       ...(search ? this.buildSearchFilter(search) : {}),
     };
 
-    return this.prisma.recipe.findMany({
+    return prisma.recipe.findMany({
       where,
       include: includeRecipeRelations,
       orderBy: { updatedAt: 'desc' },
@@ -36,13 +33,13 @@ export class RecipesService {
   }
 
   async findOne(userId: string, id: string) {
-    const recipe = await this.prisma.recipe.findFirst({
+    const recipe = await prisma.recipe.findFirst({
       where: { id, ownerUserId: userId },
       include: includeRecipeRelations,
     });
 
     if (!recipe) {
-      throw new NotFoundException('Recette introuvable');
+      throw new HTTPException(404, { message: 'Recette introuvable' });
     }
 
     return recipe;
@@ -51,7 +48,7 @@ export class RecipesService {
   async create(userId: string, dto: CreateRecipeDto) {
     this.validateRecipePayload(dto.ingredients, dto.instructions);
 
-    return this.prisma.recipe.create({
+    return prisma.recipe.create({
       data: {
         ...this.recipeData(dto),
         title: dto.title.trim(),
@@ -71,7 +68,7 @@ export class RecipesService {
       this.validateRecipePayload(dto.ingredients, dto.instructions);
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx) => {
       if (dto.ingredients) {
         await tx.ingredient.deleteMany({ where: { recipeId: id } });
       }
@@ -93,13 +90,13 @@ export class RecipesService {
 
   async remove(userId: string, id: string) {
     await this.findOne(userId, id);
-    await this.prisma.recipe.delete({ where: { id } });
+    await prisma.recipe.delete({ where: { id } });
     return { deleted: true };
   }
 
   async shuffle(userId: string, count: number) {
     const safeCount = Number.isFinite(count) ? Math.min(Math.max(Math.trunc(count), 1), 7) : 1;
-    const recipes = await this.prisma.recipe.findMany({
+    const recipes = await prisma.recipe.findMany({
       where: { ownerUserId: userId },
       include: includeRecipeRelations,
     });
@@ -159,20 +156,19 @@ export class RecipesService {
 
   private validateRecipePayload(ingredients?: IngredientDto[], instructions?: string) {
     if (instructions !== undefined && instructions.trim().length === 0) {
-      throw new BadRequestException('La préparation est obligatoire');
+      throw new HTTPException(400, { message: 'La préparation est obligatoire' });
     }
 
     if (ingredients !== undefined && this.ingredientData(ingredients).length === 0) {
-      throw new BadRequestException('Au moins un ingrédient est obligatoire');
+      throw new HTTPException(400, { message: 'Au moins un ingrédient est obligatoire' });
     }
   }
 }
 
 function emptyToNull(value?: string): string | null | undefined {
-  if (value === undefined) {
-    return undefined;
-  }
-
+  if (value === undefined) return undefined;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
 }
+
+export const recipesService = new RecipesService();
