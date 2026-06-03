@@ -14,64 +14,107 @@ interface AppProps {
 }
 
 export function App({ mode, onToggleMode, onLogout }: AppProps) {
+  const isDark = mode === 'dark';
+
   return (
-    <Container maxWidth="lg" sx={{ py: { xs: 2, md: 3 } }}>
-      <Stack spacing={{ xs: 2, md: 3 }}>
-        <Box
-          component="header"
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', sm: 'row' },
-            alignItems: { xs: 'stretch', sm: 'center' },
-            justifyContent: 'space-between',
-            gap: 1.5,
-            py: 1,
-          }}
-        >
-          <Stack component={Link} to="/" direction="row" alignItems="center" spacing={1.25} color="inherit" sx={{ textDecoration: 'none' }}>
-            <Box
-              sx={{
-                display: 'grid',
-                placeItems: 'center',
-                width: 42,
-                height: 42,
-                borderRadius: 2,
-                bgcolor: 'primary.main',
-                color: 'background.default',
-              }}
+    <Box sx={{ minHeight: '100vh' }}>
+      <Box
+        component="header"
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          bgcolor: isDark ? 'rgba(11,18,32,0.85)' : 'rgba(244,247,255,0.85)',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              height: 60,
+              gap: 2,
+            }}
+          >
+            <Stack
+              component={Link}
+              to="/"
+              direction="row"
+              alignItems="center"
+              spacing={1.25}
+              sx={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <RestaurantMenuIcon />
-            </Box>
-            <Box>
-              <Typography variant="h4" sx={{ lineHeight: 1 }}>
+              <Box
+                sx={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: '10px',
+                  bgcolor: 'primary.main',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <RestaurantMenuIcon sx={{ fontSize: 18, color: 'primary.contrastText' }} />
+              </Box>
+              <Typography variant="h6" fontWeight={800} letterSpacing="-0.02em" sx={{ lineHeight: 1 }}>
                 FeedMe
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Recettes et idées de repas
-              </Typography>
-            </Box>
-          </Stack>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
-            <Tooltip title={mode === 'dark' ? 'Passer au mode clair' : 'Passer au mode sombre'}>
-              <IconButton onClick={onToggleMode} color="inherit" aria-label="Changer le mode d'affichage">
-                {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-              </IconButton>
-            </Tooltip>
-            <Button component={Link} to="/import" variant="outlined" startIcon={<UploadFileIcon />}>
-              Importer
-            </Button>
-            <Button component={Link} to="/recipes/new" variant="contained" startIcon={<AddIcon />}>
-              Nouvelle recette
-            </Button>
-            <Tooltip title="Se déconnecter">
-              <IconButton onClick={onLogout} color="inherit" aria-label="Se déconnecter">
-                <LogoutIcon />
-              </IconButton>
-            </Tooltip>
-          </Stack>
-        </Box>
+            </Stack>
+
+            <Stack direction="row" spacing={0.5} alignItems="center">
+              <Tooltip title={isDark ? 'Mode clair' : 'Mode sombre'}>
+                <IconButton
+                  onClick={onToggleMode}
+                  size="small"
+                  sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary' } }}
+                >
+                  {isDark ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
+                </IconButton>
+              </Tooltip>
+              <Button
+                component={Link}
+                to="/import"
+                variant="outlined"
+                size="small"
+                startIcon={<UploadFileIcon />}
+                sx={{ display: { xs: 'none', sm: 'flex' }, borderRadius: '10px' }}
+              >
+                Importer
+              </Button>
+              <Button
+                component={Link}
+                to="/recipes/new"
+                variant="contained"
+                size="small"
+                startIcon={<AddIcon />}
+                sx={{ borderRadius: '10px' }}
+              >
+                Nouvelle
+              </Button>
+              <Tooltip title="Se déconnecter">
+                <IconButton
+                  onClick={onLogout}
+                  size="small"
+                  sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}
+                >
+                  <LogoutIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+          </Box>
+        </Container>
+      </Box>
+
+      <Container maxWidth="lg" sx={{ py: { xs: 3, md: 4 }, px: { xs: 2, sm: 3 } }}>
         <Outlet />
-      </Stack>
-    </Container>
+      </Container>
+    </Box>
   );
 }

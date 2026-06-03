@@ -2,6 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SaveIcon from '@mui/icons-material/Save';
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -28,13 +29,25 @@ const emptyRecipe: RecipeInput = {
   tags: [],
 };
 
+const fieldRadius = { '& .MuiOutlinedInput-root': { borderRadius: '12px' } };
+
 export function RecipeFormPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [recipe, setRecipe] = useState<RecipeInput>(emptyRecipe);
   const [tagText, setTagText] = useState('');
-  const recipeQuery = useQuery({ queryKey: ['recipe', id], queryFn: () => getRecipe(id ?? ''), enabled: Boolean(id) });
-  const createMutation = useMutation({ mutationFn: createRecipe, onSuccess: (saved) => navigate(`/recipes/${saved.id}`) });
+
+  const recipeQuery = useQuery({
+    queryKey: ['recipe', id],
+    queryFn: () => getRecipe(id ?? ''),
+    enabled: Boolean(id),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createRecipe,
+    onSuccess: (saved) => navigate(`/recipes/${saved.id}`),
+  });
+
   const updateMutation = useMutation({
     mutationFn: (input: RecipeInput) => updateRecipe(id ?? '', input),
     onSuccess: (saved) => navigate(`/recipes/${saved.id}`),
@@ -86,63 +99,142 @@ export function RecipeFormPage() {
   function updateIngredient(index: number, patch: Partial<IngredientInput>) {
     setRecipe((current) => ({
       ...current,
-      ingredients: current.ingredients.map((ingredient, ingredientIndex) =>
-        ingredientIndex === index ? { ...ingredient, ...patch } : ingredient,
+      ingredients: current.ingredients.map((ingredient, i) =>
+        i === index ? { ...ingredient, ...patch } : ingredient,
       ),
     }));
   }
 
-  return (
-    <Card variant="outlined">
-      <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-        <Stack component="form" spacing={2} onSubmit={handleSubmit}>
-          <Typography variant="h5">{id ? 'Modifier la recette' : 'Nouvelle recette'}</Typography>
-          <TextField required label="Titre" value={recipe.title} onChange={(event) => updateField('title', event.target.value)} />
-          <TextField required multiline minRows={5} label="Préparation" value={recipe.instructions} onChange={(event) => updateField('instructions', event.target.value)} />
-          <TextField multiline minRows={3} label="Notes" value={recipe.notes ?? ''} onChange={(event) => updateField('notes', event.target.value)} />
+  const isPending = createMutation.isPending || updateMutation.isPending;
 
-          <FormControl>
+  return (
+    <Card sx={{ borderRadius: '20px' }}>
+      <CardContent sx={{ p: { xs: 2.5, md: 3.5 } }}>
+        <Stack component="form" spacing={2.5} onSubmit={handleSubmit}>
+          <Typography variant="h5">{id ? 'Modifier la recette' : 'Nouvelle recette'}</Typography>
+
+          <TextField
+            required
+            label="Titre"
+            value={recipe.title}
+            onChange={(e) => updateField('title', e.target.value)}
+            sx={fieldRadius}
+          />
+          <TextField
+            required
+            multiline
+            minRows={5}
+            label="Préparation"
+            value={recipe.instructions}
+            onChange={(e) => updateField('instructions', e.target.value)}
+            sx={fieldRadius}
+          />
+          <TextField
+            multiline
+            minRows={3}
+            label="Notes"
+            value={recipe.notes ?? ''}
+            onChange={(e) => updateField('notes', e.target.value)}
+            sx={fieldRadius}
+          />
+
+          <FormControl sx={fieldRadius}>
             <InputLabel>Visibilité</InputLabel>
-            <Select label="Visibilité" value={recipe.visibility} onChange={(event) => updateField('visibility', event.target.value as RecipeInput['visibility'])}>
+            <Select
+              label="Visibilité"
+              value={recipe.visibility}
+              onChange={(e) => updateField('visibility', e.target.value as RecipeInput['visibility'])}
+            >
               <MenuItem value="private">Privée</MenuItem>
               <MenuItem value="public">Publique</MenuItem>
               <MenuItem value="shared">Partagée</MenuItem>
             </Select>
           </FormControl>
 
-          <TextField label="URL de l'image" value={recipe.imageUrl ?? ''} onChange={(event) => updateField('imageUrl', event.target.value)} />
-          <TextField label="URL source" value={recipe.sourceUrl ?? ''} onChange={(event) => updateField('sourceUrl', event.target.value)} />
-          <TextField label="Tags, séparés par des virgules" value={tagText} onChange={(event) => setTagText(event.target.value)} />
+          <TextField
+            label="URL de l'image"
+            value={recipe.imageUrl ?? ''}
+            onChange={(e) => updateField('imageUrl', e.target.value)}
+            sx={fieldRadius}
+          />
+          <TextField
+            label="URL source"
+            value={recipe.sourceUrl ?? ''}
+            onChange={(e) => updateField('sourceUrl', e.target.value)}
+            sx={fieldRadius}
+          />
+          <TextField
+            label="Tags, séparés par des virgules"
+            value={tagText}
+            onChange={(e) => setTagText(e.target.value)}
+            sx={fieldRadius}
+          />
 
-          <Typography variant="h6">Ingrédients</Typography>
-          {recipe.ingredients.map((ingredient, index) => (
-            <Stack key={index} direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems="flex-start">
-              <TextField required label="Nom" value={ingredient.name} onChange={(event) => updateIngredient(index, { name: event.target.value })} />
-              <TextField label="Quantité" value={ingredient.quantity ?? ''} onChange={(event) => updateIngredient(index, { quantity: event.target.value })} />
-              <TextField label="Unité" value={ingredient.unit ?? ''} onChange={(event) => updateIngredient(index, { unit: event.target.value })} />
-              <TextField label="Texte original" value={ingredient.originalText ?? ''} onChange={(event) => updateIngredient(index, { originalText: event.target.value })} />
-              <Button
-                type="button"
-                color="error"
-                variant="outlined"
-                startIcon={<DeleteOutlineIcon />}
-                disabled={recipe.ingredients.length === 1}
-                onClick={() => updateField('ingredients', recipe.ingredients.filter((_, i) => i !== index))}
-              >
-                Supprimer
-              </Button>
+          <Box>
+            <Typography variant="h6" sx={{ mb: 1.5 }}>
+              Ingrédients
+            </Typography>
+            <Stack spacing={1.5}>
+              {recipe.ingredients.map((ingredient, index) => (
+                <Stack key={index} direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems="flex-start">
+                  <TextField
+                    required
+                    label="Nom"
+                    value={ingredient.name}
+                    onChange={(e) => updateIngredient(index, { name: e.target.value })}
+                    sx={{ ...fieldRadius, flex: 2 }}
+                  />
+                  <TextField
+                    label="Quantité"
+                    value={ingredient.quantity ?? ''}
+                    onChange={(e) => updateIngredient(index, { quantity: e.target.value })}
+                    sx={{ ...fieldRadius, flex: 1 }}
+                  />
+                  <TextField
+                    label="Unité"
+                    value={ingredient.unit ?? ''}
+                    onChange={(e) => updateIngredient(index, { unit: e.target.value })}
+                    sx={{ ...fieldRadius, flex: 1 }}
+                  />
+                  <Button
+                    type="button"
+                    color="error"
+                    variant="outlined"
+                    startIcon={<DeleteOutlineIcon />}
+                    disabled={recipe.ingredients.length === 1}
+                    onClick={() => updateField('ingredients', recipe.ingredients.filter((_, i) => i !== index))}
+                    sx={{ borderRadius: '10px', flexShrink: 0 }}
+                  >
+                    Retirer
+                  </Button>
+                </Stack>
+              ))}
             </Stack>
-          ))}
+            <Button
+              type="button"
+              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={() =>
+                updateField('ingredients', [
+                  ...recipe.ingredients,
+                  { name: '', quantity: '', unit: '', originalText: '' },
+                ])
+              }
+              sx={{ mt: 1.5, borderRadius: '10px' }}
+            >
+              Ajouter un ingrédient
+            </Button>
+          </Box>
+
           <Button
-            type="button"
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={() => updateField('ingredients', [...recipe.ingredients, { name: '', quantity: '', unit: '', originalText: '' }])}
+            type="submit"
+            variant="contained"
+            startIcon={<SaveIcon />}
+            disabled={isPending}
+            size="large"
+            sx={{ borderRadius: '12px', py: 1.5 }}
           >
-            Ajouter un ingrédient
-          </Button>
-          <Button type="submit" variant="contained" startIcon={<SaveIcon />} disabled={createMutation.isPending || updateMutation.isPending}>
-            Enregistrer la recette
+            {isPending ? 'Enregistrement…' : 'Enregistrer la recette'}
           </Button>
         </Stack>
       </CardContent>
