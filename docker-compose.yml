@@ -47,5 +47,18 @@ services:
     depends_on:
       - backend
 
+  recipe-translator:
+    image: node:22-alpine
+    profiles:
+      - tools
+    working_dir: /app
+    environment:
+      FEEDME_API_BASE_URL: http://backend:3000/api
+    volumes:
+      - ./scripts:/app/scripts:ro
+    command: node scripts/translate-imported-recipes.mjs
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:

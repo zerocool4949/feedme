@@ -66,3 +66,9 @@ docker compose --profile tools run --rm recipe-importer
 ```
 
 The importer replaces recipes tagged `imported` and preserves manually created recipes.
+
+To translate already imported recipes to French:
+
+```bash
+docker compose --profile tools run --rm recipe-translator
+```
