@@ -40,8 +40,8 @@ services:
     working_dir: /app
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://feedme:feedme_password@postgres:5432/feedme?schema=public}
-      NEW_USERNAME: ${NEW_USERNAME}
-      NEW_PASSWORD: ${NEW_PASSWORD}
+      NEW_USERNAME: ${NEW_USERNAME:-}
+      NEW_PASSWORD: ${NEW_PASSWORD:-}
     volumes:
       - ./scripts:/app/scripts:ro
     command: node scripts/create-user.mjs
