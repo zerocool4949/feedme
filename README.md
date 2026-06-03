@@ -56,3 +56,13 @@ docker compose up -d
 Frontend: `http://localhost`
 
 Backend health: `http://localhost/api/health`
+
+## Import local HTML recipes
+
+Put exported recipe HTML files in a local `receip` directory, then run:
+
+```bash
+docker compose --profile tools run --rm recipe-importer
+```
+
+The importer replaces recipes tagged `imported` and preserves manually created recipes.
