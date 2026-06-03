@@ -16,7 +16,6 @@ const includeRecipeRelations = {
 
 interface RecipeScalarData {
   title?: string;
-  description?: string | null;
   notes?: string | null;
   instructions?: string;
   sourceUrl?: string | null;
@@ -135,7 +134,6 @@ export class RecipesService {
     return {
       OR: [
         { title: { contains: query, mode: 'insensitive' } },
-        { description: { contains: query, mode: 'insensitive' } },
         { notes: { contains: query, mode: 'insensitive' } },
         { tags: { some: { tag: { contains: query.toLowerCase(), mode: 'insensitive' } } } },
         { ingredients: { some: { name: { contains: query, mode: 'insensitive' } } } },
@@ -147,7 +145,6 @@ export class RecipesService {
   private recipeData(dto: UpdateRecipeDto): RecipeScalarData {
     return {
       ...(dto.title !== undefined ? { title: dto.title.trim() } : {}),
-      ...(dto.description !== undefined ? { description: emptyToNull(dto.description) } : {}),
       ...(dto.notes !== undefined ? { notes: emptyToNull(dto.notes) } : {}),
       ...(dto.instructions !== undefined ? { instructions: dto.instructions.trim() } : {}),
       ...(dto.sourceUrl !== undefined ? { sourceUrl: emptyToNull(dto.sourceUrl) } : {}),

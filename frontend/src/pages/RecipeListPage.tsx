@@ -128,7 +128,7 @@ export function RecipeListPage() {
                   color="text.secondary"
                   sx={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
                 >
-                  {recipe.description || recipe.notes || ''}
+                  {recipe.notes || ''}
                 </Typography>
               </CardContent>
             </CardActionArea>

@@ -13,7 +13,6 @@ const failures = [];
 for (const recipe of importedRecipes) {
   try {
     const translatedTitle = await translateText(recipe.title);
-    const translatedDescription = await translateText(recipe.description ?? '');
     const translatedNotes = await translateText(recipe.notes ?? '');
     const translatedInstructions = await translateText(recipe.instructions);
     const ingredientNames = recipe.ingredients.map((ingredient) => ingredient.name);
@@ -26,7 +25,6 @@ for (const recipe of importedRecipes) {
       method: 'PATCH',
       body: JSON.stringify({
         title: titleOverride(recipe.title) ?? translatedTitle ?? recipe.title,
-        description: translatedDescription || undefined,
         notes: translatedNotes || undefined,
         instructions: translatedInstructions || recipe.instructions,
         sourceUrl: recipe.sourceUrl ?? undefined,

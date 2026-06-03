@@ -33,11 +33,6 @@ export function RecipeDetailPage() {
       <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" gap={1}>
         <Box>
           <Typography variant="h4">{recipe.title}</Typography>
-          {recipe.description && (
-            <Typography color="text.secondary" sx={{ mt: 0.5 }}>
-              {recipe.description}
-            </Typography>
-          )}
         </Box>
         <Stack direction="row" spacing={1}>
           <Button component={Link} to={`/recipes/${recipe.id}/edit`} variant="outlined" startIcon={<EditIcon />}>

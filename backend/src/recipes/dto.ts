@@ -26,10 +26,6 @@ export class CreateRecipeDto {
 
   @IsOptional()
   @IsString()
-  description?: string;
-
-  @IsOptional()
-  @IsString()
   notes?: string;
 
   @IsString()

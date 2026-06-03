@@ -21,7 +21,6 @@ import type { IngredientInput, RecipeInput } from '../types/recipe';
 
 const emptyRecipe: RecipeInput = {
   title: '',
-  description: '',
   notes: '',
   instructions: '',
   visibility: 'private',
@@ -53,7 +52,6 @@ export function RecipeFormPage() {
     if (recipeQuery.data) {
       setRecipe({
         title: recipeQuery.data.title,
-        description: recipeQuery.data.description ?? '',
         notes: recipeQuery.data.notes ?? '',
         instructions: recipeQuery.data.instructions,
         sourceUrl: recipeQuery.data.sourceUrl ?? '',
@@ -100,7 +98,6 @@ export function RecipeFormPage() {
         <Stack component="form" spacing={2} onSubmit={handleSubmit}>
           <Typography variant="h5">{id ? 'Modifier la recette' : 'Nouvelle recette'}</Typography>
           <TextField required label="Titre" value={recipe.title} onChange={(event) => updateField('title', event.target.value)} />
-          <TextField label="Description" value={recipe.description ?? ''} onChange={(event) => updateField('description', event.target.value)} />
           <TextField required multiline minRows={5} label="Préparation" value={recipe.instructions} onChange={(event) => updateField('instructions', event.target.value)} />
           <TextField multiline minRows={3} label="Notes" value={recipe.notes ?? ''} onChange={(event) => updateField('notes', event.target.value)} />
 

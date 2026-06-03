@@ -21,7 +21,7 @@ Done:
 * Ingredient quantity/unit parsing before storage
 * Tag model
 * Recipe visibility field: `private`, `public`, `shared`
-* Search by title, description, notes, tags, ingredient names, and normalized ingredient names
+* Search by title, notes, tags, ingredient names, and normalized ingredient names
 * Shuffle meal suggestions with requested counts capped to 1 through 7 and image previews
 * Recipe import with JSON-LD and HTML fallback extraction and editable draft flow
 * Dockerfiles for frontend and backend
@@ -161,7 +161,6 @@ Fields:
 * id
 * owner_user_id
 * title
-* description
 * instructions
 * source_url
 * image_url

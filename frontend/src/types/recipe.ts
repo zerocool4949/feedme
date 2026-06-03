@@ -22,7 +22,6 @@ export interface RecipeTag {
 export interface Recipe {
   id: string;
   title: string;
-  description: string | null;
   notes: string | null;
   instructions: string;
   sourceUrl: string | null;
@@ -36,7 +35,6 @@ export interface Recipe {
 
 export interface RecipeInput {
   title: string;
-  description?: string;
   notes?: string;
   instructions: string;
   sourceUrl?: string;

@@ -3,7 +3,6 @@ import { IngredientDto } from './dto';
 
 export interface RecipeDraft {
   title: string;
-  description: string;
   notes: string;
   instructions: string;
   sourceUrl: string;
@@ -19,7 +18,6 @@ interface RecipeJson {
   '@graph'?: JsonValue;
   name?: JsonValue;
   headline?: JsonValue;
-  description?: JsonValue;
   image?: JsonValue;
   recipeIngredient?: JsonValue;
   recipeInstructions?: JsonValue;
@@ -66,7 +64,6 @@ function draftFromJson(recipe: RecipeJson, url: string): RecipeDraft {
 
   return {
     title: firstString(recipe.name) || firstString(recipe.headline),
-    description: firstString(recipe.description),
     notes: '',
     instructions: toInstructions(recipe.recipeInstructions),
     sourceUrl: url,
@@ -83,7 +80,6 @@ function draftFromJson(recipe: RecipeJson, url: string): RecipeDraft {
 function draftFromHtml(html: string, url: string): RecipeDraft {
   const text = htmlToText(html);
   const title = extractTagText(html, 'h1') || metaContent(html, 'og:title') || extractTagText(html, 'title');
-  const description = metaContent(html, 'description') || metaContent(html, 'og:description');
   const ingredientLines = linesBetween(text, 'Ingrédients', 'Préparation')
     .filter(isUsefulIngredientLine)
     .map((ingredient) => ({
@@ -94,7 +90,6 @@ function draftFromHtml(html: string, url: string): RecipeDraft {
 
   return {
     title,
-    description,
     notes: '',
     instructions: instructionLines.join('\n'),
     sourceUrl: url,
