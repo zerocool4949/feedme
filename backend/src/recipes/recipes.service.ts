@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { Prisma, RecipeVisibility } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRecipeDto, IngredientDto, UpdateRecipeDto } from './dto';
-import { normalizeIngredientName } from './ingredient-normalizer';
+import { normalizeIngredientName, parseIngredientLine } from './ingredient-normalizer';
 
 const DEFAULT_USER = {
   username: 'local',
@@ -159,13 +159,21 @@ export class RecipesService {
   private ingredientData(ingredients: IngredientDto[]) {
     return ingredients
       .filter((ingredient) => ingredient.name.trim().length > 0)
-      .map((ingredient) => ({
-        name: ingredient.name.trim(),
-        normalizedName: normalizeIngredientName(ingredient.name),
-        quantity: emptyToNull(ingredient.quantity),
-        unit: emptyToNull(ingredient.unit),
-        originalText: emptyToNull(ingredient.originalText),
-      }));
+      .map((ingredient) => {
+        const parsed = parseIngredientLine(ingredient.name);
+        const name = ingredient.quantity || ingredient.unit ? ingredient.name.trim() : parsed.name;
+        const quantity = ingredient.quantity ?? parsed.quantity;
+        const unit = ingredient.unit ?? parsed.unit;
+        const originalText = ingredient.originalText ?? ingredient.name;
+
+        return {
+          name,
+          normalizedName: normalizeIngredientName(name),
+          quantity: emptyToNull(quantity),
+          unit: emptyToNull(unit),
+          originalText: emptyToNull(originalText),
+        };
+      });
   }
 
   private tagData(tags: string[]) {

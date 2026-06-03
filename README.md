@@ -19,6 +19,7 @@ Implemented:
 * Tags table
 * Recipe visibility: private, public, shared
 * Recipe status: to_try, tested, favorite
+* Ingredient quantity/unit parsing before storage
 * Search by title, description, notes, tags, and ingredients
 * Shuffle meal suggestions with image previews
 * Recipe import with JSON-LD and HTML fallback extraction and editable draft flow

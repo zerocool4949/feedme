@@ -17,6 +17,7 @@ Done:
 * Default local user support without authentication
 * Recipe CRUD
 * Ingredient model with normalized ingredient names
+* Ingredient quantity/unit parsing before storage
 * Tag model
 * Recipe visibility field: `private`, `public`, `shared`
 * Search by title, description, notes, tags, ingredient names, and normalized ingredient names
@@ -205,6 +206,8 @@ Normalized:
 tomato
 
 Normalized values will be used for ingredient search.
+
+When possible, imported ingredient lines should be split into quantity, unit, and ingredient name before storage. The original text should still be preserved for display and manual review.
 
 ---
 
