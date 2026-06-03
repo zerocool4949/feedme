@@ -51,17 +51,17 @@ function createFeedMeTheme(mode: 'light' | 'dark') {
   return createTheme({
     palette: {
       mode,
-      primary: { main: isDark ? '#7dd87d' : '#2f7d46' },
-      secondary: { main: isDark ? '#f0b35a' : '#b56a15' },
+      primary: { main: isDark ? '#7aadee' : '#4a7ec7' },
+      secondary: { main: isDark ? '#a3b8d8' : '#7a9dbf' },
       background: {
-        default: isDark ? '#111815' : '#f5f3ec',
-        paper: isDark ? '#18231f' : '#ffffff',
+        default: isDark ? '#0f1726' : '#f4f7ff',
+        paper: isDark ? '#162035' : '#ffffff',
       },
       text: {
-        primary: isDark ? '#eef5ec' : '#17211c',
-        secondary: isDark ? '#a9b9ad' : '#5e6b62',
+        primary: isDark ? '#dde8f8' : '#1c2b4a',
+        secondary: isDark ? '#7d99be' : '#556a8a',
       },
-      divider: isDark ? 'rgba(238, 245, 236, 0.12)' : 'rgba(23, 33, 28, 0.12)',
+      divider: isDark ? 'rgba(221, 232, 248, 0.1)' : 'rgba(28, 43, 74, 0.1)',
     },
     shape: { borderRadius: 8 },
     typography: {
@@ -76,8 +76,8 @@ function createFeedMeTheme(mode: 'light' | 'dark') {
         styleOverrides: {
           body: {
             backgroundImage: isDark
-              ? 'linear-gradient(180deg, #111815 0%, #0f1512 100%)'
-              : 'linear-gradient(180deg, #fbfaf6 0%, #f5f3ec 100%)',
+              ? 'linear-gradient(180deg, #0f1726 0%, #0c1220 100%)'
+              : 'linear-gradient(180deg, #f7f9ff 0%, #eef3ff 100%)',
             minHeight: '100vh',
           },
           a: {
@@ -88,8 +88,8 @@ function createFeedMeTheme(mode: 'light' | 'dark') {
       MuiCard: {
         styleOverrides: {
           root: {
-            borderColor: isDark ? 'rgba(238, 245, 236, 0.12)' : 'rgba(23, 33, 28, 0.1)',
-            boxShadow: isDark ? '0 18px 50px rgba(0, 0, 0, 0.22)' : '0 14px 35px rgba(47, 65, 53, 0.08)',
+            borderColor: isDark ? 'rgba(122, 173, 238, 0.15)' : 'rgba(74, 126, 199, 0.15)',
+            boxShadow: isDark ? '0 18px 50px rgba(0, 0, 0, 0.3)' : '0 14px 35px rgba(74, 126, 199, 0.08)',
           },
         },
       },
