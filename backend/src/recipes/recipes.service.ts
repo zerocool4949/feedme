@@ -50,7 +50,7 @@ export class RecipesService {
     });
 
     if (!recipe) {
-      throw new NotFoundException('Recipe not found');
+      throw new NotFoundException('Recette introuvable');
     }
 
     return recipe;
@@ -182,11 +182,11 @@ export class RecipesService {
 
   private validateRecipePayload(ingredients?: IngredientDto[], instructions?: string) {
     if (instructions !== undefined && instructions.trim().length === 0) {
-      throw new BadRequestException('Instructions are required');
+      throw new BadRequestException('La préparation est obligatoire');
     }
 
     if (ingredients !== undefined && this.ingredientData(ingredients).length === 0) {
-      throw new BadRequestException('At least one ingredient is required');
+      throw new BadRequestException('Au moins un ingrédient est obligatoire');
     }
   }
 }

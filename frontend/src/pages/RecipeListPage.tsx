@@ -128,7 +128,7 @@ export function RecipeListPage() {
                     </Stack>
                   </Stack>
                 </CardContent>
-                </Stack>
+              </Stack>
             </CardActionArea>
           </Card>
         ))}

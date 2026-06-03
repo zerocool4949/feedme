@@ -51,7 +51,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!response.ok) {
     const message = await response.text();
-    throw new Error(message || `Request failed with ${response.status}`);
+    throw new Error(message || `La requête a échoué (${response.status})`);
   }
 
   return response.json() as Promise<T>;
