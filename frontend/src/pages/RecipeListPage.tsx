@@ -7,7 +7,6 @@ import {
   Button,
   Card,
   CardContent,
-  Chip,
   CircularProgress,
   IconButton,
   InputAdornment,
@@ -21,17 +20,6 @@ import { useNavigate } from 'react-router-dom';
 import { listRecipes, shuffleRecipes } from '../api/client';
 import type { Recipe } from '../types/recipe';
 
-const TAG_COLORS = [
-  { bg: 'rgba(124,184,255,0.15)', text: '#7CB8FF' },
-  { bg: 'rgba(125,211,167,0.15)', text: '#7DD3A7' },
-  { bg: 'rgba(167,139,250,0.15)', text: '#A78BFA' },
-  { bg: 'rgba(255,138,128,0.15)', text: '#FF8A80' },
-];
-
-function tagColor(tag: string) {
-  const hash = [...tag].reduce((a, c) => a + c.charCodeAt(0), 0);
-  return TAG_COLORS[hash % TAG_COLORS.length];
-}
 
 function RecipeCard({ recipe, compact = false }: { recipe: Recipe; compact?: boolean }) {
   const navigate = useNavigate();
@@ -107,28 +95,6 @@ function RecipeCard({ recipe, compact = false }: { recipe: Recipe; compact?: boo
         <Typography variant="subtitle1" fontWeight={700} noWrap title={recipe.title}>
           {recipe.title}
         </Typography>
-        {recipe.tags.length > 0 && (
-          <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mt: 0.75 }}>
-            {recipe.tags.slice(0, 3).map((tag) => {
-              const color = tagColor(tag.tag);
-              return (
-                <Chip
-                  key={tag.id}
-                  label={tag.tag}
-                  size="small"
-                  sx={{
-                    bgcolor: color.bg,
-                    color: color.text,
-                    height: 20,
-                    fontSize: '0.65rem',
-                    letterSpacing: '0.01em',
-                    '& .MuiChip-label': { px: 1 },
-                  }}
-                />
-              );
-            })}
-          </Box>
-        )}
       </CardContent>
     </Card>
   );
