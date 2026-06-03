@@ -39,7 +39,7 @@ export class RecipeImportService {
     });
 
     if (!response.ok) {
-      throw new BadRequestException(`Could not fetch recipe URL (${response.status})`);
+      throw new BadRequestException(`Impossible de récupérer l'URL de la recette (${response.status})`);
     }
 
     const html = await response.text();
@@ -47,13 +47,13 @@ export class RecipeImportService {
     const draft = jsonRecipe ? draftFromJson(jsonRecipe, url) : draftFromHtml(html, url);
 
     if (!draft.title && !draft.instructions && draft.ingredients.length === 0) {
-      throw new BadRequestException('Could not extract recipe details from this URL');
+      throw new BadRequestException("Impossible d'extraire les détails de la recette depuis cette URL");
     }
 
     return {
       ...draft,
       sourceUrl: url,
-      notes: draft.notes || 'Imported draft. Review before saving.',
+      notes: draft.notes || "Brouillon importé. Vérifie la recette avant de l'enregistrer.",
     };
   }
 }
@@ -220,7 +220,6 @@ function firstImage(value: JsonValue | undefined): string {
 
   return '';
 }
-
 
 function htmlToText(html: string): string {
   return decodeHtml(
