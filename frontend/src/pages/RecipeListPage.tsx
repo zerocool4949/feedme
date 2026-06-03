@@ -68,7 +68,7 @@ export function RecipeListPage() {
                   startIcon={<CasinoIcon />}
                   disabled={shuffleMutation.isPending}
                 >
-              Tirer {count}
+                  Tirer {count}
                 </Button>
               ))}
             </Stack>
@@ -121,7 +121,7 @@ export function RecipeListPage() {
                       {recipe.description || recipe.notes || 'Aucune note pour le moment'}
                     </Typography>
                     <Stack direction="row" gap={1} flexWrap="wrap">
-                      <Chip size="small" label={recipe.visibility} />
+                      <Chip size="small" label={visibilityLabel(recipe.visibility)} />
                       {recipe.tags.map((tag) => (
                         <Chip key={tag.id} size="small" label={tag.tag} />
                       ))}
@@ -136,4 +136,16 @@ export function RecipeListPage() {
       {!recipesQuery.isLoading && recipes.length === 0 && <Typography>Aucune recette trouvée.</Typography>}
     </Stack>
   );
+}
+
+function visibilityLabel(visibility: Recipe['visibility']): string {
+  switch (visibility) {
+    case 'public':
+      return 'Publique';
+    case 'shared':
+      return 'Partagée';
+    case 'private':
+    default:
+      return 'Privée';
+  }
 }

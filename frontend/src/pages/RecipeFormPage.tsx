@@ -98,32 +98,32 @@ export function RecipeFormPage() {
     <Card variant="outlined">
       <CardContent sx={{ p: { xs: 2, md: 3 } }}>
         <Stack component="form" spacing={2} onSubmit={handleSubmit}>
-          <Typography variant="h5">{id ? 'Edit Recipe' : 'New Recipe'}</Typography>
-          <TextField required label="Title" value={recipe.title} onChange={(event) => updateField('title', event.target.value)} />
+          <Typography variant="h5">{id ? 'Modifier la recette' : 'Nouvelle recette'}</Typography>
+          <TextField required label="Titre" value={recipe.title} onChange={(event) => updateField('title', event.target.value)} />
           <TextField label="Description" value={recipe.description ?? ''} onChange={(event) => updateField('description', event.target.value)} />
-          <TextField required multiline minRows={5} label="Instructions" value={recipe.instructions} onChange={(event) => updateField('instructions', event.target.value)} />
+          <TextField required multiline minRows={5} label="Préparation" value={recipe.instructions} onChange={(event) => updateField('instructions', event.target.value)} />
           <TextField multiline minRows={3} label="Notes" value={recipe.notes ?? ''} onChange={(event) => updateField('notes', event.target.value)} />
 
           <FormControl>
-            <InputLabel>Visibility</InputLabel>
-            <Select label="Visibility" value={recipe.visibility} onChange={(event) => updateField('visibility', event.target.value as RecipeInput['visibility'])}>
-              <MenuItem value="private">Private</MenuItem>
-              <MenuItem value="public">Public</MenuItem>
-              <MenuItem value="shared">Shared</MenuItem>
+            <InputLabel>Visibilité</InputLabel>
+            <Select label="Visibilité" value={recipe.visibility} onChange={(event) => updateField('visibility', event.target.value as RecipeInput['visibility'])}>
+              <MenuItem value="private">Privée</MenuItem>
+              <MenuItem value="public">Publique</MenuItem>
+              <MenuItem value="shared">Partagée</MenuItem>
             </Select>
           </FormControl>
 
-          <TextField label="Image URL" value={recipe.imageUrl ?? ''} onChange={(event) => updateField('imageUrl', event.target.value)} />
-          <TextField label="Source URL" value={recipe.sourceUrl ?? ''} onChange={(event) => updateField('sourceUrl', event.target.value)} />
-          <TextField label="Tags, comma separated" value={tagText} onChange={(event) => setTagText(event.target.value)} />
+          <TextField label="URL de l'image" value={recipe.imageUrl ?? ''} onChange={(event) => updateField('imageUrl', event.target.value)} />
+          <TextField label="URL source" value={recipe.sourceUrl ?? ''} onChange={(event) => updateField('sourceUrl', event.target.value)} />
+          <TextField label="Tags, séparés par des virgules" value={tagText} onChange={(event) => setTagText(event.target.value)} />
 
-          <Typography variant="h6">Ingredients</Typography>
+          <Typography variant="h6">Ingrédients</Typography>
           {recipe.ingredients.map((ingredient, index) => (
             <Stack key={index} direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems="flex-start">
-              <TextField required label="Name" value={ingredient.name} onChange={(event) => updateIngredient(index, { name: event.target.value })} />
-              <TextField label="Quantity" value={ingredient.quantity ?? ''} onChange={(event) => updateIngredient(index, { quantity: event.target.value })} />
-              <TextField label="Unit" value={ingredient.unit ?? ''} onChange={(event) => updateIngredient(index, { unit: event.target.value })} />
-              <TextField label="Original text" value={ingredient.originalText ?? ''} onChange={(event) => updateIngredient(index, { originalText: event.target.value })} />
+              <TextField required label="Nom" value={ingredient.name} onChange={(event) => updateIngredient(index, { name: event.target.value })} />
+              <TextField label="Quantité" value={ingredient.quantity ?? ''} onChange={(event) => updateIngredient(index, { quantity: event.target.value })} />
+              <TextField label="Unité" value={ingredient.unit ?? ''} onChange={(event) => updateIngredient(index, { unit: event.target.value })} />
+              <TextField label="Texte original" value={ingredient.originalText ?? ''} onChange={(event) => updateIngredient(index, { originalText: event.target.value })} />
               <Button
                 type="button"
                 color="error"
@@ -132,7 +132,7 @@ export function RecipeFormPage() {
                 disabled={recipe.ingredients.length === 1}
                 onClick={() => updateField('ingredients', recipe.ingredients.filter((_, i) => i !== index))}
               >
-                Remove
+                Supprimer
               </Button>
             </Stack>
           ))}
@@ -142,10 +142,10 @@ export function RecipeFormPage() {
             startIcon={<AddIcon />}
             onClick={() => updateField('ingredients', [...recipe.ingredients, { name: '', quantity: '', unit: '', originalText: '' }])}
           >
-            Add Ingredient
+            Ajouter un ingrédient
           </Button>
           <Button type="submit" variant="contained" startIcon={<SaveIcon />} disabled={createMutation.isPending || updateMutation.isPending}>
-            Save Recipe
+            Enregistrer la recette
           </Button>
         </Stack>
       </CardContent>

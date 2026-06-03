@@ -45,21 +45,21 @@ export function App({ mode, onToggleMode }: AppProps) {
                 FeedMe
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Recipes and meal ideas
+                Recettes et idées de repas
               </Typography>
             </Box>
           </Stack>
           <Stack direction="row" spacing={1} alignItems="center" sx={{ flexWrap: 'wrap' }}>
-            <Tooltip title={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
-              <IconButton onClick={onToggleMode} color="inherit" aria-label="Toggle color mode">
+            <Tooltip title={mode === 'dark' ? 'Passer au mode clair' : 'Passer au mode sombre'}>
+              <IconButton onClick={onToggleMode} color="inherit" aria-label="Changer le mode d'affichage">
                 {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
               </IconButton>
             </Tooltip>
             <Button component={Link} to="/import" variant="outlined" startIcon={<UploadFileIcon />}>
-              Import
+              Importer
             </Button>
             <Button component={Link} to="/recipes/new" variant="contained" startIcon={<AddIcon />}>
-              New Recipe
+              Nouvelle recette
             </Button>
           </Stack>
         </Box>

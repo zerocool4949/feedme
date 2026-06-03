@@ -16,10 +16,10 @@ export function RecipeDetailPage() {
 
   const recipe = recipeQuery.data;
   if (recipeQuery.isError) {
-    return <Typography color="error">Failed to load recipe.</Typography>;
+    return <Typography color="error">Impossible de charger la recette.</Typography>;
   }
   if (!recipe) {
-    return <Typography>Loading recipe...</Typography>;
+    return <Typography>Chargement de la recette...</Typography>;
   }
 
   return (
@@ -35,10 +35,10 @@ export function RecipeDetailPage() {
         </Box>
         <Stack direction="row" spacing={1}>
           <Button component={Link} to={`/recipes/${recipe.id}/edit`} variant="outlined" startIcon={<EditIcon />}>
-            Edit
+            Modifier
           </Button>
           <Button color="error" variant="outlined" onClick={() => deleteMutation.mutate()} startIcon={<DeleteOutlineIcon />}>
-            Delete
+            Supprimer
           </Button>
         </Stack>
       </Stack>
@@ -46,7 +46,7 @@ export function RecipeDetailPage() {
       {recipe.imageUrl && <img src={recipe.imageUrl} alt="" style={{ width: '100%', maxHeight: 360, objectFit: 'cover', borderRadius: 8 }} />}
 
       <Stack direction="row" gap={1} flexWrap="wrap">
-        <Chip label={recipe.visibility} />
+        <Chip label={visibilityLabel(recipe.visibility)} />
         {recipe.tags.map((tag) => (
           <Chip key={tag.id} label={tag.tag} />
         ))}
@@ -55,7 +55,7 @@ export function RecipeDetailPage() {
       <Card variant="outlined">
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            Ingredients
+            Ingrédients
           </Typography>
           <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
             {recipe.ingredients.map((ingredient) => (
@@ -68,18 +68,30 @@ export function RecipeDetailPage() {
       <Card variant="outlined">
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            Instructions
+            Préparation
           </Typography>
           <Typography whiteSpace="pre-wrap">{recipe.instructions}</Typography>
         </CardContent>
       </Card>
 
-      {recipe.notes && <Typography whiteSpace="pre-wrap">Notes: {recipe.notes}</Typography>}
+      {recipe.notes && <Typography whiteSpace="pre-wrap">Notes : {recipe.notes}</Typography>}
       {recipe.sourceUrl && (
         <Typography>
-          Source: <a href={recipe.sourceUrl}>{recipe.sourceUrl}</a>
+          Source : <a href={recipe.sourceUrl}>{recipe.sourceUrl}</a>
         </Typography>
       )}
     </Stack>
   );
+}
+
+function visibilityLabel(visibility: 'private' | 'public' | 'shared'): string {
+  switch (visibility) {
+    case 'public':
+      return 'Publique';
+    case 'shared':
+      return 'Partagée';
+    case 'private':
+    default:
+      return 'Privée';
+  }
 }

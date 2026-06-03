@@ -20,11 +20,11 @@ export function ImportPage() {
     <Card variant="outlined">
       <CardContent sx={{ p: { xs: 2, md: 3 } }}>
         <Stack spacing={2}>
-          <Typography variant="h5">Import Recipe</Typography>
+          <Typography variant="h5">Importer une recette</Typography>
           <Typography color="text.secondary">
-            Paste a recipe URL to create an editable draft before saving it.
+            Colle l'URL d'une recette pour créer un brouillon modifiable avant de l'enregistrer.
           </Typography>
-          <TextField label="Recipe URL" value={url} onChange={(event) => setUrl(event.target.value)} fullWidth />
+          <TextField label="URL de la recette" value={url} onChange={(event) => setUrl(event.target.value)} fullWidth />
           {importMutation.isError ? <Alert severity="error">{importMutation.error.message}</Alert> : null}
           <Button
             variant="contained"
@@ -33,7 +33,7 @@ export function ImportPage() {
             startIcon={<UploadFileIcon />}
             sx={{ alignSelf: 'flex-start' }}
           >
-            {importMutation.isPending ? 'Importing...' : 'Create Draft'}
+            {importMutation.isPending ? 'Import en cours...' : 'Créer un brouillon'}
           </Button>
         </Stack>
       </CardContent>
