@@ -20,14 +20,13 @@ Implemented:
 * Recipe visibility: private, public, shared
 * Recipe status: to_try, tested, favorite
 * Search by title, description, notes, tags, and ingredients
-* Shuffle meal suggestions
-* Recipe import endpoint and editable draft flow skeleton
+* Shuffle meal suggestions with image previews
+* Recipe import with JSON-LD and HTML fallback extraction and editable draft flow
 * Responsive Material UI frontend
 
 Not implemented yet:
 
 * Authentication
-* Real recipe extraction from JSON-LD, schema.org, OpenGraph, or HTML
 * Meal planning
 * Shopping lists
 * Social features

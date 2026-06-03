@@ -20,7 +20,7 @@ Done:
 * Tag model
 * Recipe visibility field: `private`, `public`, `shared`
 * Search by title, description, notes, tags, ingredient names, and normalized ingredient names
-* Shuffle meal suggestions with requested counts capped to 1 through 7
+* Shuffle meal suggestions with requested counts capped to 1 through 7 and image previews
 * Recipe import with JSON-LD and HTML fallback extraction and editable draft flow
 * Dockerfiles for frontend and backend
 * GitHub Actions CI publishing images to GHCR
@@ -324,6 +324,7 @@ Rules:
 * Only recipes visible to the current user
 * Reshuffle support
 * Handle insufficient recipes gracefully
+* Show the recipe image with the title when an image is available
 
 Future filters:
 

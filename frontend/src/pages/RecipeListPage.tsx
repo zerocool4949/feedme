@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Chip, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Chip, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -42,11 +42,24 @@ export function RecipeListPage() {
         </Stack>
         {shuffleMutation.isError && <Typography color="error">Failed to shuffle recipes.</Typography>}
         {shuffled.length > 0 && (
-          <Stack direction="row" gap={1} flexWrap="wrap">
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(auto-fit, minmax(180px, 1fr))' }, gap: 1.5 }}>
             {shuffled.map((recipe) => (
-              <Chip key={recipe.id} component={Link} to={`/recipes/${recipe.id}`} clickable label={recipe.title} />
+              <Card key={recipe.id} variant="outlined">
+                <CardActionArea component={Link} to={`/recipes/${recipe.id}`}>
+                  {recipe.imageUrl ? (
+                    <CardMedia component="img" image={recipe.imageUrl} alt="" sx={{ aspectRatio: '16 / 9', objectFit: 'cover' }} />
+                  ) : (
+                    <Box sx={{ aspectRatio: '16 / 9', bgcolor: 'action.hover' }} />
+                  )}
+                  <CardContent sx={{ py: 1.25, '&:last-child': { pb: 1.25 } }}>
+                    <Typography variant="subtitle1" fontWeight={600} noWrap title={recipe.title}>
+                      {recipe.title}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
             ))}
-          </Stack>
+          </Box>
         )}
       </Stack>
 
