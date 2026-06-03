@@ -34,6 +34,11 @@ recipes.post('/', zValidator('json', createRecipeSchema), async (c) => {
   return c.json(await recipesService.create(userId, dto), 201);
 });
 
+recipes.post('/:id/hide', async (c) => {
+  const userId = c.get('jwtPayload').sub;
+  return c.json(await recipesService.hide(userId, c.req.param('id')));
+});
+
 recipes.get('/:id', async (c) => {
   const userId = c.get('jwtPayload').sub;
   return c.json(await recipesService.findOne(userId, c.req.param('id')));

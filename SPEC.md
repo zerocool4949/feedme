@@ -379,6 +379,8 @@ Rules:
 * private recipes are visible only to their owner
 * shared recipes appear in list, search, detail, and shuffle for all logged-in users
 * only the owner can edit or delete a recipe
+* non-owners can hide a shared recipe from their own account
+* hidden shared recipes are excluded from list, search, detail, and shuffle for that user
 * the frontend offers only private and shared visibility choices
 
 Future possibilities:

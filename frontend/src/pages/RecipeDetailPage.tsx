@@ -1,6 +1,7 @@
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import LinkIcon from '@mui/icons-material/Link';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Button,
@@ -19,7 +20,8 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { deleteRecipe, getRecipe } from '../api/client';
+import { deleteRecipe, getRecipe, hideRecipe } from '../api/client';
+import { getCurrentUserId } from '../auth/current-user';
 
 const TAG_COLORS = [
   { bg: 'rgba(124,184,255,0.15)', text: '#7CB8FF' },
@@ -31,21 +33,6 @@ const TAG_COLORS = [
 function tagColor(tag: string) {
   const hash = [...tag].reduce((a, c) => a + c.charCodeAt(0), 0);
   return TAG_COLORS[hash % TAG_COLORS.length];
-}
-
-function getCurrentUserId(): string | null {
-  const token = localStorage.getItem('feedme-token');
-  const payload = token?.split('.')[1];
-  if (!payload) return null;
-
-  try {
-    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
-    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
-    const parsed = JSON.parse(atob(padded)) as { sub?: string };
-    return parsed.sub ?? null;
-  } catch {
-    return null;
-  }
 }
 
 export function RecipeDetailPage() {
@@ -64,8 +51,14 @@ export function RecipeDetailPage() {
     onSuccess: () => navigate('/'),
   });
 
+  const hideMutation = useMutation({
+    mutationFn: () => hideRecipe(id ?? ''),
+    onSuccess: () => navigate('/'),
+  });
+
   const recipe = recipeQuery.data;
   const canManageRecipe = recipe?.ownerUserId === getCurrentUserId();
+  const canHideRecipe = Boolean(recipe && !canManageRecipe && ['shared', 'public'].includes(recipe.visibility));
 
   if (recipeQuery.isError) {
     return <Typography color="error">Impossible de charger la recette.</Typography>;
@@ -129,6 +122,19 @@ export function RecipeDetailPage() {
               Supprimer
             </Button>
           </Stack>
+        )}
+        {canHideRecipe && (
+          <Button
+            color="inherit"
+            variant="outlined"
+            size="small"
+            disabled={hideMutation.isPending}
+            onClick={() => hideMutation.mutate()}
+            startIcon={<VisibilityOffIcon />}
+            sx={{ borderRadius: '10px', flexShrink: 0 }}
+          >
+            Masquer
+          </Button>
         )}
       </Stack>
 

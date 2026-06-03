@@ -105,12 +105,39 @@ export class RecipesService {
 
   private visibleToUserFilter(userId: string): Prisma.RecipeWhereInput {
     return {
-      OR: [
-        { ownerUserId: userId },
-        { visibility: RecipeVisibility.shared },
-        { visibility: RecipeVisibility.public },
+      AND: [
+        {
+          OR: [
+            { ownerUserId: userId },
+            { visibility: RecipeVisibility.shared },
+            { visibility: RecipeVisibility.public },
+          ],
+        },
+        { hiddenBy: { none: { userId } } },
       ],
     };
+  }
+
+  async hide(userId: string, id: string) {
+    const recipe = await prisma.recipe.findFirst({
+      where: { AND: [{ id }, this.visibleToUserFilter(userId)] },
+    });
+
+    if (!recipe) {
+      throw new HTTPException(404, { message: 'Recette introuvable' });
+    }
+
+    if (recipe.ownerUserId === userId) {
+      throw new HTTPException(400, { message: 'Impossible de masquer votre propre recette' });
+    }
+
+    await prisma.hiddenRecipe.upsert({
+      where: { userId_recipeId: { userId, recipeId: id } },
+      create: { userId, recipeId: id },
+      update: {},
+    });
+
+    return { hidden: true };
   }
 
   private async findOwned(userId: string, id: string) {

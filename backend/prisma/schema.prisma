@@ -22,6 +22,7 @@ model User {
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   recipes Recipe[]
+  hiddenRecipes HiddenRecipe[]
 
   @@map("users")
 }
@@ -41,10 +42,25 @@ model Recipe {
   owner       User         @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
   ingredients Ingredient[]
   tags        RecipeTag[]
+  hiddenBy    HiddenRecipe[]
 
   @@index([ownerUserId])
   @@index([title])
   @@map("recipes")
+}
+
+model HiddenRecipe {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  recipeId  String   @map("recipe_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId])
+  @@index([recipeId])
+  @@map("hidden_recipes")
 }
 
 model Ingredient {

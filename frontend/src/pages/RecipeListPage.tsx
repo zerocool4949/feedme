@@ -1,6 +1,7 @@
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import SearchIcon from '@mui/icons-material/Search';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Button,
@@ -13,15 +14,31 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listRecipes, shuffleRecipes } from '../api/client';
+import { hideRecipe, listRecipes, shuffleRecipes } from '../api/client';
+import { getCurrentUserId } from '../auth/current-user';
 import type { Recipe } from '../types/recipe';
 
 
-function RecipeCard({ recipe, compact = false }: { recipe: Recipe; compact?: boolean }) {
+function RecipeCard({
+  recipe,
+  compact = false,
+  currentUserId,
+  onHide,
+  hidePending = false,
+}: {
+  recipe: Recipe;
+  compact?: boolean;
+  currentUserId: string | null;
+  onHide?: (recipeId: string) => void;
+  hidePending?: boolean;
+}) {
   const navigate = useNavigate();
+  const canHideRecipe = Boolean(
+    onHide && recipe.ownerUserId !== currentUserId && ['shared', 'public'].includes(recipe.visibility),
+  );
 
   return (
     <Card
@@ -44,6 +61,28 @@ function RecipeCard({ recipe, compact = false }: { recipe: Recipe; compact?: boo
       }}
     >
       <Box sx={{ position: 'relative', flexShrink: 0 }}>
+        {canHideRecipe && (
+          <IconButton
+            aria-label="Masquer la recette"
+            title="Masquer la recette"
+            disabled={hidePending}
+            onClick={(event) => {
+              event.stopPropagation();
+              onHide?.(recipe.id);
+            }}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              zIndex: 1,
+              bgcolor: 'rgba(10,16,28,0.78)',
+              color: 'text.primary',
+              '&:hover': { bgcolor: 'rgba(10,16,28,0.92)' },
+            }}
+          >
+            <VisibilityOffIcon fontSize="small" />
+          </IconButton>
+        )}
         {recipe.imageUrl ? (
           <Box
             component="img"
@@ -82,10 +121,12 @@ function RecipeCard({ recipe, compact = false }: { recipe: Recipe; compact?: boo
 }
 
 export function RecipeListPage() {
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [shuffleCount, setShuffleCount] = useState(1);
   const [shuffled, setShuffled] = useState<Recipe[]>([]);
+  const currentUserId = getCurrentUserId();
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);
@@ -100,6 +141,14 @@ export function RecipeListPage() {
   const shuffleMutation = useMutation({
     mutationFn: shuffleRecipes,
     onSuccess: (results) => setShuffled(results),
+  });
+
+  const hideMutation = useMutation({
+    mutationFn: hideRecipe,
+    onSuccess: (_, recipeId) => {
+      setShuffled((current) => current.filter((recipe) => recipe.id !== recipeId));
+      queryClient.invalidateQueries({ queryKey: ['recipes'] });
+    },
   });
 
   function handleShuffle(count: number) {
@@ -248,7 +297,14 @@ export function RecipeListPage() {
               }}
             >
               {shuffled.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} compact />
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={recipe}
+                  compact
+                  currentUserId={currentUserId}
+                  onHide={(recipeId) => hideMutation.mutate(recipeId)}
+                  hidePending={hideMutation.isPending}
+                />
               ))}
             </Box>
           )}
@@ -279,7 +335,13 @@ export function RecipeListPage() {
           }}
         >
           {recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              currentUserId={currentUserId}
+              onHide={(recipeId) => hideMutation.mutate(recipeId)}
+              hidePending={hideMutation.isPending}
+            />
           ))}
         </Box>
       )}

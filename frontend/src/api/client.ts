@@ -40,6 +40,10 @@ export async function deleteRecipe(id: string): Promise<void> {
   await request(`/recipes/${id}`, { method: 'DELETE' });
 }
 
+export async function hideRecipe(id: string): Promise<void> {
+  await request(`/recipes/${id}/hide`, { method: 'POST' });
+}
+
 export async function shuffleRecipes(count: number): Promise<Recipe[]> {
   return request<Recipe[]>(`/recipes/shuffle?count=${count}`);
 }
