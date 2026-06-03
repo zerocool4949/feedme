@@ -1,4 +1,3 @@
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import SearchIcon from '@mui/icons-material/Search';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
@@ -71,24 +70,6 @@ function RecipeCard({ recipe, compact = false }: { recipe: Recipe; compact?: boo
             <RestaurantMenuIcon sx={{ fontSize: 36, color: 'rgba(170,182,200,0.15)' }} />
           </Box>
         )}
-        <IconButton
-          size="small"
-          onClick={(e) => e.stopPropagation()}
-          aria-label="Ajouter aux favoris"
-          sx={{
-            position: 'absolute',
-            top: 8,
-            right: 8,
-            bgcolor: 'rgba(11,18,32,0.65)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            padding: '5px',
-            '&:hover': { bgcolor: 'rgba(11,18,32,0.85)' },
-          }}
-        >
-          <FavoriteBorderIcon sx={{ fontSize: 15, color: '#FF8A80' }} />
-        </IconButton>
       </Box>
 
       <CardContent sx={{ flex: 1, p: 2, '&:last-child': { pb: 2 } }}>
