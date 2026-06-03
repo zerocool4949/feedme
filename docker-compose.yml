@@ -20,6 +20,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://feedme:feedme_password@postgres:5432/feedme?schema=public}
       PORT: 3000
+      JWT_SECRET: ${JWT_SECRET:-change-this-secret-in-production}
     depends_on:
       postgres:
         condition: service_healthy
@@ -31,6 +32,22 @@ services:
       - "${FRONTEND_PORT:-2323}:80"
     depends_on:
       - backend
+
+  create-user:
+    image: ghcr.io/zerocool4949/feedme-backend:main
+    profiles:
+      - tools
+    working_dir: /app
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://feedme:feedme_password@postgres:5432/feedme?schema=public}
+      NEW_USERNAME: ${NEW_USERNAME}
+      NEW_PASSWORD: ${NEW_PASSWORD}
+    volumes:
+      - ./scripts:/app/scripts:ro
+    command: node scripts/create-user.mjs
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   recipe-importer:
     image: node:22-alpine

@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { App } from './pages/App';
 import { ImportPage } from './pages/ImportPage';
+import { LoginPage } from './pages/LoginPage';
 import { RecipeDetailPage } from './pages/RecipeDetailPage';
 import { RecipeFormPage } from './pages/RecipeFormPage';
 import { RecipeListPage } from './pages/RecipeListPage';
@@ -24,10 +25,21 @@ const router = createBrowserRouter([
 ]);
 
 function RootApp() {
+  const [token, setToken] = React.useState<string | null>(() => localStorage.getItem('feedme-token'));
   const [mode, setMode] = React.useState<'light' | 'dark'>(() => {
     return (localStorage.getItem('feedme-color-mode') as 'light' | 'dark' | null) ?? 'dark';
   });
   const theme = React.useMemo(() => createFeedMeTheme(mode), [mode]);
+
+  function handleLogin(t: string) {
+    localStorage.setItem('feedme-token', t);
+    setToken(t);
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('feedme-token');
+    setToken(null);
+  }
 
   function toggleMode() {
     setMode((current) => {
@@ -37,10 +49,19 @@ function RootApp() {
     });
   }
 
+  if (!token) {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <LoginPage onLogin={handleLogin} />
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <App mode={mode} onToggleMode={toggleMode} />
+      <App mode={mode} onToggleMode={toggleMode} onLogout={handleLogout} />
     </ThemeProvider>
   );
 }

@@ -2,6 +2,17 @@ import type { Recipe, RecipeInput } from '../types/recipe';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '/api';
 
+export async function login(username: string, password: string): Promise<string> {
+  const response = await fetch(`${apiBaseUrl}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
+  if (!response.ok) throw new Error('Identifiants invalides');
+  const data = await response.json() as { token: string };
+  return data.token;
+}
+
 export async function listRecipes(search: string): Promise<Recipe[]> {
   const query = search.trim() ? `?search=${encodeURIComponent(search.trim())}` : '';
   return request<Recipe[]>(`/recipes${query}`);
@@ -41,13 +52,21 @@ export async function importRecipe(url: string): Promise<Partial<RecipeInput>> {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = localStorage.getItem('feedme-token');
   const response = await fetch(`${apiBaseUrl}${path}`, {
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...init?.headers,
     },
     ...init,
   });
+
+  if (response.status === 401) {
+    localStorage.removeItem('feedme-token');
+    window.location.reload();
+    throw new Error('Session expirée');
+  }
 
   if (!response.ok) {
     const message = await response.text();

@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { CurrentUser } from '../auth/current-user.decorator';
 import { CreateRecipeDto, ImportRecipeDto, UpdateRecipeDto } from './dto';
 import { RecipeImportService } from './recipe-import.service';
 import { RecipesService } from './recipes.service';
@@ -11,13 +12,13 @@ export class RecipesController {
   ) {}
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.recipesService.findAll(search);
+  findAll(@CurrentUser() user: { sub: string }, @Query('search') search?: string) {
+    return this.recipesService.findAll(user.sub, search);
   }
 
   @Get('shuffle')
-  shuffle(@Query('count') count?: string) {
-    return this.recipesService.shuffle(Number(count ?? 1));
+  shuffle(@CurrentUser() user: { sub: string }, @Query('count') count?: string) {
+    return this.recipesService.shuffle(user.sub, Number(count ?? 1));
   }
 
   @Post('import')
@@ -26,22 +27,22 @@ export class RecipesController {
   }
 
   @Post()
-  create(@Body() dto: CreateRecipeDto) {
-    return this.recipesService.create(dto);
+  create(@CurrentUser() user: { sub: string }, @Body() dto: CreateRecipeDto) {
+    return this.recipesService.create(user.sub, dto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.recipesService.findOne(id);
+  findOne(@CurrentUser() user: { sub: string }, @Param('id') id: string) {
+    return this.recipesService.findOne(user.sub, id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateRecipeDto) {
-    return this.recipesService.update(id, dto);
+  update(@CurrentUser() user: { sub: string }, @Param('id') id: string, @Body() dto: UpdateRecipeDto) {
+    return this.recipesService.update(user.sub, id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.recipesService.remove(id);
+  remove(@CurrentUser() user: { sub: string }, @Param('id') id: string) {
+    return this.recipesService.remove(user.sub, id);
   }
 }

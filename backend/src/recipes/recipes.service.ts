@@ -4,11 +4,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateRecipeDto, IngredientDto, UpdateRecipeDto } from './dto';
 import { normalizeIngredientName, parseIngredientLine } from './ingredient-normalizer';
 
-const DEFAULT_USER = {
-  username: 'local',
-  email: 'local@example.com',
-};
-
 const includeRecipeRelations = {
   ingredients: true,
   tags: true,
@@ -27,10 +22,9 @@ interface RecipeScalarData {
 export class RecipesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(search?: string) {
-    const ownerUserId = await this.getDefaultUserId();
+  async findAll(userId: string, search?: string) {
     const where: Prisma.RecipeWhereInput = {
-      ownerUserId,
+      ownerUserId: userId,
       ...(search ? this.buildSearchFilter(search) : {}),
     };
 
@@ -41,10 +35,9 @@ export class RecipesService {
     });
   }
 
-  async findOne(id: string) {
-    const ownerUserId = await this.getDefaultUserId();
+  async findOne(userId: string, id: string) {
     const recipe = await this.prisma.recipe.findFirst({
-      where: { id, ownerUserId },
+      where: { id, ownerUserId: userId },
       include: includeRecipeRelations,
     });
 
@@ -55,16 +48,15 @@ export class RecipesService {
     return recipe;
   }
 
-  async create(dto: CreateRecipeDto) {
+  async create(userId: string, dto: CreateRecipeDto) {
     this.validateRecipePayload(dto.ingredients, dto.instructions);
-    const ownerUserId = await this.getDefaultUserId();
 
     return this.prisma.recipe.create({
       data: {
         ...this.recipeData(dto),
         title: dto.title.trim(),
         instructions: dto.instructions.trim(),
-        ownerUserId,
+        ownerUserId: userId,
         ingredients: { create: this.ingredientData(dto.ingredients) },
         tags: { create: this.tagData(dto.tags ?? []) },
       },
@@ -72,8 +64,8 @@ export class RecipesService {
     });
   }
 
-  async update(id: string, dto: UpdateRecipeDto) {
-    await this.findOne(id);
+  async update(userId: string, id: string, dto: UpdateRecipeDto) {
+    await this.findOne(userId, id);
 
     if (dto.ingredients || dto.instructions !== undefined) {
       this.validateRecipePayload(dto.ingredients, dto.instructions);
@@ -99,32 +91,20 @@ export class RecipesService {
     });
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
+  async remove(userId: string, id: string) {
+    await this.findOne(userId, id);
     await this.prisma.recipe.delete({ where: { id } });
     return { deleted: true };
   }
 
-  async shuffle(count: number) {
-    const ownerUserId = await this.getDefaultUserId();
+  async shuffle(userId: string, count: number) {
     const safeCount = Number.isFinite(count) ? Math.min(Math.max(Math.trunc(count), 1), 7) : 1;
     const recipes = await this.prisma.recipe.findMany({
-      where: { ownerUserId },
+      where: { ownerUserId: userId },
       include: includeRecipeRelations,
     });
 
     return recipes.sort(() => Math.random() - 0.5).slice(0, safeCount);
-  }
-
-  private async getDefaultUserId(): Promise<string> {
-    const user = await this.prisma.user.upsert({
-      where: { username: DEFAULT_USER.username },
-      update: {},
-      create: DEFAULT_USER,
-      select: { id: true },
-    });
-
-    return user.id;
   }
 
   private buildSearchFilter(search: string): Prisma.RecipeWhereInput {

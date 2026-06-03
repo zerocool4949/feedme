@@ -1,6 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import LogoutIcon from '@mui/icons-material/Logout';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Box, Button, Container, IconButton, Stack, Tooltip, Typography } from '@mui/material';
@@ -9,9 +10,10 @@ import { Link, Outlet } from 'react-router-dom';
 interface AppProps {
   mode: 'light' | 'dark';
   onToggleMode: () => void;
+  onLogout: () => void;
 }
 
-export function App({ mode, onToggleMode }: AppProps) {
+export function App({ mode, onToggleMode, onLogout }: AppProps) {
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 2, md: 3 } }}>
       <Stack spacing={{ xs: 2, md: 3 }}>
@@ -61,6 +63,11 @@ export function App({ mode, onToggleMode }: AppProps) {
             <Button component={Link} to="/recipes/new" variant="contained" startIcon={<AddIcon />}>
               Nouvelle recette
             </Button>
+            <Tooltip title="Se déconnecter">
+              <IconButton onClick={onLogout} color="inherit" aria-label="Se déconnecter">
+                <LogoutIcon />
+              </IconButton>
+            </Tooltip>
           </Stack>
         </Box>
         <Outlet />
