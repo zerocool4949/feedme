@@ -85,6 +85,17 @@ JWT_SECRET=une-chaine-aleatoire-longue-et-secrete
 
 ---
 
+## Partage des recettes
+
+Les recettes peuvent être privées ou partagées.
+
+- **Privée** : visible uniquement par son propriétaire.
+- **Partagée** : visible par tous les utilisateurs connectés dans la liste, la recherche, le détail et le shuffle.
+
+Seul le propriétaire peut modifier ou supprimer une recette partagée. L'ancien type `public` reste accepté pour les anciennes données, mais il n'est plus proposé dans l'interface.
+
+---
+
 ## Import de recettes
 
 ### Depuis des fichiers HTML locaux

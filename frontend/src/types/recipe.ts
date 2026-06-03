@@ -21,6 +21,7 @@ export interface RecipeTag {
 
 export interface Recipe {
   id: string;
+  ownerUserId: string;
   title: string;
   notes: string | null;
   instructions: string;

@@ -146,7 +146,6 @@ export function RecipeFormPage() {
               onChange={(e) => updateField('visibility', e.target.value as RecipeInput['visibility'])}
             >
               <MenuItem value="private">Privée</MenuItem>
-              <MenuItem value="public">Publique</MenuItem>
               <MenuItem value="shared">Partagée</MenuItem>
             </Select>
           </FormControl>

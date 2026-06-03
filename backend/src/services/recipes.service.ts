@@ -21,8 +21,7 @@ interface RecipeScalarData {
 export class RecipesService {
   async findAll(userId: string, search?: string) {
     const where: Prisma.RecipeWhereInput = {
-      ownerUserId: userId,
-      ...(search ? this.buildSearchFilter(search) : {}),
+      AND: [this.visibleToUserFilter(userId), ...(search ? [this.buildSearchFilter(search)] : [])],
     };
 
     return prisma.recipe.findMany({
@@ -34,7 +33,7 @@ export class RecipesService {
 
   async findOne(userId: string, id: string) {
     const recipe = await prisma.recipe.findFirst({
-      where: { id, ownerUserId: userId },
+      where: { AND: [{ id }, this.visibleToUserFilter(userId)] },
       include: includeRecipeRelations,
     });
 
@@ -62,7 +61,7 @@ export class RecipesService {
   }
 
   async update(userId: string, id: string, dto: UpdateRecipeDto) {
-    await this.findOne(userId, id);
+    await this.findOwned(userId, id);
 
     if (dto.ingredients || dto.instructions !== undefined) {
       this.validateRecipePayload(dto.ingredients, dto.instructions);
@@ -89,7 +88,7 @@ export class RecipesService {
   }
 
   async remove(userId: string, id: string) {
-    await this.findOne(userId, id);
+    await this.findOwned(userId, id);
     await prisma.recipe.delete({ where: { id } });
     return { deleted: true };
   }
@@ -97,11 +96,34 @@ export class RecipesService {
   async shuffle(userId: string, count: number) {
     const safeCount = Number.isFinite(count) ? Math.min(Math.max(Math.trunc(count), 1), 7) : 1;
     const recipes = await prisma.recipe.findMany({
-      where: { ownerUserId: userId },
+      where: this.visibleToUserFilter(userId),
       include: includeRecipeRelations,
     });
 
     return recipes.sort(() => Math.random() - 0.5).slice(0, safeCount);
+  }
+
+  private visibleToUserFilter(userId: string): Prisma.RecipeWhereInput {
+    return {
+      OR: [
+        { ownerUserId: userId },
+        { visibility: RecipeVisibility.shared },
+        { visibility: RecipeVisibility.public },
+      ],
+    };
+  }
+
+  private async findOwned(userId: string, id: string) {
+    const recipe = await prisma.recipe.findFirst({
+      where: { id, ownerUserId: userId },
+      include: includeRecipeRelations,
+    });
+
+    if (!recipe) {
+      throw new HTTPException(404, { message: 'Recette introuvable' });
+    }
+
+    return recipe;
   }
 
   private buildSearchFilter(search: string): Prisma.RecipeWhereInput {

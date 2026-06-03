@@ -33,6 +33,21 @@ function tagColor(tag: string) {
   return TAG_COLORS[hash % TAG_COLORS.length];
 }
 
+function getCurrentUserId(): string | null {
+  const token = localStorage.getItem('feedme-token');
+  const payload = token?.split('.')[1];
+  if (!payload) return null;
+
+  try {
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
+    const parsed = JSON.parse(atob(padded)) as { sub?: string };
+    return parsed.sub ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -50,6 +65,7 @@ export function RecipeDetailPage() {
   });
 
   const recipe = recipeQuery.data;
+  const canManageRecipe = recipe?.ownerUserId === getCurrentUserId();
 
   if (recipeQuery.isError) {
     return <Typography color="error">Impossible de charger la recette.</Typography>;
@@ -90,28 +106,30 @@ export function RecipeDetailPage() {
             })}
           </Stack>
         </Box>
-        <Stack direction="row" spacing={1} flexShrink={0}>
-          <Button
-            component={Link}
-            to={`/recipes/${recipe.id}/edit`}
-            variant="outlined"
-            size="small"
-            startIcon={<EditIcon />}
-            sx={{ borderRadius: '10px' }}
-          >
-            Modifier
-          </Button>
-          <Button
-            color="error"
-            variant="outlined"
-            size="small"
-            onClick={() => setConfirmOpen(true)}
-            startIcon={<DeleteOutlineIcon />}
-            sx={{ borderRadius: '10px' }}
-          >
-            Supprimer
-          </Button>
-        </Stack>
+        {canManageRecipe && (
+          <Stack direction="row" spacing={1} flexShrink={0}>
+            <Button
+              component={Link}
+              to={`/recipes/${recipe.id}/edit`}
+              variant="outlined"
+              size="small"
+              startIcon={<EditIcon />}
+              sx={{ borderRadius: '10px' }}
+            >
+              Modifier
+            </Button>
+            <Button
+              color="error"
+              variant="outlined"
+              size="small"
+              onClick={() => setConfirmOpen(true)}
+              startIcon={<DeleteOutlineIcon />}
+              sx={{ borderRadius: '10px' }}
+            >
+              Supprimer
+            </Button>
+          </Stack>
+        )}
       </Stack>
 
       {/* Hero image */}
@@ -246,7 +264,6 @@ export function RecipeDetailPage() {
 function visibilityLabel(visibility: 'private' | 'public' | 'shared'): string {
   switch (visibility) {
     case 'public':
-      return 'Publique';
     case 'shared':
       return 'Partagée';
     case 'private':

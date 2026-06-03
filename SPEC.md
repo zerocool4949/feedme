@@ -15,12 +15,12 @@ Done:
 * Hono REST API
 * Prisma schema and migrations
 * PostgreSQL Docker service with persistent volume
-* Default local user support without authentication
+* Multi-user authentication with JWT
 * Recipe CRUD
 * Ingredient model with normalized ingredient names
 * Ingredient quantity/unit parsing before storage
 * Tag model
-* Recipe visibility field: `private`, `public`, `shared`
+* Recipe visibility field: private or shared in the UI, with legacy `public` records treated as shared
 * Search by title, notes, tags, ingredient names, and normalized ingredient names
 * Shuffle meal suggestions with requested counts capped to 1 through 7 and image previews
 * Recipe import with JSON-LD and HTML fallback extraction and editable draft flow
@@ -29,7 +29,6 @@ Done:
 
 Not done:
 
-* Authentication and authorization
 * Meal planning calendar
 * Shopping lists
 * OCR
@@ -149,7 +148,7 @@ Fields:
 * created_at
 * updated_at
 
-Authentication is not required in MVP.
+Users authenticate with username and password. Recipes are scoped by owner unless they are shared.
 
 ---
 
@@ -174,8 +173,9 @@ Fields:
 Values:
 
 * private
-* public
 * shared
+
+`public` can still exist in older database records for compatibility, but the frontend no longer exposes it. Legacy public recipes are readable like shared recipes.
 
 ---
 
@@ -372,19 +372,19 @@ Actions:
 
 # Sharing
 
-Not part of MVP implementation.
+Shared recipes are visible to every authenticated user.
 
-However architecture must support:
+Rules:
 
-* private recipes
-* public recipes
-* shared recipes
+* private recipes are visible only to their owner
+* shared recipes appear in list, search, detail, and shuffle for all logged-in users
+* only the owner can edit or delete a recipe
+* the frontend offers only private and shared visibility choices
 
 Future possibilities:
 
-* browse public recipes
-* copy public recipes into private collection
-* share recipes with friends
+* share recipes with specific users
+* copy shared recipes into a private collection
 
 ---
 
