@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RecipeVisibility {
+  private
+  public
+  shared
+}
+
+enum RecipeStatus {
+  to_try
+  tested
+  favorite
+}
+
+enum RecipeDifficulty {
+  easy
+  medium
+  hard
+}
+
+model User {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String?  @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  recipes Recipe[]
+
+  @@map("users")
+}
+
+model Recipe {
+  id              String             @id @default(uuid())
+  ownerUserId     String             @map("owner_user_id")
+  title           String
+  description     String?
+  notes           String?
+  instructions    String
+  prepTimeMinutes Int?               @map("prep_time_minutes")
+  cookTimeMinutes Int?               @map("cook_time_minutes")
+  servings        Int?
+  sourceUrl       String?            @map("source_url")
+  imageUrl        String?            @map("image_url")
+  visibility      RecipeVisibility   @default(private)
+  status          RecipeStatus       @default(to_try)
+  rating          Int?
+  difficulty      RecipeDifficulty?
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+
+  owner       User         @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+  ingredients Ingredient[]
+  tags        RecipeTag[]
+
+  @@index([ownerUserId])
+  @@index([title])
+  @@map("recipes")
+}
+
+model Ingredient {
+  id             String  @id @default(uuid())
+  recipeId       String  @map("recipe_id")
+  name           String
+  normalizedName String  @map("normalized_name")
+  quantity       String?
+  unit           String?
+  originalText   String? @map("original_text")
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@index([normalizedName])
+  @@map("ingredients")
+}
+
+model RecipeTag {
+  id       String @id @default(uuid())
+  recipeId String @map("recipe_id")
+  tag      String
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@index([tag])
+  @@unique([recipeId, tag])
+  @@map("recipe_tags")
+}
