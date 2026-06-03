@@ -1,17 +1,24 @@
 import CasinoIcon from '@mui/icons-material/Casino';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Button, Card, CardActionArea, CardContent, CardMedia, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardContent, CardMedia, CircularProgress, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { listRecipes, shuffleRecipes } from '../api/client';
 import type { Recipe } from '../types/recipe';
 
 export function RecipeListPage() {
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [shuffleCount, setShuffleCount] = useState(1);
   const [shuffled, setShuffled] = useState<Recipe[]>([]);
-  const recipesQuery = useQuery({ queryKey: ['recipes', search], queryFn: () => listRecipes(search) });
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const recipesQuery = useQuery({ queryKey: ['recipes', debouncedSearch], queryFn: () => listRecipes(debouncedSearch) });
   const shuffleMutation = useMutation({
     mutationFn: shuffleRecipes,
     onSuccess: (results) => setShuffled(results),
@@ -96,6 +103,12 @@ export function RecipeListPage() {
           )}
         </Stack>
       </Box>
+
+      {recipesQuery.isLoading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+          <CircularProgress />
+        </Box>
+      )}
 
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 2 }}>
         {recipes.map((recipe) => (

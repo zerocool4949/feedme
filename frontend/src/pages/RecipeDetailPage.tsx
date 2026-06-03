@@ -1,13 +1,15 @@
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deleteRecipe, getRecipe } from '../api/client';
 
 export function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const recipeQuery = useQuery({ queryKey: ['recipe', id], queryFn: () => getRecipe(id ?? ''), enabled: Boolean(id) });
   const deleteMutation = useMutation({
     mutationFn: () => deleteRecipe(id ?? ''),
@@ -19,7 +21,11 @@ export function RecipeDetailPage() {
     return <Typography color="error">Impossible de charger la recette.</Typography>;
   }
   if (!recipe) {
-    return <Typography>Chargement de la recette...</Typography>;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
@@ -37,7 +43,7 @@ export function RecipeDetailPage() {
           <Button component={Link} to={`/recipes/${recipe.id}/edit`} variant="outlined" startIcon={<EditIcon />}>
             Modifier
           </Button>
-          <Button color="error" variant="outlined" onClick={() => deleteMutation.mutate()} startIcon={<DeleteOutlineIcon />}>
+          <Button color="error" variant="outlined" onClick={() => setConfirmOpen(true)} startIcon={<DeleteOutlineIcon />}>
             Supprimer
           </Button>
         </Stack>
@@ -80,6 +86,23 @@ export function RecipeDetailPage() {
           Source : <a href={recipe.sourceUrl}>{recipe.sourceUrl}</a>
         </Typography>
       )}
+
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <DialogTitle>Supprimer cette recette ?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>« {recipe.title} » sera supprimée définitivement.</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)}>Annuler</Button>
+          <Button
+            color="error"
+            disabled={deleteMutation.isPending}
+            onClick={() => { setConfirmOpen(false); deleteMutation.mutate(); }}
+          >
+            Supprimer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 }

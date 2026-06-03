@@ -76,7 +76,6 @@ Users should be able to:
 * Search recipes by ingredient
 * Search recipes by title, notes, and tags
 * Generate random meal ideas
-* Mark recipes as favorites
 * Organize recipes using tags
 * Support future recipe sharing
 
@@ -333,7 +332,6 @@ Rules:
 
 Future filters:
 
-* favorites only
 * vegetarian
 * tags
 
