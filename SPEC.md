@@ -10,7 +10,8 @@ Done:
 * React + Vite + TypeScript frontend
 * React Router routes for list, detail, create, edit, and import pages
 * TanStack Query API integration
-* Material UI responsive layout with persistent dark mode
+* Material UI responsive layout with persistent dark/light mode (blue pastel palette)
+* Recipe list page with 3-column responsive grid (1 on mobile, 2 on tablet, 3 on desktop)
 * NestJS REST API
 * Prisma schema and migrations
 * PostgreSQL Docker service with persistent volume
@@ -335,6 +336,19 @@ Future filters:
 * favorites only
 * vegetarian
 * tags
+
+---
+
+# Recipe List Page
+
+Display:
+
+* search bar
+* shuffle section with image previews
+* recipe grid (1 column on mobile, 2 on tablet, 3 on desktop)
+* each card shows: thumbnail image, title, description or notes
+
+Tags are not shown on the list page. Full details including tags are on the detail page.
 
 ---
 

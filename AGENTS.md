@@ -169,6 +169,18 @@ Avoid assumptions about local development environments.
 
 ---
 
+# UI Conventions
+
+Theme uses a blue pastel palette (light and dark mode) defined in `frontend/src/main.tsx`.
+
+Do not change the color scheme without being asked.
+
+List pages show minimal card content (title, description). Tags and metadata belong on the detail page only.
+
+Responsive breakpoints follow MUI defaults: xs mobile, sm tablet, lg desktop.
+
+---
+
 # Mobile Compatibility
 
 Future Android APK support is required.

@@ -1,6 +1,6 @@
 import CasinoIcon from '@mui/icons-material/Casino';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Chip, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardContent, CardMedia, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -97,7 +97,7 @@ export function RecipeListPage() {
         </Stack>
       </Box>
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }, gap: 2 }}>
         {recipes.map((recipe) => (
           <Card key={recipe.id} variant="outlined">
             <CardActionArea component={Link} to={`/recipes/${recipe.id}`} sx={{ height: '100%' }}>
@@ -120,12 +120,6 @@ export function RecipeListPage() {
                     <Typography variant="body2" color="text.secondary">
                       {recipe.description || recipe.notes || 'Aucune note pour le moment'}
                     </Typography>
-                    <Stack direction="row" gap={1} flexWrap="wrap">
-                      <Chip size="small" label={visibilityLabel(recipe.visibility)} />
-                      {recipe.tags.map((tag) => (
-                        <Chip key={tag.id} size="small" label={tag.tag} />
-                      ))}
-                    </Stack>
                   </Stack>
                 </CardContent>
               </Stack>
@@ -138,14 +132,3 @@ export function RecipeListPage() {
   );
 }
 
-function visibilityLabel(visibility: Recipe['visibility']): string {
-  switch (visibility) {
-    case 'public':
-      return 'Publique';
-    case 'shared':
-      return 'Partagée';
-    case 'private':
-    default:
-      return 'Privée';
-  }
-}
