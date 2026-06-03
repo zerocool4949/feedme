@@ -95,11 +95,11 @@ function parseRecipeHtml(html, file) {
     instructions:
       instructions.length > 0
         ? instructions.join('\n')
-        : 'Directions were missing in the imported HTML file. Complete manually.',
+        : 'La préparation était absente du fichier HTML importé. Complète-la manuellement.',
     notes:
       instructions.length > 0
         ? undefined
-        : 'Imported from local HTML export. Directions were missing in the source file.',
+        : 'Importé depuis un export HTML local. La préparation était absente du fichier source.',
   });
 }
 
