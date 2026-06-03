@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style type="text/css">
+            /* Shared styles */
+            body {
+                font-family: Helvetica, sans-serif;
+                font-size: 16px;
+                color: #34302e;
+                margin: 0.25in;
+            }
+            @page {
+                size: letter portrait;
+                margin: 0.25in;
+            }
+            .name {
+                font-size: 18px;
+                font-family: Helvetica, sans-serif;
+                font-weight: normal;
+                margin: 0 0 10px 0;
+            }
+            .categories {
+                color: #605D5D;
+                font-size: 14px;
+                font-family: Helvetica, sans-serif;
+                font-style: italic;
+            }
+            .rating {
+                color: #d10505;
+                font-size: 14px;
+            }
+            .metadata {
+                font-size: 14px;
+            }
+            .infobox p {
+                margin: 0;
+                line-height: 150%;
+            }
+            .subhead {
+                color: #d10505;
+                font-weight: bold;
+                font-size: 14px;
+                text-transform: uppercase;
+                margin: 10px 0;
+            }
+            
+            .ingredients p {
+                margin: 4px 0;
+            }
+            /* To prevent nutrition/directions from getting too close
+               to ingredients */
+            .ingredients {
+                padding-bottom: 10px;
+            }
+            .clear {
+                clear:both;
+            }
+            a {
+                color: #4990E2;
+                text-decoration: none;
+            }
+            /* Full page specific styles */
+            .text {
+                line-height: 130%;
+            }
+            .photobox {
+                float: left;
+                margin-right: 14px;
+                            }
+            .photo {
+                max-width: 140px;
+                max-height: 140px;
+                width: auto;
+                height: auto;
+            }
+            .inline-image {
+                max-width: 25%;
+                max-height: 25%;
+                width: auto;
+                height: auto;
+            }
+            .photoswipe {
+                border: 1px #dddddd solid;
+                cursor: pointer;
+            }
+            .pswp__caption__center {
+                text-align: center !important;
+            }
+            .recipe {
+                page-break-after: always;
+                            }
+            .recipe:first-child {
+                border-top: 0 none;
+                margin-top: 0;
+                padding-top: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Recipe -->
+<div class="recipe" itemscope itemtype="http://schema.org/Recipe" >
+    
+    <div class="infobox">
+
+        <!-- Image -->
+        <div class="photobox">
+            <a href="https://recipecontent.fooby.ch/24712_3-2_1200-800.jpg">
+                <img src="Images/FD3E433A-59ED-44C4-85B2-562EDB82815D/E1942240-7709-44E5-9580-AB2C9702181A.jpg" itemprop="image" class="photo photoswipe"/>
+            </a>
+                    </div>
+
+        <!-- Name -->
+        <h1 itemprop="name" class="name">Piccata De Poulet</h1>
+        
+        <!-- Info -->
+        
+        <!-- Rating, categories -->
+        <p itemprop="aggregateRating" class="rating" value="0"></p>
+        
+        <p class="metadata">
+        
+            <!-- Cook time, prep time, servings, difficulty -->
+            <b>Prep Time: </b><span itemprop="">45 min</span>
+            <b>Total Time: </b><span itemprop="">45 min</span>
+            <b>Servings: </b><span itemprop="">4</span>
+
+            <!-- Source -->
+                <b>Source: </b>
+                    <a itemprop="url" href="https://fooby.ch/fr/recettes/24712/piccata-de-poulet">
+                        <span itemprop="author">Fooby.ch</span>
+                    </a>
+                            
+        </p>
+        
+        <div class="clear"></div>
+
+    </div>
+    
+    <div class="left-column">
+
+        <!-- Ingredients -->
+        <div class="ingredientsbox">
+            <h3 class="subhead">Ingredients</h3>
+            <div class="ingredients text">
+                <p class="line" itemprop="recipeIngredient"><strong>1</strong> citrons bio</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> échalotes</p><p class="line" itemprop="recipeIngredient"><strong>¼</strong> bouquet de persil plat</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> cs d’huile d&apos;olive</p><p class="line" itemprop="recipeIngredient">d’huile</p><p class="line" itemprop="recipeIngredient"><strong>1 ½</strong> cs de sucre glace</p><p class="line" itemprop="recipeIngredient"><strong>4</strong> cs de farine blanche</p><p class="line" itemprop="recipeIngredient"><strong>1</strong> cs de beurre</p><p class="line" itemprop="recipeIngredient"><strong>5</strong> œufs frais</p><p class="line" itemprop="recipeIngredient"><strong>80</strong> g de Sbrinz râpé</p><p class="line" itemprop="recipeIngredient"><strong>3</strong> cs de câpres</p><p class="line" itemprop="recipeIngredient"><strong>4</strong> blancs de poulet</p><p class="line" itemprop="recipeIngredient"><strong>2</strong> cs de jus de citron</p><p class="line" itemprop="recipeIngredient">sel, poivre, selon le goût</p><p class="line" itemprop="recipeIngredient"><strong>½</strong> de cc de sel</p><p class="line" itemprop="recipeIngredient">un peu de poivre</p>
+            </div>
+        </div>
+        
+        <!-- Nutrition (in two-column mode it goes below the ingredients) -->
+
+    </div>
+    
+    <div class="right-column">
+    
+    <!-- Description -->
+
+    <!-- Directions -->
+    <div class="directionsbox">
+        <h3 class="subhead">Directions</h3>
+        <div itemprop="recipeInstructions" class="directions text">
+            <p class="line">Verser le sucre glace dans une assiette plate et y passer les tranches de citron. Faire chauffer l&apos;huile dans une poêle antiadhésive et y faire revenir les tranches de citron pendant 2 min de chaque côté. Ajouter l&apos;échalote et les câpres, faire revenir pendant 2 min. Ajouter l&apos;eau et le jus de citron, porter à ébullition, baisser le feu. Ajouter le beurre et le persil, mélanger, assaisonner, retirer du feu et réserver.</p><p class="line">Couper les blancs de poulet en deux dans leur largeur, assaisonner. Verser la farine dans une assiette plate. Battre les œufs dans une assiette creuse, incorporer le sbrinz. Passer le poulet dans la farine puis dans la préparation aux œufs.</p><p class="line">Faire fondre du beurre à rôtir dans la même poêle. Baisser le feu et faire cuire le poulet par portions à feu moyen pendant 4 min de chaque côté, le retirer du feu. Dresser avec la sauce au citron.</p>
+        </div>
+    </div>
+
+    <!-- Notes -->
+
+
+    <!-- Nutrition (in regular mode it goes below the notes) -->
+        <!-- Used in two different places depending on the recipe layout -->
+<div class="nutritionbox textbox">
+    <h3 class="subhead">Nutrition</h3>
+    <div itemprop="nutrition" class="nutrition text">
+        <p>Fat: 26 g<br/>Calories: 546 kcal<br/>Carbohydrate: 21 g<br/>Serving Size: 4 personnes<br/>Protein: 56 g</p>
+    </div>
+</div>
+
+    
+    </div>
+    
+    <div class="clear"></div>
+
+</div>
+
+
+
+    </body>
+</html>

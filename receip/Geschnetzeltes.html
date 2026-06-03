@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style type="text/css">
+            /* Shared styles */
+            body {
+                font-family: Helvetica, sans-serif;
+                font-size: 16px;
+                color: #34302e;
+                margin: 0.25in;
+            }
+            @page {
+                size: letter portrait;
+                margin: 0.25in;
+            }
+            .name {
+                font-size: 18px;
+                font-family: Helvetica, sans-serif;
+                font-weight: normal;
+                margin: 0 0 10px 0;
+            }
+            .categories {
+                color: #605D5D;
+                font-size: 14px;
+                font-family: Helvetica, sans-serif;
+                font-style: italic;
+            }
+            .rating {
+                color: #d10505;
+                font-size: 14px;
+            }
+            .metadata {
+                font-size: 14px;
+            }
+            .infobox p {
+                margin: 0;
+                line-height: 150%;
+            }
+            .subhead {
+                color: #d10505;
+                font-weight: bold;
+                font-size: 14px;
+                text-transform: uppercase;
+                margin: 10px 0;
+            }
+            
+            .ingredients p {
+                margin: 4px 0;
+            }
+            /* To prevent nutrition/directions from getting too close
+               to ingredients */
+            .ingredients {
+                padding-bottom: 10px;
+            }
+            .clear {
+                clear:both;
+            }
+            a {
+                color: #4990E2;
+                text-decoration: none;
+            }
+            /* Full page specific styles */
+            .text {
+                line-height: 130%;
+            }
+            .photobox {
+                float: left;
+                margin-right: 14px;
+                            }
+            .photo {
+                max-width: 140px;
+                max-height: 140px;
+                width: auto;
+                height: auto;
+            }
+            .inline-image {
+                max-width: 25%;
+                max-height: 25%;
+                width: auto;
+                height: auto;
+            }
+            .photoswipe {
+                border: 1px #dddddd solid;
+                cursor: pointer;
+            }
+            .pswp__caption__center {
+                text-align: center !important;
+            }
+            .recipe {
+                page-break-after: always;
+                            }
+            .recipe:first-child {
+                border-top: 0 none;
+                margin-top: 0;
+                padding-top: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Recipe -->
+<div class="recipe" itemscope itemtype="http://schema.org/Recipe" >
+    
+    <div class="infobox">
+
+        <!-- Image -->
+        <div class="photobox">
+            <a href="https://www.ptitchef.com/imgupl/recipe/saute-de-porc-a-la-creme-et-aux-champignons--59314p76462.jpg">
+                <img src="Images/41C308FF-1EBC-467E-AA92-CDC12DD50F50/6EE9D0EB-CBBD-450C-A159-E6CE69AA7D3D.jpg" itemprop="image" class="photo photoswipe"/>
+            </a>
+                    </div>
+
+        <!-- Name -->
+        <h1 itemprop="name" class="name">Geschnetzeltes</h1>
+        
+        <!-- Info -->
+        
+        <!-- Rating, categories -->
+        <p itemprop="aggregateRating" class="rating" value="0"></p>
+        
+        <p class="metadata">
+        
+            <!-- Cook time, prep time, servings, difficulty -->
+            <b>Prep Time: </b><span itemprop="">15 min</span>
+            <b>Cook Time: </b><span itemprop="">45 min</span>
+            <b>Total Time: </b><span itemprop="">1 hr</span>
+            <b>Servings: </b><span itemprop="">6</span>
+
+            <!-- Source -->
+                <b>Source: </b>
+                    <a itemprop="url" href="https://www.ptitchef.com/recettes/plat/saute-de-porc-a-la-creme-et-aux-champignons-fid-1526563">
+                        <span itemprop="author">Ptitchef.com</span>
+                    </a>
+                            
+        </p>
+        
+        <div class="clear"></div>
+
+    </div>
+    
+    <div class="left-column">
+
+        <!-- Ingredients -->
+        <div class="ingredientsbox">
+            <h3 class="subhead">Ingredients</h3>
+            <div class="ingredients text">
+                <p class="line" itemprop="recipeIngredient"><strong>800</strong> g de sauté de porc</p><p class="line" itemprop="recipeIngredient"><strong>200</strong> g de champignons de paris</p><p class="line" itemprop="recipeIngredient"><strong>150</strong> g de lardons</p><p class="line" itemprop="recipeIngredient"><strong>2</strong> échalotes</p><p class="line" itemprop="recipeIngredient"><strong>10</strong> cl de vin blanc sec</p><p class="line" itemprop="recipeIngredient"><strong>30</strong> cl de bouillon de volaille</p><p class="line" itemprop="recipeIngredient"><strong>3</strong> cas de crème fraîche épaisse</p><p class="line" itemprop="recipeIngredient">Huile</p><p class="line" itemprop="recipeIngredient">Sel</p><p class="line" itemprop="recipeIngredient">Poivre</p>
+            </div>
+        </div>
+        
+        <!-- Nutrition (in two-column mode it goes below the ingredients) -->
+
+    </div>
+    
+    <div class="right-column">
+    
+    <!-- Description -->
+
+    <!-- Directions -->
+    <div class="directionsbox">
+        <h3 class="subhead">Directions</h3>
+        <div itemprop="recipeInstructions" class="directions text">
+            <p class="line">Commencez par nettoyer les champignons et coupez-les, épluchez et émincez les échalotes.</p><p class="line">Dans une sauteuse, faites chauffer l&apos;huile et faites revenir à feu vif vos morceaux de viande avec les lardons, salez et poivrez. une fois votre viande légèrement dorée, retirez-la de la casserole et déposez-la sur une assiette, dans la même casserole, faites revenir les échalotes et les champignons.</p><p class="line">Remettez la viande dans la sauteuse, ajoutez le vin blanc, laissez cuire 2/3 minutes, ajoutez le bouillon, couvrez et laissez cuire à feu doux pendant 35 minutes, votre sauce devra avoir réduit de moitié.</p><p class="line">10 minutes avant la fin de la cuisson, ajoutez les 3 cuillères à soupe de crème fraîche, et laissez mijoter encore 10 minutes ( si votre sauce est trop liquide ajoutez 1 C à S de Maïzena pour l&apos;épaissir un peu ).</p><p class="line">Servez votre sauté de porc à la crème et aux champignons dans des minis cocottes par exemple accompagné de pommes vapeur.</p><p class="line">Bonne dégustation.</p>
+        </div>
+    </div>
+
+    <!-- Notes -->
+
+
+    <!-- Nutrition (in regular mode it goes below the notes) -->
+        <!-- Used in two different places depending on the recipe layout -->
+<div class="nutritionbox textbox">
+    <h3 class="subhead">Nutrition</h3>
+    <div itemprop="nutrition" class="nutrition text">
+        <p>Fat: 39.1g<br/>Calories: 545Kcal<br/>Saturated Fat: 12.4g<br/>Sodium: 0.6g<br/>Fiber: 0.7g<br/>Carbohydrate: 3.2g<br/>Sugar: 0.8g<br/>Serving Size: 277g<br/>Protein: 42.4g</p>
+    </div>
+</div>
+
+    
+    </div>
+    
+    <div class="clear"></div>
+
+</div>
+
+
+
+    </body>
+</html>
