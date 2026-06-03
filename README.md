@@ -1,74 +1,99 @@
 # FeedMe
 
-Self-hosted MVP recipe and meal inspiration app.
+Application auto-hébergée de gestion de recettes et d'idées de repas.
 
-## Current Status
+---
 
-Initial MVP implementation is in place.
-
-Implemented:
-
-* React + Vite + TypeScript frontend
-* NestJS backend
-* Prisma ORM
-* PostgreSQL schema and initial migration
-* Docker Compose with frontend, backend, and postgres services
-* Default local user support
-* Recipe CRUD
-* Ingredients table with normalized ingredient names
-* Tags table
-* Recipe visibility: private, public, shared
-* Recipe status: to_try, tested, favorite
-* Ingredient quantity/unit parsing before storage
-* Search by title, description, notes, tags, and ingredients
-* Shuffle meal suggestions with image previews
-* Recipe import with JSON-LD and HTML fallback extraction and editable draft flow
-* Responsive Material UI frontend with persistent dark mode
-
-Not implemented yet:
-
-* Authentication
-* Meal planning
-* Shopping lists
-* Social features
-* OCR
-* AI features
-* Public recipe browsing or sharing flows
-* Automated tests
-
-Verification performed:
-
-* `npm run build`
-* `npm run lint`
-* `npx prisma validate --schema backend/prisma/schema.prisma`
-
-Not verified in this environment:
-
-* `docker compose up -d`, because Docker is not installed locally.
-* Runtime API endpoint checks against a running PostgreSQL container.
-
-## Run
+## Déploiement serveur
 
 ```bash
+docker compose pull
 docker compose up -d
 ```
 
-Frontend: `http://localhost`
+Frontend : `http://server-ip:2323`
 
-Backend health: `http://localhost/api/health`
+Santé API : `http://server-ip:2323/api/health`
 
-## Import local HTML recipes
+Les migrations de base de données s'exécutent automatiquement au démarrage.
 
-Put exported recipe HTML files in a local `receip` directory, then run:
+---
+
+## Développement local
+
+### Option 1 — npm (recommandé, hot reload)
+
+Nécessite Node.js et Docker installés.
+
+**Terminal 1 — base de données uniquement**
+
+```bash
+docker compose up postgres -d
+```
+
+**Terminal 2 — backend**
+
+```bash
+cd backend
+DATABASE_URL="postgresql://feedme:feedme_password@localhost:5432/feedme?schema=public" npx prisma migrate deploy
+npm run start:dev
+```
+
+**Terminal 3 — frontend**
+
+```bash
+cd frontend
+npm run dev
+```
+
+Frontend : `http://localhost:5173`  
+Backend : `http://localhost:3000`
+
+### Option 2 — Docker (test du build de production)
+
+```bash
+# Créer docker-compose.override.yml avec les build contexts locaux :
+# services:
+#   backend:
+#     build: { context: ./backend }
+#     image: feedme-backend-local
+#   frontend:
+#     build: { context: ./frontend }
+#     image: feedme-frontend-local
+
+docker compose build
+docker compose up -d
+```
+
+Frontend : `http://localhost:2323`
+
+---
+
+## Import de recettes
+
+### Depuis des fichiers HTML locaux
+
+Placer les fichiers HTML dans le dossier `receip`, puis exécuter :
 
 ```bash
 docker compose --profile tools run --rm recipe-importer
 ```
 
-The importer replaces recipes tagged `imported` and preserves manually created recipes.
+Supprime les recettes taguées `imported` puis réimporte tous les fichiers.
 
-To translate already imported recipes to French:
+### Traduction automatique des recettes importées
 
 ```bash
 docker compose --profile tools run --rm recipe-translator
 ```
+
+Traduit les titres, descriptions, instructions et ingrédients en français via Google Translate.
+
+---
+
+## Stack
+
+- **Frontend** : React · Vite · TypeScript · TanStack Query · Material UI
+- **Backend** : NestJS · Prisma ORM
+- **Base de données** : PostgreSQL
+- **Déploiement** : Docker Compose · GitHub Actions CI → GHCR
