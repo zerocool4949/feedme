@@ -172,11 +172,24 @@ Avoid assumptions about local development environments.
 
 # UI Conventions
 
-Theme uses a blue pastel palette (light and dark mode) defined in `frontend/src/main.tsx`.
+Theme is "Cozy Midnight Kitchen" — dark navy with soft blue accents, defined in `frontend/src/main.tsx`.
+
+Key palette values:
+* Background: `#0B1220`
+* Surface: `#121C2E`
+* Primary accent: `#7CB8FF`
+* Text: `#F4F7FB`
+* Muted text: `#AAB6C8`
 
 Do not change the color scheme without being asked.
 
+Cards use 16px rounded corners, soft borders (`rgba(255,255,255,0.08)`), and a hover lift animation.
+
 List pages show only the title and image on each card. All other content belongs on the detail page.
+
+Tags are shown on the detail page only — not on list or card views.
+
+There is no favorites feature. Do not add heart icons or favorite-related UI.
 
 Responsive breakpoints follow MUI defaults: xs mobile, sm tablet, lg desktop.
 
