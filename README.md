@@ -74,7 +74,7 @@ Frontend : `http://localhost:2323`
 Créer ou mettre à jour un utilisateur (remplace aussi ses recettes depuis l'ancien utilisateur par défaut) :
 
 ```bash
-NEW_USERNAME=raphael NEW_PASSWORD=monmotdepasse docker compose --profile tools run --rm create-user
+NEW_USERNAME=user NEW_PASSWORD=monmotdepasse docker compose --profile tools run --rm create-user
 ```
 
 Définir `JWT_SECRET` dans un fichier `.env` sur le serveur :
