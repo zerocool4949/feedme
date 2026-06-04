@@ -7,6 +7,15 @@
   ],
   "scripts": {
     "build": "npm run build --workspace backend && npm run build --workspace frontend",
-    "lint": "npm run lint --workspace backend && npm run lint --workspace frontend"
+    "lint": "npm run lint --workspace backend && npm run lint --workspace frontend",
+    "android:sync": "npm run build:android --workspace frontend && cap sync android",
+    "android:build:debug": "npm run android:sync && android\\gradlew.bat assembleDebug -p android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/core": "^8.4.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.0"
   }
 }

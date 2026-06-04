@@ -26,13 +26,24 @@ Done:
 * Recipe import with JSON-LD, schema.org Recipe, OpenGraph, and HTML fallback extraction and editable draft flow
 * Vitest unit tests for recipe import extraction
 * Sharing model: non-owners can hide shared recipes per-account, with a dedicated restore page
+* Capacitor dependencies, config, Android build scripts, and generated Android project scaffold
 * Dockerfiles for frontend and backend
 * GitHub Actions CI publishing images to GHCR
+
+In progress:
+
+* Capacitor Android debug APK packaging
+  * App id: `xyz.lyranet.feedme`
+  * App name: `FeedMe`
+  * Android API target: `https://feedme.lyranet.xyz/api`
+  * Android project exists in `android/`
+  * `npm run android:sync` succeeds
+  * Debug APK build is blocked until Android SDK packages are installed/configured
 
 Not done:
 
 * Meal planning calendar
-* Capacitor Android packaging
+* Completed Capacitor Android debug APK build
 * Automated tests
 
 Verified:
@@ -42,6 +53,16 @@ Verified:
 * Prisma schema validates when `DATABASE_URL` is provided
 * Docker deployment works via `docker compose pull && docker compose up -d`
 * Migrations run on container startup via `prisma migrate deploy`
+* Android-mode frontend build succeeds with `npm run build:android --workspace frontend`
+* Capacitor sync succeeds with `npm run android:sync`
+
+Android APK remaining work:
+
+* Install/configure Android SDK command-line tools
+* Install SDK packages: `platform-tools`, `platforms;android-36`, `build-tools;36.0.0`
+* Run APK build with JDK 21, not JDK 25
+* Build debug APK with `npm run android:build:debug`
+* Smoke test installed APK against `https://feedme.lyranet.xyz/api`
 
 ---
 
@@ -114,6 +135,14 @@ Do NOT build the following in the MVP:
 
 * Capacitor
 * Android APK
+
+Current Android packaging status:
+
+* Capacitor config is at `capacitor.config.ts`
+* Android platform project is generated under `android/`
+* Android build mode uses `frontend/.env.android`
+* The APK is configured for the hosted API at `https://feedme.lyranet.xyz/api`
+* The local debug APK build is not complete because the Android SDK is not fully installed/configured
 
 ---
 
