@@ -1,8 +1,9 @@
+import { App as CapacitorApp } from '@capacitor/app';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, useLocation, useNavigate } from 'react-router-dom';
 import { App } from './pages/App';
 import { HiddenRecipesPage } from './pages/HiddenRecipesPage';
 import { ImportPage } from './pages/ImportPage';
@@ -146,6 +147,8 @@ const theme = createTheme({
 
 function RootApp() {
   const [token, setToken] = React.useState<string | null>(() => localStorage.getItem('feedme-token'));
+  const navigate = useNavigate();
+  const location = useLocation();
 
   function handleLogin(t: string) {
     localStorage.setItem('feedme-token', t);
@@ -156,6 +159,35 @@ function RootApp() {
     localStorage.removeItem('feedme-token');
     setToken(null);
   }
+
+  React.useEffect(() => {
+    let active = true;
+    let removeBackButtonListener: (() => Promise<void>) | undefined;
+
+    void CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+      if (location.pathname !== '/') {
+        if (canGoBack) {
+          navigate(-1);
+        } else {
+          navigate('/');
+        }
+        return;
+      }
+
+      void CapacitorApp.minimizeApp();
+    }).then((handle) => {
+      if (active) {
+        removeBackButtonListener = handle.remove;
+      } else {
+        void handle.remove();
+      }
+    });
+
+    return () => {
+      active = false;
+      void removeBackButtonListener?.();
+    };
+  }, [location.pathname, navigate]);
 
   if (!token) {
     return (

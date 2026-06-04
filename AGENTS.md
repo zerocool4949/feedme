@@ -84,6 +84,7 @@ Frontend:
 * React Router
 * TanStack Query
 * Material UI
+* Capacitor (Android back button, `@capacitor/app`)
 
 Backend:
 

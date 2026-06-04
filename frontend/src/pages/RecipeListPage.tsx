@@ -337,8 +337,11 @@ export function RecipeListPage() {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
-            gap: { xs: 2.5, md: 3 },
+            gridTemplateColumns: {
+              xs: 'repeat(auto-fit, minmax(145px, 1fr))',
+              lg: 'repeat(3, 1fr)',
+            },
+            gap: { xs: 1.5, sm: 2.5, md: 3 },
           }}
         >
           {recipes.map((recipe) => (

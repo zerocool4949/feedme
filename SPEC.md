@@ -26,7 +26,7 @@ Done:
 * Recipe import with JSON-LD, schema.org Recipe, OpenGraph, and HTML fallback extraction and editable draft flow
 * Vitest unit tests for recipe import extraction
 * Sharing model: non-owners can hide shared recipes per-account, with a dedicated restore page
-* Capacitor Android APK: debug build succeeds, targets `https://feedme.lyranet.xyz/api`
+* Capacitor Android APK: debug build succeeds, targets `https://feedme.lyranet.xyz/api`, Kotlin MainActivity, Android back button handled
 * Dockerfiles for frontend and backend
 * GitHub Actions CI publishing images to GHCR
 
