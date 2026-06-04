@@ -6,7 +6,7 @@ DB_NAME="${2:-feedme}"
 DB_USER="${3:-feedme}"
 ENV="${4:-prod}"
 
-[ "$ENV" = "dev" ] && export COMPOSE_PROJECT_NAME=feedme-dev
+[ "$ENV" = "dev" ] && export COMPOSE_PROJECT_NAME=feedme-dev || true
 
 mkdir -p "$OUTPUT_DIR"
 

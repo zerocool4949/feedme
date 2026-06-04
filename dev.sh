@@ -2,7 +2,7 @@
 set -e
 
 export COMPOSE_PROJECT_NAME=feedme-dev
-DB_URL="postgresql://feedme:feedme_password@localhost:5432/feedme?schema=public"
+DB_URL="postgresql://feedme:feedme_password@localhost:5433/feedme?schema=public"
 
 echo "Starting Postgres..."
 docker compose up postgres -d > /dev/null
