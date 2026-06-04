@@ -1,34 +1,5 @@
 # AGENTS.md
 
-## Current Project Snapshot
-
-Android APK packaging is in progress.
-
-Current state:
-
-* Capacitor dependencies and `capacitor.config.ts` have been added.
-* The generated Android project exists in `android/`.
-* Android app id is `xyz.lyranet.feedme`.
-* Android app name is `FeedMe`.
-* Android frontend mode uses `frontend/.env.android`.
-* Android API target is `https://feedme.lyranet.xyz/api`.
-* `npm run android:sync` has succeeded.
-* `npm run android:build:debug` has not completed yet.
-
-Known Android blocker:
-
-* The local machine had only standalone `adb`, not a full Android SDK.
-* JDK 25 caused `Unsupported class file major version 69`; use JDK 21 for Gradle.
-* Android SDK packages still need to be installed/configured:
-  * `platform-tools`
-  * `platforms;android-36`
-  * `build-tools;36.0.0`
-* After installing SDK packages, set `ANDROID_HOME` or create `android/local.properties` with `sdk.dir=...`.
-
-Next Android step:
-
-* Finish Android SDK setup, rerun `npm run android:build:debug`, then smoke test the APK against `https://feedme.lyranet.xyz/api`.
-
 ## General Principles
 
 * Build the simplest working solution first.
