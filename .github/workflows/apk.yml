@@ -47,6 +47,9 @@ jobs:
       - name: Set Android SDK path
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
 
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/feedme-release.keystore
+
       - name: Create keystore.properties
         run: |
           echo "storeFile=../feedme-release.keystore" > android/keystore.properties
