@@ -27,7 +27,8 @@ jobs:
 
       - name: Install Android SDK components
         run: |
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
             "platforms;android-36" \
             "build-tools;36.0.0" \
             "platform-tools"
@@ -54,7 +55,9 @@ jobs:
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/keystore.properties
 
       - name: Build release APK
-        run: ./gradlew assembleRelease
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --stacktrace
         working-directory: android
 
       - name: Upload APK
