@@ -29,8 +29,28 @@ interface RecipeJson {
   recipeCuisine?: JsonValue;
 }
 
+function isPrivateIp(ip: string): boolean {
+  return /^(127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|::1|fc|fd)/i.test(ip);
+}
+
+async function assertPublicUrl(url: string): Promise<void> {
+  const parsed = new URL(url);
+  if (!['http:', 'https:'].includes(parsed.protocol)) {
+    throw new HTTPException(400, { message: 'Protocole non supporté' });
+  }
+  const { address } = await import('dns').then((dns) =>
+    new Promise<{ address: string }>((resolve, reject) =>
+      dns.lookup(parsed.hostname, (err, address) => (err ? reject(err) : resolve({ address }))),
+    ),
+  );
+  if (isPrivateIp(address)) {
+    throw new HTTPException(400, { message: 'URL non accessible' });
+  }
+}
+
 export class RecipeImportService {
   async createDraft(url: string): Promise<RecipeDraft> {
+    await assertPublicUrl(url);
     const response = await fetch(url, {
       headers: {
         Accept: 'text/html,application/xhtml+xml',

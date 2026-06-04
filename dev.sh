@@ -22,7 +22,7 @@ export DATABASE_URL="$DB_URL"
 (cd backend && npx prisma migrate deploy && npx prisma generate)
 
 echo "Starting backend..."
-DATABASE_URL="$DB_URL" PORT=3000 npm --prefix backend run start:dev &
+DATABASE_URL="$DB_URL" PORT=3000 JWT_SECRET="${JWT_SECRET:-feedme-dev-secret-do-not-use-in-prod}" npm --prefix backend run start:dev &
 
 echo "Starting frontend..."
 npm --prefix frontend run dev -- --host &

@@ -22,4 +22,5 @@ docker compose exec -T postgres pg_dump \
   --no-privileges \
   > "$backup_path"
 
+chmod 600 "$backup_path"
 echo "Backup created: $backup_path"
