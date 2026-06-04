@@ -23,22 +23,13 @@ Done:
 * Recipe visibility field: private or shared in the UI, with legacy `public` records treated as shared
 * Search by title, notes, tags, ingredient names, and normalized ingredient names
 * Shuffle meal suggestions with requested counts capped to 1 through 7 and image previews
-* Recipe import with JSON-LD and HTML fallback extraction and editable draft flow
+* Recipe import with JSON-LD, schema.org Recipe, OpenGraph, and HTML fallback extraction and editable draft flow
 * Dockerfiles for frontend and backend
 * GitHub Actions CI publishing images to GHCR
 
 Not done:
 
 * Meal planning calendar
-* Shopping lists
-* OCR
-* AI recipe generation
-* Social feeds
-* Recipe comments
-* Notifications
-* Cloud sync
-* Nutrition tracking
-* Public recipe browsing, copying, or friend sharing flows
 * Capacitor Android packaging
 * Automated tests
 
@@ -85,14 +76,7 @@ Users should be able to:
 Do NOT build the following in the MVP:
 
 * Meal planning calendar
-* Shopping lists
-* OCR
-* AI recipe generation
-* Social feeds
-* Recipe comments
-* Notifications
-* Cloud sync
-* Nutrition tracking
+* Android app
 
 ---
 
@@ -239,7 +223,8 @@ Supported extraction priority:
 
 1. JSON-LD
 2. schema.org Recipe
-3. HTML fallback (meta tags and content parsing)
+3. OpenGraph
+4. HTML fallback (meta tags and content parsing)
 
 Imported data:
 

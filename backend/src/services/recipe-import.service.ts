@@ -1,3 +1,5 @@
+import * as cheerio from 'cheerio';
+import type { Element } from 'domhandler';
 import { HTTPException } from 'hono/http-exception';
 import { IngredientDto } from '../schemas';
 
@@ -12,6 +14,7 @@ export interface RecipeDraft {
 }
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+type CheerioApi = ReturnType<typeof cheerio.load>;
 
 interface RecipeJson {
   '@type'?: JsonValue;
@@ -40,10 +43,9 @@ export class RecipeImportService {
     }
 
     const html = await response.text();
-    const jsonRecipe = findRecipeJson(html);
-    const draft = jsonRecipe ? draftFromJson(jsonRecipe, url) : draftFromHtml(html, url);
+    const draft = parseRecipeDraftFromHtml(html, url);
 
-    if (!draft.title && !draft.instructions && draft.ingredients.length === 0) {
+    if (!isUsefulDraft(draft)) {
       throw new HTTPException(400, { message: "Impossible d'extraire les détails de la recette depuis cette URL" });
     }
 
@@ -55,6 +57,19 @@ export class RecipeImportService {
   }
 }
 
+export function parseRecipeDraftFromHtml(html: string, url: string): RecipeDraft {
+  const $ = cheerio.load(html);
+  const jsonRecipe = findRecipeJson(html);
+  const drafts = [
+    jsonRecipe ? draftFromJson(jsonRecipe, url) : null,
+    draftFromSchemaOrg($, url),
+    draftFromOpenGraph($, url),
+    draftFromHtml($, html, url),
+  ];
+
+  return drafts.find((draft) => draft && isUsefulDraft(draft)) ?? emptyDraft(url);
+}
+
 function draftFromJson(recipe: RecipeJson, url: string): RecipeDraft {
   const ingredients = toStringArray(recipe.recipeIngredient).map((ingredient) => ({
     name: ingredient,
@@ -64,22 +79,72 @@ function draftFromJson(recipe: RecipeJson, url: string): RecipeDraft {
   return {
     title: firstString(recipe.name) || firstString(recipe.headline),
     notes: '',
-    instructions: toInstructions(recipe.recipeInstructions),
+    instructions: toInstructions(toStringArray(recipe.recipeInstructions)),
     sourceUrl: url,
     imageUrl: firstImage(recipe.image),
     ingredients,
     tags: unique([
-      ...toStringArray(recipe.keywords).flatMap((keyword) => keyword.split(',')),
+      ...toStringArray(recipe.keywords).flatMap(splitCommaValues),
       ...toStringArray(recipe.recipeCategory),
       ...toStringArray(recipe.recipeCuisine),
     ]),
   };
 }
 
-function draftFromHtml(html: string, url: string): RecipeDraft {
+function draftFromSchemaOrg($: CheerioApi, url: string): RecipeDraft | null {
+  const recipe = $('[itemtype*="schema.org/Recipe"], [typeof*="Recipe"]').first();
+  if (!recipe.length) return null;
+
+  const propText = (name: string) =>
+    unique(
+      recipe
+        .find(`[itemprop="${name}"], [property="${name}"]`)
+        .map((_, element) => propertyValue($, element))
+        .get(),
+    );
+
+  const ingredients = propText('recipeIngredient').map((ingredient) => ({
+    name: ingredient,
+    originalText: ingredient,
+  }));
+
+  return {
+    title: propText('name')[0] ?? propText('headline')[0] ?? '',
+    notes: '',
+    instructions: toInstructions(propText('recipeInstructions')),
+    sourceUrl: url,
+    imageUrl: propText('image')[0] ?? '',
+    ingredients,
+    tags: unique([...propText('keywords').flatMap(splitCommaValues), ...propText('recipeCategory'), ...propText('recipeCuisine')]),
+  };
+}
+
+function draftFromOpenGraph($: CheerioApi, url: string): RecipeDraft | null {
+  const title = metaContent($, 'og:title') || metaContent($, 'twitter:title');
+  const notes = metaContent($, 'og:description') || metaContent($, 'description') || metaContent($, 'twitter:description');
+  const imageUrl = metaContent($, 'og:image') || metaContent($, 'twitter:image');
+  const tags = unique([
+    ...allMetaContent($, 'article:tag'),
+    ...splitCommaValues(metaContent($, 'keywords') || metaContent($, 'news_keywords')),
+  ]);
+
+  if (!title && !notes && !imageUrl && tags.length === 0) return null;
+
+  return {
+    title,
+    notes,
+    instructions: '',
+    sourceUrl: url,
+    imageUrl,
+    ingredients: [],
+    tags,
+  };
+}
+
+function draftFromHtml($: CheerioApi, html: string, url: string): RecipeDraft {
   const text = htmlToText(html);
-  const title = extractTagText(html, 'h1') || metaContent(html, 'og:title') || extractTagText(html, 'title');
-  const ingredientLines = linesBetween(text, 'Ingrédients', 'Préparation')
+  const title = cleanText($('h1').first().text()) || metaContent($, 'og:title') || cleanText($('title').first().text());
+  const ingredientLines = linesBetweenHeading(text, 'ingredients', 'preparation')
     .filter(isUsefulIngredientLine)
     .map((ingredient) => ({
       name: ingredient,
@@ -92,7 +157,7 @@ function draftFromHtml(html: string, url: string): RecipeDraft {
     notes: '',
     instructions: instructionLines.join('\n'),
     sourceUrl: url,
-    imageUrl: metaContent(html, 'og:image'),
+    imageUrl: metaContent($, 'og:image'),
     ingredients: ingredientLines,
     tags: [],
   };
@@ -146,8 +211,8 @@ function safeJsonParse(value: string): JsonValue | undefined {
   }
 }
 
-function toInstructions(value: JsonValue | undefined): string {
-  return toStringArray(value)
+function toInstructions(values: string[]): string {
+  return values
     .map((step) => step.replace(/^\d+\.\s*/, '').trim())
     .filter(Boolean)
     .map((step, index) => `${index + 1}. ${step}`)
@@ -198,18 +263,16 @@ function htmlToText(html: string): string {
   );
 }
 
-function extractTagText(html: string, tag: string): string {
-  const match = html.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i'));
-  return match ? decodeHtml(match[1].replace(/<[^>]+>/g, ' ')).trim() : '';
+function metaContent($: CheerioApi, name: string): string {
+  return allMetaContent($, name)[0] ?? '';
 }
 
-function metaContent(html: string, name: string): string {
-  const pattern = new RegExp(
-    `<meta[^>]+(?:name|property)=["']${escapeRegExp(name)}["'][^>]+content=["']([^"']+)["'][^>]*>|<meta[^>]+content=["']([^"']+)["'][^>]+(?:name|property)=["']${escapeRegExp(name)}["'][^>]*>`,
-    'i',
+function allMetaContent($: CheerioApi, name: string): string[] {
+  return unique(
+    $(`meta[name="${name}"], meta[property="${name}"]`)
+      .map((_, element) => cleanText($(element).attr('content') ?? ''))
+      .get(),
   );
-  const match = html.match(pattern);
-  return decodeHtml((match?.[1] ?? match?.[2] ?? '').trim());
 }
 
 function linesBetween(text: string, start: string, end: string): string[] {
@@ -222,9 +285,18 @@ function linesBetween(text: string, start: string, end: string): string[] {
   return section.split('\n').map((line) => line.trim()).filter(Boolean);
 }
 
+function linesBetweenHeading(text: string, start: string, end: string): string[] {
+  const lines = text.split('\n').map((line) => line.trim());
+  const startIndex = lines.findIndex((line) => foldText(line).includes(start));
+  if (startIndex === -1) return [];
+
+  const endIndex = lines.findIndex((line, index) => index > startIndex && foldText(line).includes(end));
+  return lines.slice(startIndex + 1, endIndex === -1 ? undefined : endIndex).filter(Boolean);
+}
+
 function extractInstructionLines(text: string): string[] {
   const preparationSection = linesBetween(text, "Changer d'affichage", 'Par portion:');
-  const lines = preparationSection.length ? preparationSection : linesBetween(text, 'Préparation', 'Par portion:');
+  const lines = preparationSection.length ? preparationSection : linesBetweenHeading(text, 'preparation', 'par portion:');
 
   return lines
     .map((line) => line.replace(/^\d+\.\s*/, '').trim())
@@ -233,13 +305,14 @@ function extractInstructionLines(text: string): string[] {
 }
 
 function isUsefulIngredientLine(line: string): boolean {
+  const foldedLine = foldText(line);
   if (/^\d+\s+portions?$/i.test(line)) return false;
-  if (/^(quantité ingrédients|afficher la recette|cuisinez en écoutant|compote de pommes:?|viande hachée:?)$/i.test(line)) return false;
+  if (/^(quantite ingredients|afficher la recette|cuisinez en ecoutant|compote de pommes:?|viande hachee:?)$/i.test(foldedLine)) return false;
   return line.length > 2;
 }
 
 function unique(values: string[]): string[] {
-  return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+  return [...new Set(values.map(cleanText).filter(Boolean))];
 }
 
 function stripHtmlComments(value: string): string {
@@ -257,8 +330,41 @@ function decodeHtml(value: string): string {
     .replace(/&gt;/g, '>');
 }
 
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function propertyValue($: CheerioApi, element: Element): string {
+  const node = $(element);
+  const value = node.attr('content') ?? node.attr('src') ?? node.attr('href') ?? node.attr('datetime') ?? node.text();
+  return cleanText(value);
+}
+
+function splitCommaValues(value: string): string[] {
+  return value.split(',').map((item) => item.trim()).filter(Boolean);
+}
+
+function cleanText(value: string): string {
+  return value.replace(/\s+/g, ' ').trim();
+}
+
+function foldText(value: string): string {
+  return cleanText(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
+function isUsefulDraft(draft: RecipeDraft): boolean {
+  return Boolean(draft.title || draft.instructions || draft.ingredients.length > 0);
+}
+
+function emptyDraft(url: string): RecipeDraft {
+  return {
+    title: '',
+    notes: '',
+    instructions: '',
+    sourceUrl: url,
+    imageUrl: '',
+    ingredients: [],
+    tags: [],
+  };
 }
 
 export const recipeImportService = new RecipeImportService();
