@@ -213,4 +213,41 @@ describe('parseRecipeDraftFromHtml', () => {
       tags: [],
     });
   });
+
+  it('falls through to next extractor when JSON-LD is malformed', () => {
+    const draft = parseRecipeDraftFromHtml(
+      `
+      <html>
+        <head>
+          <script type="application/ld+json">{ this is not valid json }</script>
+          <meta property="og:title" content="Fallback Title" />
+          <meta property="og:image" content="https://example.test/img.jpg" />
+        </head>
+      </html>
+      `,
+      sourceUrl,
+    );
+
+    expect(draft.title).toBe('Fallback Title');
+    expect(draft.imageUrl).toBe('https://example.test/img.jpg');
+  });
+
+  it('uses the first valid recipe block when multiple JSON-LD blocks are present', () => {
+    const draft = parseRecipeDraftFromHtml(
+      `
+      <html>
+        <head>
+          <script type="application/ld+json">{ "@type": "WebSite", "name": "My Site" }</script>
+          <script type="application/ld+json">
+            { "@type": "Recipe", "name": "Second Block Soup", "recipeIngredient": ["1 carrot"] }
+          </script>
+        </head>
+      </html>
+      `,
+      sourceUrl,
+    );
+
+    expect(draft.title).toBe('Second Block Soup');
+    expect(draft.ingredients).toEqual([{ name: '1 carrot', originalText: '1 carrot' }]);
+  });
 });

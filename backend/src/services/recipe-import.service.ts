@@ -64,7 +64,7 @@ export function parseRecipeDraftFromHtml(html: string, url: string): RecipeDraft
     jsonRecipe ? draftFromJson(jsonRecipe, url) : null,
     draftFromSchemaOrg($, url),
     draftFromOpenGraph($, url),
-    draftFromHtml($, html, url),
+    draftFromHtml($, url),
   ];
 
   return drafts.find((draft) => draft && isUsefulDraft(draft)) ?? emptyDraft(url);
@@ -141,8 +141,8 @@ function draftFromOpenGraph($: CheerioApi, url: string): RecipeDraft | null {
   };
 }
 
-function draftFromHtml($: CheerioApi, html: string, url: string): RecipeDraft {
-  const text = htmlToText(html);
+function draftFromHtml($: CheerioApi, url: string): RecipeDraft {
+  const text = htmlToText($.html() ?? '');
   const title = cleanText($('h1').first().text()) || metaContent($, 'og:title') || cleanText($('title').first().text());
   const ingredientLines = linesBetweenHeading(text, 'ingredients', 'preparation')
     .filter(isUsefulIngredientLine)
@@ -295,6 +295,7 @@ function linesBetweenHeading(text: string, start: string, end: string): string[]
 }
 
 function extractInstructionLines(text: string): string[] {
+  // "Changer d'affichage" / "Par portion:" are section markers specific to ricardocuisine.com
   const preparationSection = linesBetween(text, "Changer d'affichage", 'Par portion:');
   const lines = preparationSection.length ? preparationSection : linesBetweenHeading(text, 'preparation', 'par portion:');
 
