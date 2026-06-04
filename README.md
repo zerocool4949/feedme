@@ -75,16 +75,16 @@ L'APK cible l'API auto-hébergée : `https://feedme.lyranet.xyz/api`
 
 Prérequis sur la machine de build :
 
-- JDK 21 (`C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot`)
-- Android SDK à `C:\Android` (packages : `platform-tools`, `platforms;android-36`, `build-tools;36.0.0`)
-- `android/local.properties` contenant `sdk.dir=C\:\\Android`
+- JDK 21 installé, avec `JAVA_HOME` qui pointe vers ce JDK
+- Android SDK installé avec les packages `platform-tools`, `platforms;android-36`, `build-tools;36.0.0`
+- `ANDROID_HOME` défini ou `android/local.properties` contenant le chemin du SDK, par exemple `sdk.dir=C\:\\Android`
 
 Construire l'APK debug :
 
 ```powershell
-$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
+$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot' # adapte ce chemin si besoin
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
-$env:ANDROID_HOME='C:\Android'
+$env:ANDROID_HOME='C:\Android' # adapte ce chemin si besoin
 npm run android:build:debug
 ```
 

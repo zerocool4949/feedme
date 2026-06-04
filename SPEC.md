@@ -124,7 +124,7 @@ Current Android packaging status:
 * Android platform project is generated under `android/`
 * Android build mode uses `frontend/.env.android`
 * The APK is configured for the hosted API at `https://feedme.lyranet.xyz/api`
-* The local debug APK build is not complete because the Android SDK is not fully installed/configured
+* The local debug APK build succeeds when JDK 21 and the required Android SDK packages are configured
 
 ---
 
