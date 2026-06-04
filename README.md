@@ -123,6 +123,6 @@ Traduit les titres, descriptions, instructions et ingrédients en français via 
 ## Stack
 
 - **Frontend** : React · Vite · TypeScript · TanStack Query · Material UI
-- **Backend** : Hono · Prisma ORM · Zod
+- **Backend** : Hono · Prisma ORM · Zod · Vitest
 - **Base de données** : PostgreSQL
 - **Déploiement** : Docker Compose · GitHub Actions CI → GHCR

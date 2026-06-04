@@ -172,18 +172,19 @@ Avoid assumptions about local development environments.
 
 # UI Conventions
 
-Theme is "Cozy Midnight Kitchen" — dark navy with soft blue accents, defined in `frontend/src/main.tsx`.
+Theme is "Warm Cookbook" — single light mode only, warm off-white background with soft blue accents, defined in `frontend/src/main.tsx`. There is no dark mode. Do not add a dark mode toggle.
 
 Key palette values:
-* Background: `#0B1220`
-* Surface: `#121C2E`
-* Primary accent: `#7CB8FF`
-* Text: `#F4F7FB`
-* Muted text: `#AAB6C8`
+* Background: `#FDFCF8`
+* Surface: `#FFFFFF`
+* Primary accent: `#5B8DEF`
+* Text: `#1C1C1E`
+* Muted text: `#6B7280`
+* Divider: `rgba(0,0,0,0.07)`
 
 Do not change the color scheme without being asked.
 
-Cards use 16px rounded corners, soft borders (`rgba(255,255,255,0.08)`), and a hover lift animation.
+Cards use 16px rounded corners, soft box-shadow (`0 2px 16px rgba(0,0,0,0.07)`), no border, and a hover lift animation.
 
 List pages show only the title and image on each card. All other content belongs on the detail page.
 

@@ -10,7 +10,7 @@ Done:
 * React + Vite + TypeScript frontend
 * React Router routes for list, detail, create, edit, and import pages
 * TanStack Query API integration
-* Material UI responsive layout with persistent dark/light mode (blue pastel palette)
+* Material UI responsive layout with warm cookbook light theme (blue pastel palette, no dark mode)
 * Recipe list page with 3-column responsive grid (1 on mobile, 2 on tablet, 3 on desktop)
 * Hono REST API
 * Prisma schema and migrations
@@ -24,6 +24,8 @@ Done:
 * Search by title, notes, tags, ingredient names, and normalized ingredient names
 * Shuffle meal suggestions with requested counts capped to 1 through 7 and image previews
 * Recipe import with JSON-LD, schema.org Recipe, OpenGraph, and HTML fallback extraction and editable draft flow
+* Vitest unit tests for recipe import extraction
+* Sharing model: non-owners can hide shared recipes per-account, with a dedicated restore page
 * Dockerfiles for frontend and backend
 * GitHub Actions CI publishing images to GHCR
 
@@ -272,7 +274,7 @@ Requirements:
 * case insensitive
 * partial matching
 * fast response time
-* UI remains usable in light and dark color modes
+* UI is light theme only (warm cookbook aesthetic)
 
 Examples:
 
