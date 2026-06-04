@@ -16,6 +16,7 @@ Done:
 * Prisma schema and migrations
 * PostgreSQL Docker service with persistent volume
 * Multi-user authentication with JWT
+* Authenticated password change with current-password verification
 * Recipe CRUD
 * Ingredient model with normalized ingredient names
 * Ingredient quantity/unit parsing before storage
@@ -26,7 +27,7 @@ Done:
 * Recipe import with JSON-LD, schema.org Recipe, OpenGraph, and HTML fallback extraction and editable draft flow
 * Vitest unit tests for recipe import extraction
 * Sharing model: non-owners can hide shared recipes per-account, with a dedicated restore page
-* Capacitor Android APK: debug build succeeds, targets `https://feedme.lyranet.xyz/api`, Kotlin MainActivity, Android back button handled
+* Capacitor Android APK: debug and signed release builds succeed, targets `https://feedme.lyranet.xyz/api`, Kotlin MainActivity, Android back button handled
 * Dockerfiles for frontend and backend
 * GitHub Actions CI publishing images to GHCR
 
@@ -45,6 +46,7 @@ Verified:
 * Android-mode frontend build succeeds with `npm run build:android --workspace frontend`
 * Capacitor sync succeeds with `npm run android:sync`
 * Debug APK builds successfully with `npm run android:build:debug` (requires JDK 21 and Android SDK at `C:\Android`)
+* Signed release APK builds successfully with `npm run android:build:release` when local signing files are present
 
 ---
 
@@ -146,6 +148,8 @@ Fields:
 * updated_at
 
 Users authenticate with username and password. Recipes are scoped by owner unless they are shared.
+
+Authenticated users can change their password from the app. The API requires the current password, hashes the new password, and the frontend clears the JWT token after success so the user logs in again.
 
 ---
 

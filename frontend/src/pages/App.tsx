@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
+import LockResetIcon from '@mui/icons-material/LockReset';
 import LogoutIcon from '@mui/icons-material/Logout';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
@@ -63,6 +64,16 @@ export function App({ onLogout }: AppProps) {
             </Stack>
 
             <Stack direction="row" spacing={0.5} alignItems="center">
+              <Tooltip title="Changer le mot de passe">
+                <IconButton
+                  component={Link}
+                  to="/account/password"
+                  size="small"
+                  sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+                >
+                  <LockResetIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
               <Button
                 component={Link}
                 to="/import"

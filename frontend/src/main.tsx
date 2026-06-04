@@ -8,6 +8,7 @@ import { App } from './pages/App';
 import { HiddenRecipesPage } from './pages/HiddenRecipesPage';
 import { ImportPage } from './pages/ImportPage';
 import { LoginPage } from './pages/LoginPage';
+import { PasswordPage } from './pages/PasswordPage';
 import { RecipeDetailPage } from './pages/RecipeDetailPage';
 import { RecipeFormPage } from './pages/RecipeFormPage';
 import { RecipeListPage } from './pages/RecipeListPage';
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: 'recipes/:id', element: <RecipeDetailPage /> },
       { path: 'recipes/:id/edit', element: <RecipeFormPage /> },
       { path: 'import', element: <ImportPage /> },
+      { path: 'account/password', element: <PasswordPage /> },
     ],
   },
 ]);

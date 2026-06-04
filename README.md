@@ -106,6 +106,34 @@ Installer sur un appareil connecté :
 adb install android\app\build\outputs\apk\debug\app-debug.apk
 ```
 
+### APK release signé
+
+Le keystore et ses mots de passe ne doivent pas être commités.
+
+Créer `android/keystore.properties` :
+
+```properties
+storeFile=../feedme-release.keystore
+storePassword=...
+keyAlias=feedme
+keyPassword=...
+```
+
+Construire l'APK release signé :
+
+```powershell
+$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot' # adapte ce chemin si besoin
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+$env:ANDROID_HOME='C:\Android' # adapte ce chemin si besoin
+npm run android:build:release
+```
+
+APK généré :
+
+```text
+android/app/build/outputs/apk/release/app-release.apk
+```
+
 ---
 
 ## Gestion des utilisateurs
@@ -121,6 +149,8 @@ Définir `JWT_SECRET` dans un fichier `.env` sur le serveur :
 ```
 JWT_SECRET=une-chaine-aleatoire-longue-et-secrete
 ```
+
+Les utilisateurs connectÃ©s peuvent modifier leur mot de passe depuis l'application. AprÃ¨s modification, la session locale est supprimÃ©e et l'utilisateur doit se reconnecter.
 
 ---
 

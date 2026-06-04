@@ -92,6 +92,13 @@ Backend:
 * Prisma
 * Zod
 
+Auth:
+
+* Users authenticate with username and password.
+* Password changes are authenticated only.
+* Password change requires the current password and stores a bcrypt hash.
+* After a successful password change, the frontend clears the JWT and forces a new login.
+
 Database:
 
 * PostgreSQL
@@ -99,6 +106,14 @@ Database:
 Deployment:
 
 * Docker Compose
+
+Android:
+
+* Capacitor Android targets `https://feedme.lyranet.xyz/api`.
+* Debug APK command: `npm run android:build:debug`.
+* Signed release APK command: `npm run android:build:release`.
+* Release signing uses ignored local files: `android/feedme-release.keystore` and `android/keystore.properties`.
+* Never commit keystores, key passwords, or `android/local.properties`.
 
 ---
 

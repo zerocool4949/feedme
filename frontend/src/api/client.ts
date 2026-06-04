@@ -13,6 +13,13 @@ export async function login(username: string, password: string): Promise<string>
   return data.token;
 }
 
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  await request('/auth/password', {
+    method: 'PATCH',
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+}
+
 export async function listRecipes(search: string): Promise<Recipe[]> {
   const query = search.trim() ? `?search=${encodeURIComponent(search.trim())}` : '';
   return request<Recipe[]>(`/recipes${query}`);

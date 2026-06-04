@@ -22,7 +22,12 @@ export const createRecipeSchema = z.object({
 export const updateRecipeSchema = createRecipeSchema.partial();
 export const importRecipeSchema = z.object({ url: z.string().url() });
 export const loginSchema = z.object({ username: z.string(), password: z.string() });
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8),
+});
 
 export type IngredientDto = z.infer<typeof ingredientSchema>;
 export type CreateRecipeDto = z.infer<typeof createRecipeSchema>;
 export type UpdateRecipeDto = z.infer<typeof updateRecipeSchema>;
+export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
