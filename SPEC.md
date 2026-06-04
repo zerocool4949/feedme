@@ -26,24 +26,13 @@ Done:
 * Recipe import with JSON-LD, schema.org Recipe, OpenGraph, and HTML fallback extraction and editable draft flow
 * Vitest unit tests for recipe import extraction
 * Sharing model: non-owners can hide shared recipes per-account, with a dedicated restore page
-* Capacitor dependencies, config, Android build scripts, and generated Android project scaffold
+* Capacitor Android APK: debug build succeeds, targets `https://feedme.lyranet.xyz/api`
 * Dockerfiles for frontend and backend
 * GitHub Actions CI publishing images to GHCR
-
-In progress:
-
-* Capacitor Android debug APK packaging
-  * App id: `xyz.lyranet.feedme`
-  * App name: `FeedMe`
-  * Android API target: `https://feedme.lyranet.xyz/api`
-  * Android project exists in `android/`
-  * `npm run android:sync` succeeds
-  * Debug APK build is blocked until Android SDK packages are installed/configured
 
 Not done:
 
 * Meal planning calendar
-* Completed Capacitor Android debug APK build
 * Automated tests
 
 Verified:
@@ -55,14 +44,7 @@ Verified:
 * Migrations run on container startup via `prisma migrate deploy`
 * Android-mode frontend build succeeds with `npm run build:android --workspace frontend`
 * Capacitor sync succeeds with `npm run android:sync`
-
-Android APK remaining work:
-
-* Install/configure Android SDK command-line tools
-* Install SDK packages: `platform-tools`, `platforms;android-36`, `build-tools;36.0.0`
-* Run APK build with JDK 21, not JDK 25
-* Build debug APK with `npm run android:build:debug`
-* Smoke test installed APK against `https://feedme.lyranet.xyz/api`
+* Debug APK builds successfully with `npm run android:build:debug` (requires JDK 21 and Android SDK at `C:\Android`)
 
 ---
 

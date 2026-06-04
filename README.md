@@ -71,63 +71,39 @@ Frontend : `http://localhost:2323`
 
 ## Android APK
 
-Le premier APK Android cible l'API auto-hebergee :
+L'APK cible l'API auto-hébergée : `https://feedme.lyranet.xyz/api`
 
-`https://feedme.lyranet.xyz/api`
+Prérequis sur la machine de build :
 
-Etat actuel :
+- JDK 21 (`C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot`)
+- Android SDK à `C:\Android` (packages : `platform-tools`, `platforms;android-36`, `build-tools;36.0.0`)
+- `android/local.properties` contenant `sdk.dir=C\:\\Android`
 
-- Capacitor est installe.
-- Le projet Android existe dans `android/`.
-- La configuration Capacitor existe dans `capacitor.config.ts`.
-- Le mode Android frontend existe dans `frontend/.env.android`.
-- `npm run android:sync` fonctionne.
-- Le build APK debug n'est pas encore termine.
+Construire l'APK debug :
 
-Prerequis :
-
-- JDK 21 installe et utilise pour le build Android
-- Android SDK installe et configure
-- `adb` disponible si tu veux installer/tester sur un telephone ou un emulateur
-
-Il reste a installer/configurer les packages Android SDK :
-
-- `platform-tools`
-- `platforms;android-36`
-- `build-tools;36.0.0`
-
-Le dernier blocage connu etait :
-
-```text
-SDK location not found. Define a valid SDK location with an ANDROID_HOME environment variable
-```
-
-Note : JDK 25 est trop recent pour le build Gradle actuel. Utiliser JDK 21.
-
-Construire un APK debug :
-
-```bash
+```powershell
+$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+$env:ANDROID_HOME='C:\Android'
 npm run android:build:debug
 ```
 
-APK genere :
+APK généré :
 
-```text
+```
 android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Synchroniser seulement le projet Android apres une modification frontend :
+Synchroniser le projet Android après une modification frontend :
 
 ```bash
 npm run android:sync
 ```
 
-Si `JAVA_HOME` pointe encore vers JDK 25, lancer le build avec JDK 21 :
+Installer sur un appareil connecté :
 
-```powershell
-$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
-$env:Path="$env:JAVA_HOME\bin;$env:Path"
-npm run android:build:debug
+```bash
+adb install android\app\build\outputs\apk\debug\app-debug.apk
 ```
 
 ---
