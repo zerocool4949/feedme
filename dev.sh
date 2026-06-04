@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+export COMPOSE_PROJECT_NAME=feedme-dev
 DB_URL="postgresql://feedme:feedme_password@localhost:5432/feedme?schema=public"
 
 echo "Starting Postgres..."
@@ -9,7 +10,7 @@ docker compose up postgres -d > /dev/null
 echo "Waiting for Postgres to be healthy..."
 retries=20
 while [ $retries -gt 0 ]; do
-  health=$(docker inspect --format "{{.State.Health.Status}}" feedme-postgres-1 2>/dev/null || true)
+  health=$(docker inspect --format "{{.State.Health.Status}}" feedme-dev-postgres-1 2>/dev/null || true)
   [ "$health" = "healthy" ] && break
   sleep 2
   retries=$((retries - 1))
@@ -24,7 +25,7 @@ echo "Starting backend..."
 DATABASE_URL="$DB_URL" PORT=3000 npm --prefix backend run start:dev &
 
 echo "Starting frontend..."
-npm --prefix frontend run dev &
+npm --prefix frontend run dev -- --host &
 
 echo "Done. Frontend: http://localhost:5173  Backend: http://localhost:3000"
 wait

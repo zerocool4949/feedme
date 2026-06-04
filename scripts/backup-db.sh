@@ -4,6 +4,9 @@ set -e
 OUTPUT_DIR="${1:-backups}"
 DB_NAME="${2:-feedme}"
 DB_USER="${3:-feedme}"
+ENV="${4:-prod}"
+
+[ "$ENV" = "dev" ] && export COMPOSE_PROJECT_NAME=feedme-dev
 
 mkdir -p "$OUTPUT_DIR"
 
