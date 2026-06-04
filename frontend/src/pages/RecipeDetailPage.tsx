@@ -86,14 +86,14 @@ export function RecipeDetailPage() {
           </Stack>
         </Box>
         {canManageRecipe && (
-          <Stack direction="row" spacing={1} flexShrink={0}>
+          <Stack direction="row" spacing={1} flexShrink={0} sx={{ width: { xs: '100%', sm: 'auto' } }}>
             <Button
               component={Link}
               to={`/recipes/${recipe.id}/edit`}
               variant="outlined"
               size="small"
               startIcon={<EditIcon />}
-              sx={{ borderRadius: '10px' }}
+              sx={{ borderRadius: '10px', flex: { xs: 1, sm: 'initial' } }}
             >
               Modifier
             </Button>
@@ -103,7 +103,7 @@ export function RecipeDetailPage() {
               size="small"
               onClick={() => setConfirmOpen(true)}
               startIcon={<DeleteOutlineIcon />}
-              sx={{ borderRadius: '10px' }}
+              sx={{ borderRadius: '10px', flex: { xs: 1, sm: 'initial' } }}
             >
               Supprimer
             </Button>
@@ -117,7 +117,7 @@ export function RecipeDetailPage() {
             disabled={hideMutation.isPending}
             onClick={() => hideMutation.mutate()}
             startIcon={<VisibilityOffIcon />}
-            sx={{ borderRadius: '10px', flexShrink: 0 }}
+            sx={{ borderRadius: '10px', flexShrink: 0, width: { xs: '100%', sm: 'auto' } }}
           >
             Masquer
           </Button>
@@ -132,7 +132,7 @@ export function RecipeDetailPage() {
           alt=""
           sx={{
             width: '100%',
-            maxHeight: 520,
+            maxHeight: { xs: 360, md: 520 },
             objectFit: 'cover',
             borderRadius: '16px',
             display: 'block',
@@ -207,15 +207,20 @@ export function RecipeDetailPage() {
               </>
             )}
             {recipe.sourceUrl && (
-              <Stack direction="row" alignItems="center" spacing={0.75} sx={{ mt: recipe.notes ? 2 : 0 }}>
+              <Stack direction="row" alignItems="flex-start" spacing={0.75} sx={{ mt: recipe.notes ? 2 : 0 }}>
                 <LinkIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
-                <Typography variant="body2">
+                <Typography variant="body2" sx={{ minWidth: 0 }}>
                   <Box
                     component="a"
                     href={recipe.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    sx={{ color: 'primary.main', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+                    sx={{
+                      color: 'primary.main',
+                      textDecoration: 'none',
+                      overflowWrap: 'anywhere',
+                      '&:hover': { textDecoration: 'underline' },
+                    }}
                   >
                     {recipe.sourceUrl}
                   </Box>

@@ -28,6 +28,9 @@ Done:
 * Vitest unit tests for recipe import extraction
 * Sharing model: non-owners can hide shared recipes per-account, with a dedicated restore page
 * Capacitor Android APK: debug and signed release builds succeed, targets `https://feedme.lyranet.xyz/api`, Kotlin MainActivity, Android back button handled
+* Android release workflow uses versioned APK names and local-only signing files
+* Database backup and restore scripts exist for the PostgreSQL Docker service
+* Focused UI polish for mobile recipe actions, import form behavior, and long source URLs
 * Dockerfiles for frontend and backend
 * GitHub Actions CI publishing images to GHCR
 
@@ -47,6 +50,7 @@ Verified:
 * Capacitor sync succeeds with `npm run android:sync`
 * Debug APK builds successfully with `npm run android:build:debug` (requires JDK 21 and Android SDK at `C:\Android`)
 * Signed release APK builds successfully with `npm run android:build:release` when local signing files are present
+* Database backups can be created with `npm run db:backup`
 
 ---
 
@@ -127,6 +131,7 @@ Current Android packaging status:
 * Android build mode uses `frontend/.env.android`
 * The APK is configured for the hosted API at `https://feedme.lyranet.xyz/api`
 * The local debug APK build succeeds when JDK 21 and the required Android SDK packages are configured
+* APK outputs are named `feedme-<version>-<buildType>.apk`
 
 ---
 
@@ -419,6 +424,7 @@ Required containers:
 Requirements:
 
 * persistent database volume
+* backup and restore scripts for the PostgreSQL service
 * restart unless-stopped
 * environment variable configuration
 * reverse proxy friendly

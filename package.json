@@ -1,5 +1,6 @@
 {
   "name": "feedme",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "backend",
@@ -10,7 +11,8 @@
     "lint": "npm run lint --workspace backend && npm run lint --workspace frontend",
     "android:sync": "npm run build:android --workspace frontend && cap sync android",
     "android:build:debug": "npm run android:sync && android\\gradlew.bat assembleDebug -p android",
-    "android:build:release": "npm run android:sync && android\\gradlew.bat assembleRelease -p android"
+    "android:build:release": "npm run android:sync && android\\gradlew.bat assembleRelease -p android",
+    "db:backup": "powershell -ExecutionPolicy Bypass -File scripts/backup-db.ps1"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.0",

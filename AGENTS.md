@@ -112,6 +112,7 @@ Android:
 * Capacitor Android targets `https://feedme.lyranet.xyz/api`.
 * Debug APK command: `npm run android:build:debug`.
 * Signed release APK command: `npm run android:build:release`.
+* APK outputs are named `feedme-<versionName>-<buildType>.apk`.
 * Release signing uses ignored local files: `android/feedme-release.keystore` and `android/keystore.properties`.
 * Never commit keystores, key passwords, or `android/local.properties`.
 
@@ -181,6 +182,8 @@ The application is self-hosted.
 Everything must work through:
 
 docker compose up -d
+
+Database backups use `scripts/backup-db.ps1`; restores use `scripts/restore-db.ps1` and require `-ConfirmRestore`.
 
 Avoid assumptions about local development environments.
 

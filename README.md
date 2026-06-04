@@ -88,7 +88,7 @@ $env:ANDROID_HOME='C:\Android'
 npm run android:build:debug
 ```
 
-Output: `android/app/build/outputs/apk/debug/app-debug.apk`
+Output: `android/app/build/outputs/apk/debug/feedme-1.0.0-debug.apk`
 
 Sync the Android project after a frontend change:
 
@@ -124,7 +124,37 @@ $env:ANDROID_HOME='C:\Android'
 npm run android:build:release
 ```
 
-Output: `android/app/build/outputs/apk/release/app-release.apk`
+Output: `android/app/build/outputs/apk/release/feedme-1.0.0-release.apk`
+
+Before a release:
+
+1. Update the root `package.json` version.
+2. Update `versionCode` and `versionName` in `android/app/build.gradle`.
+3. Run `npm run lint`.
+4. Run `npm run build`.
+5. Run `npm run android:build:release`.
+
+The release APK filename includes the Android `versionName`.
+
+---
+
+## Database backup and restore
+
+Backups are written to the ignored local `backups/` folder.
+
+Create a backup:
+
+```powershell
+npm run db:backup
+```
+
+Restore a backup:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/restore-db.ps1 -BackupPath backups\feedme-YYYYMMDD-HHMMSS.sql -ConfirmRestore
+```
+
+Restore is destructive. Verify the backup path before adding `-ConfirmRestore`.
 
 ---
 

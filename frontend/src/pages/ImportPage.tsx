@@ -17,21 +17,38 @@ export function ImportPage() {
   });
 
   return (
-    <Card variant="outlined">
+    <Card sx={{ borderRadius: '20px' }}>
       <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-        <Stack spacing={2}>
+        <Stack
+          component="form"
+          spacing={2}
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (url.trim() && !importMutation.isPending) {
+              importMutation.mutate(url);
+            }
+          }}
+        >
           <Typography variant="h5">Importer une recette</Typography>
           <Typography color="text.secondary">
             Colle l'URL d'une recette pour créer un brouillon modifiable avant de l'enregistrer.
           </Typography>
-          <TextField label="URL de la recette" value={url} onChange={(event) => setUrl(event.target.value)} fullWidth />
+          <TextField
+            label="URL de la recette"
+            value={url}
+            onChange={(event) => setUrl(event.target.value)}
+            fullWidth
+            type="url"
+            autoComplete="url"
+            inputMode="url"
+          />
           {importMutation.isError ? <Alert severity="error">{importMutation.error.message}</Alert> : null}
           <Button
+            type="submit"
             variant="contained"
-            onClick={() => importMutation.mutate(url)}
             disabled={!url.trim() || importMutation.isPending}
             startIcon={<UploadFileIcon />}
-            sx={{ alignSelf: 'flex-start' }}
+            sx={{ alignSelf: { xs: 'stretch', sm: 'flex-start' }, borderRadius: '12px' }}
           >
             {importMutation.isPending ? 'Import en cours...' : 'Créer un brouillon'}
           </Button>

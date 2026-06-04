@@ -202,7 +202,7 @@ export function RecipeFormPage() {
                     startIcon={<DeleteOutlineIcon />}
                     disabled={recipe.ingredients.length === 1}
                     onClick={() => updateField('ingredients', recipe.ingredients.filter((_, i) => i !== index))}
-                    sx={{ borderRadius: '10px', flexShrink: 0 }}
+                    sx={{ borderRadius: '10px', flexShrink: 0, width: { xs: '100%', sm: 'auto' } }}
                   >
                     Retirer
                   </Button>
@@ -219,7 +219,7 @@ export function RecipeFormPage() {
                   { name: '', quantity: '', unit: '', originalText: '' },
                 ])
               }
-              sx={{ mt: 1.5, borderRadius: '10px' }}
+              sx={{ mt: 1.5, borderRadius: '10px', width: { xs: '100%', sm: 'auto' } }}
             >
               Ajouter un ingrédient
             </Button>
