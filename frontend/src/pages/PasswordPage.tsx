@@ -1,6 +1,8 @@
 import LockResetIcon from '@mui/icons-material/LockReset';
 import { Alert, Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
 import { FormEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { changePassword } from '../api/client';
 
 const fieldRadius = { '& .MuiOutlinedInput-root': { borderRadius: '12px' } };
@@ -9,34 +11,36 @@ export function PasswordPage() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [pending, setPending] = useState(false);
+  const [validationError, setValidationError] = useState('');
 
-  async function handleSubmit(event: FormEvent) {
+  const mutation = useMutation({
+    mutationFn: () => changePassword(currentPassword, newPassword),
+    onSuccess: () => {
+      setTimeout(() => {
+        localStorage.removeItem('feedme-token');
+        window.location.reload();
+      }, 1500);
+    },
+  });
+
+  function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    setError('');
+    setValidationError('');
 
     if (newPassword.length < 8) {
-      setError('Le nouveau mot de passe doit contenir au moins 8 caractères.');
+      setValidationError('Le nouveau mot de passe doit contenir au moins 8 caractères.');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError('Les deux nouveaux mots de passe ne correspondent pas.');
+      setValidationError('Les deux nouveaux mots de passe ne correspondent pas.');
       return;
     }
 
-    setPending(true);
-    try {
-      await changePassword(currentPassword, newPassword);
-      localStorage.removeItem('feedme-token');
-      window.location.reload();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Impossible de modifier le mot de passe.');
-    } finally {
-      setPending(false);
-    }
+    mutation.mutate();
   }
+
+  const error = validationError || (mutation.error instanceof Error ? mutation.error.message : '');
 
   return (
     <Card sx={{ borderRadius: '20px', maxWidth: 560, mx: 'auto' }}>
@@ -49,6 +53,7 @@ export function PasswordPage() {
             type="password"
             value={currentPassword}
             autoComplete="current-password"
+            disabled={mutation.isSuccess}
             onChange={(event) => setCurrentPassword(event.target.value)}
             sx={fieldRadius}
           />
@@ -58,6 +63,7 @@ export function PasswordPage() {
             type="password"
             value={newPassword}
             autoComplete="new-password"
+            disabled={mutation.isSuccess}
             onChange={(event) => setNewPassword(event.target.value)}
             sx={fieldRadius}
           />
@@ -67,20 +73,38 @@ export function PasswordPage() {
             type="password"
             value={confirmPassword}
             autoComplete="new-password"
+            disabled={mutation.isSuccess}
             onChange={(event) => setConfirmPassword(event.target.value)}
             sx={fieldRadius}
           />
-          {error ? <Alert severity="error">{error}</Alert> : null}
-          <Button
-            type="submit"
-            variant="contained"
-            startIcon={<LockResetIcon />}
-            disabled={pending}
-            size="large"
-            sx={{ borderRadius: '12px', py: 1.5 }}
-          >
-            {pending ? 'Modification...' : 'Modifier le mot de passe'}
-          </Button>
+          {mutation.isSuccess && (
+            <Alert severity="success">
+              Mot de passe modifié. Redirection vers la connexion…
+            </Alert>
+          )}
+          {error && <Alert severity="error">{error}</Alert>}
+          <Stack direction="row" spacing={1.5}>
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={<LockResetIcon />}
+              disabled={mutation.isPending || mutation.isSuccess}
+              size="large"
+              sx={{ borderRadius: '12px', py: 1.5, flex: 1 }}
+            >
+              {mutation.isPending ? 'Modification...' : 'Modifier le mot de passe'}
+            </Button>
+            <Button
+              component={Link}
+              to="/"
+              variant="outlined"
+              size="large"
+              disabled={mutation.isPending || mutation.isSuccess}
+              sx={{ borderRadius: '12px', py: 1.5 }}
+            >
+              Annuler
+            </Button>
+          </Stack>
         </Stack>
       </CardContent>
     </Card>
