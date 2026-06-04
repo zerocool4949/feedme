@@ -110,11 +110,10 @@ Deployment:
 Android:
 
 * Capacitor Android targets `https://feedme.lyranet.xyz/api`.
-* Debug APK command: `npm run android:build:debug`.
-* Signed release APK command: `npm run android:build:release`.
+* APKs are built via GitHub Actions on every push to `main` — download from the Actions tab.
 * APK outputs are named `feedme-<versionName>-<buildType>.apk`.
-* Release signing uses ignored local files: `android/feedme-release.keystore` and `android/keystore.properties`.
-* Never commit keystores, key passwords, or `android/local.properties`.
+* Signing uses `android/feedme-release.keystore` (committed) and GitHub Actions secrets `KEYSTORE_PASSWORD` / `KEY_PASSWORD`.
+* Never commit `android/local.properties`.
 
 ---
 
@@ -183,7 +182,7 @@ Everything must work through:
 
 docker compose up -d
 
-Database backups use `scripts/backup-db.ps1`; restores use `scripts/restore-db.ps1` and require `-ConfirmRestore`.
+Database backups use `scripts/backup-db.sh`; restores use `scripts/restore-db.sh` (prompts for confirmation).
 
 Avoid assumptions about local development environments.
 
@@ -217,15 +216,13 @@ Responsive breakpoints follow MUI defaults: xs mobile, sm tablet, lg desktop.
 
 # Mobile Compatibility
 
-Future Android APK support is required.
+Android APK is built via GitHub Actions. All UI must remain mobile friendly.
 
 Avoid:
 
 * browser-specific hacks
 * desktop-only assumptions
 * dependencies incompatible with Capacitor
-
-All UI must remain mobile friendly.
 
 ---
 

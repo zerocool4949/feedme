@@ -21,51 +21,16 @@ Database migrations run automatically on startup.
 
 ## Local development
 
-### Option 1 — npm (recommended, hot reload)
-
 Requires Node.js and Docker.
 
-**Terminal 1 — database only**
-
 ```bash
-docker compose up postgres -d
+./dev.sh
 ```
 
-**Terminal 2 — backend**
-
-```bash
-cd backend
-DATABASE_URL="postgresql://feedme:feedme_password@localhost:5432/feedme?schema=public" npx prisma migrate deploy
-DATABASE_URL="postgresql://feedme:feedme_password@localhost:5432/feedme?schema=public" npm run start:dev
-```
-
-**Terminal 3 — frontend**
-
-```bash
-cd frontend
-npm run dev
-```
-
-Frontend: `http://localhost:5173`
+Frontend: `http://localhost:5173`  
 Backend: `http://localhost:3000`
 
-### Option 2 — Docker (production build test)
-
-```bash
-# Create docker-compose.override.yml with local build contexts:
-# services:
-#   backend:
-#     build: { context: ./backend }
-#     image: feedme-backend-local
-#   frontend:
-#     build: { context: ./frontend }
-#     image: feedme-frontend-local
-
-docker compose build
-docker compose up -d
-```
-
-Frontend: `http://localhost:2323`
+Uses a separate dev Postgres on port 5433 — production data is untouched.
 
 ---
 
@@ -73,22 +38,7 @@ Frontend: `http://localhost:2323`
 
 The APK targets the self-hosted API: `https://feedme.lyranet.xyz/api`
 
-Build machine requirements:
-
-- JDK 21 with `JAVA_HOME` pointing to it
-- Android SDK with packages `platform-tools`, `platforms;android-36`, `build-tools;36.0.0`
-- `ANDROID_HOME` set, or `android/local.properties` containing `sdk.dir=C\:\\Android`
-
-Build the debug APK:
-
-```powershell
-$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
-$env:Path="$env:JAVA_HOME\bin;$env:Path"
-$env:ANDROID_HOME='C:\Android'
-npm run android:build:debug
-```
-
-Output: `android/app/build/outputs/apk/debug/feedme-1.0.0-debug.apk`
+A signed release APK is built automatically by GitHub Actions on every push to `main`. Download it from the **Actions** tab → latest run → **feedme-apk** artifact.
 
 Sync the Android project after a frontend change:
 
@@ -96,45 +46,11 @@ Sync the Android project after a frontend change:
 npm run android:sync
 ```
 
-Install on a connected device:
-
-```bash
-adb install android\app\build\outputs\apk\debug\app-debug.apk
-```
-
-### Signed release APK
-
-Never commit the keystore or its passwords.
-
-Create `android/keystore.properties`:
-
-```properties
-storeFile=../feedme-release.keystore
-storePassword=...
-keyAlias=feedme
-keyPassword=...
-```
-
-Build the signed release APK:
-
-```powershell
-$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
-$env:Path="$env:JAVA_HOME\bin;$env:Path"
-$env:ANDROID_HOME='C:\Android'
-npm run android:build:release
-```
-
-Output: `android/app/build/outputs/apk/release/feedme-1.0.0-release.apk`
-
 Before a release:
 
 1. Update the root `package.json` version.
 2. Update `versionCode` and `versionName` in `android/app/build.gradle`.
-3. Run `npm run lint`.
-4. Run `npm run build`.
-5. Run `npm run android:build:release`.
-
-The release APK filename includes the Android `versionName`.
+3. Push to `main` — the APK is built and uploaded automatically.
 
 ---
 
@@ -142,19 +58,17 @@ The release APK filename includes the Android `versionName`.
 
 Backups are written to the ignored local `backups/` folder.
 
-Create a backup:
+Create a backup (production by default):
 
-```powershell
-npm run db:backup
+```bash
+./scripts/backup-db.sh
 ```
 
-Restore a backup:
+Restore a backup (prompts for confirmation — destructive):
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/restore-db.ps1 -BackupPath backups\feedme-YYYYMMDD-HHMMSS.sql -ConfirmRestore
+```bash
+./scripts/restore-db.sh backups/feedme-YYYYMMDD-HHMMSS.sql
 ```
-
-Restore is destructive. Verify the backup path before adding `-ConfirmRestore`.
 
 ---
 
