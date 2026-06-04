@@ -48,12 +48,10 @@ jobs:
 
       - name: Create keystore.properties
         run: |
-          cat > android/keystore.properties <<EOF
-storeFile=../feedme-release.keystore
-storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-keyAlias=feedme
-keyPassword=${{ secrets.KEY_PASSWORD }}
-EOF
+          echo "storeFile=../feedme-release.keystore" > android/keystore.properties
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> android/keystore.properties
+          echo "keyAlias=feedme" >> android/keystore.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/keystore.properties
 
       - name: Build release APK
         run: ./gradlew assembleRelease
