@@ -83,13 +83,13 @@ export function HiddenRecipesPage() {
                   sx={{
                     width: '100%',
                     aspectRatio: '4/3',
-                    bgcolor: '#18253A',
+                    bgcolor: '#F3F4F6',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  <RestaurantMenuIcon sx={{ fontSize: 36, color: 'rgba(170,182,200,0.15)' }} />
+                  <RestaurantMenuIcon sx={{ fontSize: 36, color: 'rgba(0,0,0,0.1)' }} />
                 </Box>
               )}
               <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>

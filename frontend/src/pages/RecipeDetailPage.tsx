@@ -23,17 +23,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deleteRecipe, getRecipe, hideRecipe } from '../api/client';
 import { getCurrentUserId } from '../auth/current-user';
 
-const TAG_COLORS = [
-  { bg: 'rgba(124,184,255,0.15)', text: '#7CB8FF' },
-  { bg: 'rgba(125,211,167,0.15)', text: '#7DD3A7' },
-  { bg: 'rgba(167,139,250,0.15)', text: '#A78BFA' },
-  { bg: 'rgba(255,138,128,0.15)', text: '#FF8A80' },
-];
-
-function tagColor(tag: string) {
-  const hash = [...tag].reduce((a, c) => a + c.charCodeAt(0), 0);
-  return TAG_COLORS[hash % TAG_COLORS.length];
-}
 
 export function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -84,19 +73,16 @@ export function RecipeDetailPage() {
             <Chip
               label={visibilityLabel(recipe.visibility)}
               size="small"
-              sx={{ bgcolor: 'rgba(170,182,200,0.12)', color: 'text.secondary' }}
+              sx={{ bgcolor: 'rgba(0,0,0,0.05)', color: 'text.secondary' }}
             />
-            {recipe.tags.map((tag) => {
-              const color = tagColor(tag.tag);
-              return (
-                <Chip
-                  key={tag.id}
-                  label={tag.tag}
-                  size="small"
-                  sx={{ bgcolor: color.bg, color: color.text }}
-                />
-              );
-            })}
+            {recipe.tags.map((tag) => (
+              <Chip
+                key={tag.id}
+                label={tag.tag}
+                size="small"
+                sx={{ bgcolor: 'rgba(91,141,239,0.1)', color: 'primary.main' }}
+              />
+            ))}
           </Stack>
         </Box>
         {canManageRecipe && (
@@ -146,7 +132,7 @@ export function RecipeDetailPage() {
           alt=""
           sx={{
             width: '100%',
-            maxHeight: 440,
+            maxHeight: 520,
             objectFit: 'cover',
             borderRadius: '16px',
             display: 'block',
@@ -175,7 +161,7 @@ export function RecipeDetailPage() {
                   key={ingredient.id}
                   sx={{
                     py: 0.5,
-                    borderBottom: '1px solid rgba(255,255,255,0.05)',
+                    borderBottom: '1px solid rgba(0,0,0,0.05)',
                     '&:last-child': { borderBottom: 'none' },
                   }}
                 >

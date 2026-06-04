@@ -1,6 +1,4 @@
 import AddIcon from '@mui/icons-material/Add';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
 import LogoutIcon from '@mui/icons-material/Logout';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
@@ -8,14 +6,10 @@ import { Box, Button, Container, IconButton, Stack, Tooltip, Typography } from '
 import { Link, Outlet } from 'react-router-dom';
 
 interface AppProps {
-  mode: 'light' | 'dark';
-  onToggleMode: () => void;
   onLogout: () => void;
 }
 
-export function App({ mode, onToggleMode, onLogout }: AppProps) {
-  const isDark = mode === 'dark';
-
+export function App({ onLogout }: AppProps) {
   return (
     <Box sx={{ minHeight: '100vh' }}>
       <Box
@@ -26,7 +20,7 @@ export function App({ mode, onToggleMode, onLogout }: AppProps) {
           zIndex: 100,
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          bgcolor: isDark ? 'rgba(11,18,32,0.85)' : 'rgba(244,247,255,0.85)',
+          bgcolor: 'rgba(253,252,248,0.9)',
           borderBottom: '1px solid',
           borderColor: 'divider',
         }}
@@ -37,7 +31,7 @@ export function App({ mode, onToggleMode, onLogout }: AppProps) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              height: 60,
+              height: 56,
               gap: 2,
             }}
           >
@@ -51,8 +45,8 @@ export function App({ mode, onToggleMode, onLogout }: AppProps) {
             >
               <Box
                 sx={{
-                  width: 34,
-                  height: 34,
+                  width: 32,
+                  height: 32,
                   borderRadius: '10px',
                   bgcolor: 'primary.main',
                   display: 'flex',
@@ -61,7 +55,7 @@ export function App({ mode, onToggleMode, onLogout }: AppProps) {
                   flexShrink: 0,
                 }}
               >
-                <RestaurantMenuIcon sx={{ fontSize: 18, color: 'primary.contrastText' }} />
+                <RestaurantMenuIcon sx={{ fontSize: 17, color: 'primary.contrastText' }} />
               </Box>
               <Typography variant="h6" fontWeight={800} letterSpacing="-0.02em" sx={{ lineHeight: 1 }}>
                 FeedMe
@@ -69,15 +63,6 @@ export function App({ mode, onToggleMode, onLogout }: AppProps) {
             </Stack>
 
             <Stack direction="row" spacing={0.5} alignItems="center">
-              <Tooltip title={isDark ? 'Mode clair' : 'Mode sombre'}>
-                <IconButton
-                  onClick={onToggleMode}
-                  size="small"
-                  sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary' } }}
-                >
-                  {isDark ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
-                </IconButton>
-              </Tooltip>
               <Button
                 component={Link}
                 to="/import"

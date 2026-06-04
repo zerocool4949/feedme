@@ -50,13 +50,9 @@ function RecipeCard({
         flexDirection: 'column',
         borderRadius: '16px',
         overflow: 'hidden',
-        border: '1px solid rgba(255,255,255,0.08)',
-        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
         '&:hover': {
-          transform: 'translateY(-5px)',
-          bgcolor: '#1A2D4A',
-          borderColor: 'rgba(124,184,255,0.2)',
-          boxShadow: '0 24px 60px rgba(0,0,0,0.5)',
+          transform: 'translateY(-4px)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         },
       }}
     >
@@ -75,9 +71,9 @@ function RecipeCard({
               top: 8,
               right: 8,
               zIndex: 1,
-              bgcolor: 'rgba(10,16,28,0.78)',
-              color: 'text.primary',
-              '&:hover': { bgcolor: 'rgba(10,16,28,0.92)' },
+              bgcolor: 'rgba(255,255,255,0.85)',
+              color: 'text.secondary',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.97)' },
             }}
           >
             <VisibilityOffIcon fontSize="small" />
@@ -100,13 +96,13 @@ function RecipeCard({
             sx={{
               width: '100%',
               aspectRatio: compact ? '16/9' : '4/3',
-              bgcolor: '#18253A',
+              bgcolor: '#F3F4F6',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <RestaurantMenuIcon sx={{ fontSize: 36, color: 'rgba(170,182,200,0.15)' }} />
+            <RestaurantMenuIcon sx={{ fontSize: 36, color: 'rgba(0,0,0,0.1)' }} />
           </Box>
         )}
       </Box>
@@ -161,42 +157,44 @@ export function RecipeListPage() {
   return (
     <Stack spacing={4}>
       {/* Search */}
-      <TextField
-        placeholder="Rechercher une recette, un ingrédient, un tag…"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        fullWidth
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
-            </InputAdornment>
-          ),
-        }}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            borderRadius: '100px',
-            fontSize: '0.95rem',
-            pl: 0.5,
-          },
-        }}
-      />
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ sm: 'center' }}>
+        <TextField
+          placeholder="Rechercher une recette, un ingrédient, un tag…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: '100px',
+              fontSize: '0.95rem',
+              pl: 0.5,
+            },
+          }}
+        />
+        <Button
+          component={Link}
+          to="/recipes/hidden"
+          variant="outlined"
+          startIcon={<VisibilityOffIcon />}
+          sx={{ borderRadius: '100px', flexShrink: 0 }}
+        >
+          Masquées
+        </Button>
+      </Stack>
 
-      <Button
-        component={Link}
-        to="/recipes/hidden"
-        variant="outlined"
-        startIcon={<VisibilityOffIcon />}
-        sx={{ borderRadius: '100px', alignSelf: 'flex-start' }}
-      >
-        Masquées
-      </Button>
       {/* Shuffle — visual centerpiece */}
       <Box
         sx={{
           borderRadius: '20px',
-          background: 'linear-gradient(135deg, #121C2E 0%, #162340 60%, #1C2E50 100%)',
-          border: '1px solid rgba(124,184,255,0.12)',
+          background: 'linear-gradient(135deg, #EEF3FF 0%, #E6EEFF 60%, #EBF2FF 100%)',
+          border: '1px solid rgba(91,141,239,0.15)',
           p: { xs: 3, md: 4 },
           position: 'relative',
           overflow: 'hidden',
@@ -211,7 +209,7 @@ export function RecipeListPage() {
             width: 300,
             height: 300,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(124,184,255,0.07) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(91,141,239,0.1) 0%, transparent 70%)',
             pointerEvents: 'none',
           }}
         />
@@ -223,7 +221,7 @@ export function RecipeListPage() {
             width: 200,
             height: 200,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(125,211,167,0.04) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(91,141,239,0.06) 0%, transparent 70%)',
             pointerEvents: 'none',
           }}
         />
@@ -278,7 +276,7 @@ export function RecipeListPage() {
 
           {shuffleMutation.isPending && (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
-              <CircularProgress size={28} sx={{ color: '#7CB8FF' }} />
+              <CircularProgress size={28} />
             </Box>
           )}
 
@@ -288,7 +286,7 @@ export function RecipeListPage() {
                 textAlign: 'center',
                 py: 4,
                 borderRadius: '12px',
-                border: '1px dashed rgba(255,255,255,0.08)',
+                border: '1px dashed rgba(91,141,239,0.25)',
               }}
             >
               <Typography variant="body2" color="text.secondary">
@@ -340,7 +338,7 @@ export function RecipeListPage() {
           sx={{
             display: 'grid',
             gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
-            gap: { xs: 2, md: 2.5 },
+            gap: { xs: 2.5, md: 3 },
           }}
         >
           {recipes.map((recipe) => (
