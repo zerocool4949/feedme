@@ -110,9 +110,11 @@ Deployment:
 Android:
 
 * Capacitor Android targets `https://feedme.lyranet.xyz/api`.
-* APKs are built via GitHub Actions on every push to `main` — download from the Actions tab.
-* APK outputs are named `feedme-<versionName>-<buildType>.apk`.
-* Signing uses `android/feedme-release.keystore` (committed) and GitHub Actions secrets `KEYSTORE_PASSWORD` / `KEY_PASSWORD`.
+* APKs are built via GitHub Actions on every push.
+* Push to `main` → temporary artifact on the Actions tab (30 days).
+* Push a `v*` tag → permanent GitHub Release with the APK attached.
+* APK outputs are named `feedme-<versionName>-release.apk`.
+* Signing uses `android/feedme-release.keystore` (gitignored, stored as `KEYSTORE_BASE64` secret) and secrets `KEYSTORE_PASSWORD` / `KEY_PASSWORD`.
 * Never commit `android/local.properties`.
 
 ---

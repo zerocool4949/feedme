@@ -28,7 +28,7 @@ Done:
 * Vitest unit tests for recipe import extraction
 * Sharing model: non-owners can hide shared recipes per-account, with a dedicated restore page
 * Capacitor Android APK: signed release builds via GitHub Actions, targets `https://feedme.lyranet.xyz/api`, Kotlin MainActivity, Android back button handled
-* Android release workflow uses versioned APK names, signed with repo keystore and GitHub Actions secrets
+* Push to `main` produces a temporary artifact; pushing a `v*` tag creates a GitHub Release with the APK attached
 * Database backup and restore scripts exist for the PostgreSQL Docker service
 * Focused UI polish for mobile recipe actions, import form behavior, and long source URLs
 * Dockerfiles for frontend and backend
@@ -48,7 +48,7 @@ Verified:
 * Migrations run on container startup via `prisma migrate deploy`
 * Android-mode frontend build succeeds with `npm run build:android --workspace frontend`
 * Capacitor sync succeeds with `npm run android:sync`
-* Signed release APK builds via GitHub Actions on push to `main`
+* Signed release APK builds via GitHub Actions; tags publish to GitHub Releases
 * Database backups can be created with `npm run db:backup`
 
 ---
@@ -129,7 +129,7 @@ Android packaging:
 * Android platform project is generated under `android/`
 * Android build mode uses `frontend/.env.android`
 * The APK is configured for the hosted API at `https://feedme.lyranet.xyz/api`
-* Signed release APK is built by GitHub Actions on every push to `main`
+* Signed release APK is built by GitHub Actions; pushing a `v*` tag creates a GitHub Release
 * APK outputs are named `feedme-<version>-<buildType>.apk`
 
 ---

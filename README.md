@@ -38,19 +38,29 @@ Uses a separate dev Postgres on port 5433 — production data is untouched.
 
 The APK targets the self-hosted API: `https://feedme.lyranet.xyz/api`
 
-A signed release APK is built automatically by GitHub Actions on every push to `main`. Download it from the **Actions** tab → latest run → **feedme-apk** artifact.
+APKs are built automatically by GitHub Actions on every push.
+
+- **Push to `main`** — builds an APK and saves it as a temporary artifact (30 days) on the Actions tab.
+- **Push a version tag** — builds an APK and publishes it as a permanent GitHub Release.
+
+To release a new version:
+
+1. Update `versionCode` and `versionName` in `android/app/build.gradle`.
+2. Update the version in the root `package.json`.
+3. Commit, then tag and push:
+
+```bash
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+The APK will appear at `https://github.com/zerocool4949/feedme/releases`.
 
 Sync the Android project after a frontend change:
 
 ```bash
 npm run android:sync
 ```
-
-Before a release:
-
-1. Update the root `package.json` version.
-2. Update `versionCode` and `versionName` in `android/app/build.gradle`.
-3. Push to `main` — the APK is built and uploaded automatically.
 
 ---
 
