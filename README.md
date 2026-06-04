@@ -1,31 +1,31 @@
 # FeedMe
 
-Application auto-hébergée de gestion de recettes et d'idées de repas.
+Self-hosted recipe management and meal inspiration app.
 
 ---
 
-## Déploiement serveur
+## Server deployment
 
 ```bash
 docker compose pull
 docker compose up -d
 ```
 
-Frontend : `http://server-ip:2323`
+Frontend: `http://server-ip:2323`
 
-Santé API : `http://server-ip:2323/api/health`
+API health: `http://server-ip:2323/api/health`
 
-Les migrations de base de données s'exécutent automatiquement au démarrage.
+Database migrations run automatically on startup.
 
 ---
 
-## Développement local
+## Local development
 
-### Option 1 — npm (recommandé, hot reload)
+### Option 1 — npm (recommended, hot reload)
 
-Nécessite Node.js et Docker installés.
+Requires Node.js and Docker.
 
-**Terminal 1 — base de données uniquement**
+**Terminal 1 — database only**
 
 ```bash
 docker compose up postgres -d
@@ -46,13 +46,13 @@ cd frontend
 npm run dev
 ```
 
-Frontend : `http://localhost:5173`  
-Backend : `http://localhost:3000`
+Frontend: `http://localhost:5173`
+Backend: `http://localhost:3000`
 
-### Option 2 — Docker (test du build de production)
+### Option 2 — Docker (production build test)
 
 ```bash
-# Créer docker-compose.override.yml avec les build contexts locaux :
+# Create docker-compose.override.yml with local build contexts:
 # services:
 #   backend:
 #     build: { context: ./backend }
@@ -65,52 +65,48 @@ docker compose build
 docker compose up -d
 ```
 
-Frontend : `http://localhost:2323`
+Frontend: `http://localhost:2323`
 
 ---
 
 ## Android APK
 
-L'APK cible l'API auto-hébergée : `https://feedme.lyranet.xyz/api`
+The APK targets the self-hosted API: `https://feedme.lyranet.xyz/api`
 
-Prérequis sur la machine de build :
+Build machine requirements:
 
-- JDK 21 installé, avec `JAVA_HOME` qui pointe vers ce JDK
-- Android SDK installé avec les packages `platform-tools`, `platforms;android-36`, `build-tools;36.0.0`
-- `ANDROID_HOME` défini ou `android/local.properties` contenant le chemin du SDK, par exemple `sdk.dir=C\:\\Android`
+- JDK 21 with `JAVA_HOME` pointing to it
+- Android SDK with packages `platform-tools`, `platforms;android-36`, `build-tools;36.0.0`
+- `ANDROID_HOME` set, or `android/local.properties` containing `sdk.dir=C\:\\Android`
 
-Construire l'APK debug :
+Build the debug APK:
 
 ```powershell
-$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot' # adapte ce chemin si besoin
+$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
-$env:ANDROID_HOME='C:\Android' # adapte ce chemin si besoin
+$env:ANDROID_HOME='C:\Android'
 npm run android:build:debug
 ```
 
-APK généré :
+Output: `android/app/build/outputs/apk/debug/app-debug.apk`
 
-```
-android/app/build/outputs/apk/debug/app-debug.apk
-```
-
-Synchroniser le projet Android après une modification frontend :
+Sync the Android project after a frontend change:
 
 ```bash
 npm run android:sync
 ```
 
-Installer sur un appareil connecté :
+Install on a connected device:
 
 ```bash
 adb install android\app\build\outputs\apk\debug\app-debug.apk
 ```
 
-### APK release signé
+### Signed release APK
 
-Le keystore et ses mots de passe ne doivent pas être commités.
+Never commit the keystore or its passwords.
 
-Créer `android/keystore.properties` :
+Create `android/keystore.properties`:
 
 ```properties
 storeFile=../feedme-release.keystore
@@ -119,79 +115,75 @@ keyAlias=feedme
 keyPassword=...
 ```
 
-Construire l'APK release signé :
+Build the signed release APK:
 
 ```powershell
-$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot' # adapte ce chemin si besoin
+$env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
 $env:Path="$env:JAVA_HOME\bin;$env:Path"
-$env:ANDROID_HOME='C:\Android' # adapte ce chemin si besoin
+$env:ANDROID_HOME='C:\Android'
 npm run android:build:release
 ```
 
-APK généré :
-
-```text
-android/app/build/outputs/apk/release/app-release.apk
-```
+Output: `android/app/build/outputs/apk/release/app-release.apk`
 
 ---
 
-## Gestion des utilisateurs
+## User management
 
-Créer ou mettre à jour un utilisateur (remplace aussi ses recettes depuis l'ancien utilisateur par défaut) :
+Create or update a user (also migrates recipes from the old default user):
 
 ```bash
-NEW_USERNAME=user NEW_PASSWORD=monmotdepasse docker compose --profile tools run --rm create-user
+NEW_USERNAME=user NEW_PASSWORD=mypassword docker compose --profile tools run --rm create-user
 ```
 
-Définir `JWT_SECRET` dans un fichier `.env` sur le serveur :
+Set `JWT_SECRET` in a `.env` file on the server:
 
 ```
-JWT_SECRET=une-chaine-aleatoire-longue-et-secrete
+JWT_SECRET=a-long-random-secret-string
 ```
 
-Les utilisateurs connectÃ©s peuvent modifier leur mot de passe depuis l'application. AprÃ¨s modification, la session locale est supprimÃ©e et l'utilisateur doit se reconnecter.
+Logged-in users can change their password from the app. After a successful change the local session is cleared and the user must log in again.
 
 ---
 
-## Partage des recettes
+## Recipe sharing
 
-Les recettes peuvent être privées ou partagées.
+Recipes can be private or shared.
 
-- **Privée** : visible uniquement par son propriétaire.
-- **Partagée** : visible par tous les utilisateurs connectés dans la liste, la recherche, le détail et le shuffle.
+- **Private**: visible to the owner only.
+- **Shared**: visible to all logged-in users in the list, search, detail, and shuffle views.
 
-Seul le propriétaire peut modifier ou supprimer une recette partagée. L'ancien type `public` reste accepté pour les anciennes données, mais il n'est plus proposé dans l'interface.
+Only the owner can edit or delete a shared recipe. The legacy `public` type is still accepted for old records but is no longer offered in the UI.
 
-Si une recette partagée ne t'intéresse pas, tu peux la masquer. Le masquage ne concerne que ton compte : la recette reste disponible pour son propriétaire et les autres utilisateurs. Les recettes masquées peuvent être restaurées depuis la page **Masquées**.
+If a shared recipe is not of interest, any user can hide it. Hiding is per-account — the recipe remains available to its owner and other users. Hidden recipes can be restored from the **Hidden** page.
 
 ---
 
-## Import de recettes
+## Recipe import
 
-### Depuis des fichiers HTML locaux
+### From local HTML files
 
-Placer les fichiers HTML dans le dossier `receip`, puis exécuter :
+Place HTML files in the `receip` folder, then run:
 
 ```bash
 docker compose --profile tools run --rm recipe-importer
 ```
 
-Supprime les recettes taguées `imported` puis réimporte tous les fichiers.
+Deletes recipes tagged `imported` then reimports all files.
 
-### Traduction automatique des recettes importées
+### Automatic translation of imported recipes
 
 ```bash
 docker compose --profile tools run --rm recipe-translator
 ```
 
-Traduit les titres, descriptions, instructions et ingrédients en français via Google Translate.
+Translates titles, descriptions, instructions, and ingredients into French via Google Translate.
 
 ---
 
 ## Stack
 
-- **Frontend** : React · Vite · TypeScript · TanStack Query · Material UI
-- **Backend** : Hono · Prisma ORM · Zod · Vitest
-- **Base de données** : PostgreSQL
-- **Déploiement** : Docker Compose · GitHub Actions CI → GHCR
+- **Frontend**: React · Vite · TypeScript · TanStack Query · Material UI · Capacitor
+- **Backend**: Hono · Prisma ORM · Zod · Vitest
+- **Database**: PostgreSQL
+- **Deployment**: Docker Compose · GitHub Actions CI → GHCR
