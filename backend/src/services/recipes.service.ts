@@ -3,6 +3,7 @@ import { Prisma, RecipeVisibility } from '@prisma/client';
 import { prisma } from '../db';
 import { CreateRecipeDto, IngredientDto, UpdateRecipeDto } from '../schemas';
 import { normalizeIngredientName, parseIngredientLine } from '../recipes/ingredient-normalizer';
+import { shuffleDiverseRecipes } from './recipe-shuffle.service';
 
 const includeRecipeRelations = {
   ingredients: true,
@@ -100,7 +101,7 @@ export class RecipesService {
       include: includeRecipeRelations,
     });
 
-    return recipes.sort(() => Math.random() - 0.5).slice(0, safeCount);
+    return shuffleDiverseRecipes(recipes, safeCount);
   }
 
   private visibleToUserFilter(userId: string): Prisma.RecipeWhereInput {

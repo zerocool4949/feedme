@@ -4,8 +4,9 @@ import { HTTPException } from 'hono/http-exception';
 import { prisma } from '../db';
 import { ChangePasswordDto } from '../schemas';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable must be set');
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) throw new Error('JWT_SECRET environment variable must be set');
+const JWT_SECRET = jwtSecret;
 
 const JWT_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
 
