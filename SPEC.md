@@ -32,6 +32,8 @@ Done:
 * Database backup and restore scripts exist for the PostgreSQL Docker service
 * `scripts/copy-prod-to-dev.sh` copies production data into the local dev database
 * Focused UI polish for mobile recipe actions, import form behavior, and long source URLs
+* Multilingual UI: French and English, auto-detected from browser locale, switchable at any time via globe button; preference persisted in localStorage
+* Recipe language field: each recipe stores its language ('fr' or 'en'), shown as a chip on the detail page and selectable in the edit form; DB column added via migration with DEFAULT 'fr'
 * Dockerfiles for frontend and backend
 * GitHub Actions CI publishing images to GHCR
 

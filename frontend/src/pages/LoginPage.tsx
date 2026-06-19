@@ -2,12 +2,15 @@ import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import { Box, Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material';
 import { FormEvent, useState } from 'react';
 import { login } from '../api/client';
+import { LocaleToggleButton } from '../components/LocaleToggleButton';
+import { useI18n } from '../i18n';
 
 interface LoginPageProps {
   onLogin: (token: string) => void;
 }
 
 export function LoginPage({ onLogin }: LoginPageProps) {
+  const { t } = useI18n();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,7 +24,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
       const token = await login(username, password);
       onLogin(token);
     } catch {
-      setError("Nom d'utilisateur ou mot de passe incorrect.");
+      setError(t('login.error'));
     } finally {
       setPending(false);
     }
@@ -38,6 +41,16 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(22,40,69,0.9) 0%, transparent 100%), #0B1220',
       }}
     >
+      <LocaleToggleButton
+        sx={{
+          position: 'fixed',
+          top: 16,
+          right: 16,
+          color: '#FFFFFF',
+          bgcolor: 'rgba(255,255,255,0.08)',
+          '&:hover': { bgcolor: 'rgba(255,255,255,0.16)' },
+        }}
+      />
       <Box sx={{ width: '100%', maxWidth: 380 }}>
         <Stack alignItems="center" spacing={1.5} sx={{ mb: 5 }}>
           <Box
@@ -58,7 +71,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             FeedMe
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Bonne cuisine ce soir 🍽️
+            {t('login.tagline')}
           </Typography>
         </Stack>
 
@@ -73,7 +86,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           <CardContent sx={{ p: 3.5 }}>
             <Stack component="form" spacing={2.5} onSubmit={handleSubmit}>
               <TextField
-                label="Nom d'utilisateur"
+                label={t('login.username')}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 autoComplete="username"
@@ -83,7 +96,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                 sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px' } }}
               />
               <TextField
-                label="Mot de passe"
+                label={t('login.password')}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -105,7 +118,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                 fullWidth
                 sx={{ py: 1.5, borderRadius: '12px', fontSize: '1rem', mt: 0.5 }}
               >
-                {pending ? 'Connexion…' : 'Se connecter'}
+                {pending ? t('login.pending') : t('login.submit')}
               </Button>
             </Stack>
           </CardContent>

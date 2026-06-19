@@ -14,6 +14,7 @@ interface RecipeScalarData {
   title?: string;
   notes?: string | null;
   instructions?: string;
+  language?: 'fr' | 'en';
   sourceUrl?: string | null;
   imageUrl?: string | null;
   visibility?: RecipeVisibility;
@@ -193,6 +194,7 @@ export class RecipesService {
       ...(dto.title !== undefined ? { title: dto.title.trim() } : {}),
       ...(dto.notes !== undefined ? { notes: emptyToNull(dto.notes) } : {}),
       ...(dto.instructions !== undefined ? { instructions: dto.instructions.trim() } : {}),
+      ...(dto.language !== undefined ? { language: dto.language } : {}),
       ...(dto.sourceUrl !== undefined ? { sourceUrl: emptyToNull(dto.sourceUrl) } : {}),
       ...(dto.imageUrl !== undefined ? { imageUrl: emptyToNull(dto.imageUrl) } : {}),
       ...(dto.visibility !== undefined ? { visibility: dto.visibility } : {}),

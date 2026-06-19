@@ -12,6 +12,7 @@ export const createRecipeSchema = z.object({
   title: z.string(),
   notes: z.string().optional(),
   instructions: z.string(),
+  language: z.enum(['fr', 'en']).optional(),
   sourceUrl: z.string().url().optional().or(z.literal('')),
   imageUrl: z.string().url().optional().or(z.literal('')),
   visibility: z.nativeEnum(RecipeVisibility).optional(),

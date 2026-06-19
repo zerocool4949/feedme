@@ -4,10 +4,12 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { importRecipe } from '../api/client';
+import { useI18n } from '../i18n';
 
 export function ImportPage() {
   const [url, setUrl] = useState('');
   const navigate = useNavigate();
+  const { t } = useI18n();
   const importMutation = useMutation({
     mutationFn: importRecipe,
     onSuccess: (draft) => {
@@ -29,12 +31,12 @@ export function ImportPage() {
             }
           }}
         >
-          <Typography variant="h5">Importer une recette</Typography>
+          <Typography variant="h5">{t('import.title')}</Typography>
           <Typography color="text.secondary">
-            Colle l'URL d'une recette pour créer un brouillon modifiable avant de l'enregistrer.
+            {t('import.description')}
           </Typography>
           <TextField
-            label="URL de la recette"
+            label={t('import.url')}
             value={url}
             onChange={(event) => setUrl(event.target.value)}
             fullWidth
@@ -50,7 +52,7 @@ export function ImportPage() {
             startIcon={<UploadFileIcon />}
             sx={{ alignSelf: { xs: 'stretch', sm: 'flex-start' }, borderRadius: '12px' }}
           >
-            {importMutation.isPending ? 'Import en cours...' : 'Créer un brouillon'}
+            {importMutation.isPending ? t('import.pending') : t('import.createDraft')}
           </Button>
         </Stack>
       </CardContent>

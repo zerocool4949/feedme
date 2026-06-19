@@ -22,11 +22,18 @@ import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deleteRecipe, getRecipe, hideRecipe } from '../api/client';
 import { getCurrentUserId } from '../auth/current-user';
+import { useI18n } from '../i18n';
+import type { RecipeLanguage } from '../types/recipe';
 
+const LANGUAGE_LABEL_KEYS = {
+  fr: 'common.language.fr',
+  en: 'common.language.en',
+} as const satisfies Record<RecipeLanguage, 'common.language.fr' | 'common.language.en'>;
 
 export function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const recipeQuery = useQuery({
@@ -50,7 +57,7 @@ export function RecipeDetailPage() {
   const canHideRecipe = Boolean(recipe && !canManageRecipe && ['shared', 'public'].includes(recipe.visibility));
 
   if (recipeQuery.isError) {
-    return <Typography color="error">Impossible de charger la recette.</Typography>;
+    return <Typography color="error">{t('detail.loadError')}</Typography>;
   }
 
   if (!recipe) {
@@ -71,7 +78,12 @@ export function RecipeDetailPage() {
           </Typography>
           <Stack direction="row" gap={0.75} flexWrap="wrap">
             <Chip
-              label={visibilityLabel(recipe.visibility)}
+              label={visibilityLabel(recipe.visibility, t)}
+              size="small"
+              sx={{ bgcolor: 'rgba(0,0,0,0.05)', color: 'text.secondary' }}
+            />
+            <Chip
+              label={t(LANGUAGE_LABEL_KEYS[recipe.language ?? 'fr'])}
               size="small"
               sx={{ bgcolor: 'rgba(0,0,0,0.05)', color: 'text.secondary' }}
             />
@@ -95,7 +107,7 @@ export function RecipeDetailPage() {
               startIcon={<EditIcon />}
               sx={{ borderRadius: '10px', flex: { xs: 1, sm: 'initial' } }}
             >
-              Modifier
+              {t('detail.edit')}
             </Button>
             <Button
               color="error"
@@ -105,7 +117,7 @@ export function RecipeDetailPage() {
               startIcon={<DeleteOutlineIcon />}
               sx={{ borderRadius: '10px', flex: { xs: 1, sm: 'initial' } }}
             >
-              Supprimer
+              {t('detail.delete')}
             </Button>
           </Stack>
         )}
@@ -119,7 +131,7 @@ export function RecipeDetailPage() {
             startIcon={<VisibilityOffIcon />}
             sx={{ borderRadius: '10px', flexShrink: 0, width: { xs: '100%', sm: 'auto' } }}
           >
-            Masquer
+            {t('detail.hide')}
           </Button>
         )}
       </Stack>
@@ -152,7 +164,7 @@ export function RecipeDetailPage() {
         <Card sx={{ borderRadius: '16px' }}>
           <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
             <Typography variant="h6" fontWeight={700} gutterBottom>
-              Ingrédients
+              {t('detail.ingredients')}
             </Typography>
             <Stack spacing={0.5} component="ul" sx={{ m: 0, pl: 0, listStyle: 'none' }}>
               {recipe.ingredients.map((ingredient) => (
@@ -178,7 +190,7 @@ export function RecipeDetailPage() {
         <Card sx={{ borderRadius: '16px' }}>
           <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
             <Typography variant="h6" fontWeight={700} gutterBottom>
-              Préparation
+              {t('detail.instructions')}
             </Typography>
             <Typography
               whiteSpace="pre-wrap"
@@ -199,7 +211,7 @@ export function RecipeDetailPage() {
             {recipe.notes && (
               <>
                 <Typography variant="subtitle2" color="text.secondary" gutterBottom fontWeight={600}>
-                  Notes
+                  {t('detail.notes')}
                 </Typography>
                 <Typography whiteSpace="pre-wrap" variant="body2" color="text.secondary" lineHeight={1.7}>
                   {recipe.notes}
@@ -232,13 +244,13 @@ export function RecipeDetailPage() {
       )}
 
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-        <DialogTitle fontWeight={700}>Supprimer cette recette ?</DialogTitle>
+        <DialogTitle fontWeight={700}>{t('detail.deleteTitle')}</DialogTitle>
         <DialogContent>
-          <DialogContentText>« {recipe.title} » sera supprimée définitivement.</DialogContentText>
+          <DialogContentText>{t('detail.deleteMessage', { title: recipe.title })}</DialogContentText>
         </DialogContent>
         <DialogActions sx={{ p: 2.5, pt: 1 }}>
           <Button onClick={() => setConfirmOpen(false)} sx={{ borderRadius: '10px' }}>
-            Annuler
+            {t('common.cancel')}
           </Button>
           <Button
             color="error"
@@ -250,7 +262,7 @@ export function RecipeDetailPage() {
             }}
             sx={{ borderRadius: '10px' }}
           >
-            Supprimer
+            {t('detail.delete')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -258,13 +270,16 @@ export function RecipeDetailPage() {
   );
 }
 
-function visibilityLabel(visibility: 'private' | 'public' | 'shared'): string {
+function visibilityLabel(
+  visibility: 'private' | 'public' | 'shared',
+  t: ReturnType<typeof useI18n>['t'],
+): string {
   switch (visibility) {
     case 'public':
     case 'shared':
-      return 'Partagée';
+      return t('common.shared');
     case 'private':
     default:
-      return 'Privée';
+      return t('common.private');
   }
 }

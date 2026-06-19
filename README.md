@@ -135,6 +135,12 @@ Translates titles, descriptions, instructions, and ingredients into French via G
 
 ---
 
+## Multilingual support
+
+The UI is available in French and English. The language is detected from the browser locale and can be switched at any time via the globe button in the header or on the login screen. Each recipe also stores its own language (French or English), shown as a chip on the detail page.
+
+---
+
 ## Stack
 
 - **Frontend**: React · Vite · TypeScript · TanStack Query · Material UI · Capacitor

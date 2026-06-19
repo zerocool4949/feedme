@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { hideRecipe, listRecipes, shuffleRecipes } from '../api/client';
 import { getCurrentUserId } from '../auth/current-user';
+import { useI18n } from '../i18n';
 import type { Recipe } from '../types/recipe';
 
 
@@ -36,6 +37,7 @@ function RecipeCard({
   hidePending?: boolean;
 }) {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const canHideRecipe = Boolean(
     onHide && recipe.ownerUserId !== currentUserId && ['shared', 'public'].includes(recipe.visibility),
   );
@@ -59,8 +61,8 @@ function RecipeCard({
       <Box sx={{ position: 'relative', flexShrink: 0 }}>
         {canHideRecipe && (
           <IconButton
-            aria-label="Masquer la recette"
-            title="Masquer la recette"
+            aria-label={t('list.hideRecipe')}
+            title={t('list.hideRecipe')}
             disabled={hidePending}
             onClick={(event) => {
               event.stopPropagation();
@@ -118,6 +120,7 @@ function RecipeCard({
 
 export function RecipeListPage() {
   const queryClient = useQueryClient();
+  const { t } = useI18n();
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [shuffleCount, setShuffleCount] = useState(1);
@@ -159,7 +162,7 @@ export function RecipeListPage() {
       {/* Search */}
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ sm: 'center' }}>
         <TextField
-          placeholder="Rechercher une recette, un ingrédient, un tag…"
+          placeholder={t('list.searchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           fullWidth
@@ -185,7 +188,7 @@ export function RecipeListPage() {
           startIcon={<VisibilityOffIcon />}
           sx={{ borderRadius: '100px', flexShrink: 0 }}
         >
-          Masquées
+          {t('list.hidden')}
         </Button>
       </Stack>
 
@@ -242,10 +245,10 @@ export function RecipeListPage() {
                 <Box component="span" sx={{ fontSize: '1.3rem', lineHeight: 1 }}>
                   🍳
                 </Box>
-                Envie d'inspiration ce soir ?
+                {t('list.shuffleTitle')}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75 }}>
-                Laisse FeedMe choisir pour toi ce soir.
+                {t('list.shuffleSubtitle')}
               </Typography>
             </Box>
 
@@ -268,7 +271,7 @@ export function RecipeListPage() {
                   disabled={shuffleMutation.isPending}
                   startIcon={<ShuffleIcon />}
                 >
-                  Relancer
+                  {t('list.shuffleAgain')}
                 </Button>
               )}
             </Stack>
@@ -290,7 +293,7 @@ export function RecipeListPage() {
               }}
             >
               <Typography variant="body2" color="text.secondary">
-                Clique sur ×1, ×4 ou ×7 pour découvrir des idées de recettes 🍽️
+                {t('list.shuffleEmpty')}
               </Typography>
             </Box>
           )}
@@ -318,7 +321,7 @@ export function RecipeListPage() {
 
           {shuffleMutation.isError && (
             <Typography color="error" variant="body2">
-              Impossible de tirer des recettes au hasard.
+              {t('list.shuffleError')}
             </Typography>
           )}
         </Stack>
@@ -331,7 +334,7 @@ export function RecipeListPage() {
         </Box>
       ) : recipes.length === 0 ? (
         <Box sx={{ textAlign: 'center', py: 8 }}>
-          <Typography color="text.secondary">Aucune recette trouvée.</Typography>
+          <Typography color="text.secondary">{t('list.empty')}</Typography>
         </Box>
       ) : (
         <Box

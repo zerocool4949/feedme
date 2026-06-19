@@ -5,12 +5,16 @@ import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Box, Button, Container, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { Link, Outlet } from 'react-router-dom';
+import { LocaleToggleButton } from '../components/LocaleToggleButton';
+import { useI18n } from '../i18n';
 
 interface AppProps {
   onLogout: () => void;
 }
 
 export function App({ onLogout }: AppProps) {
+  const { t } = useI18n();
+
   return (
     <Box sx={{ minHeight: '100vh' }}>
       <Box
@@ -64,7 +68,8 @@ export function App({ onLogout }: AppProps) {
             </Stack>
 
             <Stack direction="row" spacing={0.5} alignItems="center">
-              <Tooltip title="Changer le mot de passe">
+              <LocaleToggleButton sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }} />
+              <Tooltip title={t('app.changePassword')}>
                 <IconButton
                   component={Link}
                   to="/account/password"
@@ -82,7 +87,7 @@ export function App({ onLogout }: AppProps) {
                 startIcon={<UploadFileIcon />}
                 sx={{ display: { xs: 'none', sm: 'flex' }, borderRadius: '10px' }}
               >
-                Importer
+                {t('app.import')}
               </Button>
               <Button
                 component={Link}
@@ -92,9 +97,9 @@ export function App({ onLogout }: AppProps) {
                 startIcon={<AddIcon />}
                 sx={{ borderRadius: '10px' }}
               >
-                Nouvelle
+                {t('app.newRecipe')}
               </Button>
-              <Tooltip title="Se déconnecter">
+              <Tooltip title={t('app.logout')}>
                 <IconButton
                   onClick={onLogout}
                   size="small"

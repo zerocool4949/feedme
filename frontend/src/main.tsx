@@ -12,6 +12,7 @@ import { PasswordPage } from './pages/PasswordPage';
 import { RecipeDetailPage } from './pages/RecipeDetailPage';
 import { RecipeFormPage } from './pages/RecipeFormPage';
 import { RecipeListPage } from './pages/RecipeListPage';
+import { I18nProvider } from './i18n';
 
 const router = createBrowserRouter([
   {
@@ -213,7 +214,9 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <I18nProvider>
+        <RouterProvider router={router} />
+      </I18nProvider>
     </QueryClientProvider>
   </React.StrictMode>,
 );

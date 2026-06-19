@@ -4,10 +4,12 @@ import { useMutation } from '@tanstack/react-query';
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { changePassword } from '../api/client';
+import { useI18n } from '../i18n';
 
 const fieldRadius = { '& .MuiOutlinedInput-root': { borderRadius: '12px' } };
 
 export function PasswordPage() {
+  const { t } = useI18n();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,12 +30,12 @@ export function PasswordPage() {
     setValidationError('');
 
     if (newPassword.length < 8) {
-      setValidationError('Le nouveau mot de passe doit contenir au moins 8 caractères.');
+      setValidationError(t('password.tooShort'));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setValidationError('Les deux nouveaux mots de passe ne correspondent pas.');
+      setValidationError(t('password.mismatch'));
       return;
     }
 
@@ -46,10 +48,10 @@ export function PasswordPage() {
     <Card sx={{ borderRadius: '20px', maxWidth: 560, mx: 'auto' }}>
       <CardContent sx={{ p: { xs: 2.5, md: 3.5 } }}>
         <Stack component="form" spacing={2.5} onSubmit={handleSubmit}>
-          <Typography variant="h5">Changer le mot de passe</Typography>
+          <Typography variant="h5">{t('password.title')}</Typography>
           <TextField
             required
-            label="Mot de passe actuel"
+            label={t('password.current')}
             type="password"
             value={currentPassword}
             autoComplete="current-password"
@@ -59,7 +61,7 @@ export function PasswordPage() {
           />
           <TextField
             required
-            label="Nouveau mot de passe"
+            label={t('password.new')}
             type="password"
             value={newPassword}
             autoComplete="new-password"
@@ -69,7 +71,7 @@ export function PasswordPage() {
           />
           <TextField
             required
-            label="Confirmer le nouveau mot de passe"
+            label={t('password.confirm')}
             type="password"
             value={confirmPassword}
             autoComplete="new-password"
@@ -79,7 +81,7 @@ export function PasswordPage() {
           />
           {mutation.isSuccess && (
             <Alert severity="success">
-              Mot de passe modifié. Redirection vers la connexion…
+              {t('password.success')}
             </Alert>
           )}
           {error && <Alert severity="error">{error}</Alert>}
@@ -92,7 +94,7 @@ export function PasswordPage() {
               size="large"
               sx={{ borderRadius: '12px', py: 1.5, flex: 1 }}
             >
-              {mutation.isPending ? 'Modification...' : 'Modifier le mot de passe'}
+              {mutation.isPending ? t('password.pending') : t('password.submit')}
             </Button>
             <Button
               component={Link}
@@ -102,7 +104,7 @@ export function PasswordPage() {
               disabled={mutation.isPending || mutation.isSuccess}
               sx={{ borderRadius: '12px', py: 1.5 }}
             >
-              Annuler
+              {t('common.cancel')}
             </Button>
           </Stack>
         </Stack>

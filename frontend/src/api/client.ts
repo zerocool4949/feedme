@@ -1,4 +1,5 @@
 import type { Recipe, RecipeInput } from '../types/recipe';
+import { translate } from '../i18n';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? '/api';
 
@@ -8,7 +9,7 @@ export async function login(username: string, password: string): Promise<string>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   });
-  if (!response.ok) throw new Error('Identifiants invalides');
+  if (!response.ok) throw new Error(translate('api.invalidCredentials'));
   const data = await response.json() as { token: string };
   return data.token;
 }
@@ -84,12 +85,12 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (response.status === 401) {
     localStorage.removeItem('feedme-token');
     window.location.reload();
-    throw new Error('Session expirée');
+    throw new Error(translate('api.sessionExpired'));
   }
 
   if (!response.ok) {
     const message = await response.text();
-    throw new Error(message || `La requête a échoué (${response.status})`);
+    throw new Error(message || translate('api.requestFailed', { status: response.status }));
   }
 
   return response.json() as Promise<T>;

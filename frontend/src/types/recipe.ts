@@ -1,4 +1,5 @@
 export type RecipeVisibility = 'private' | 'public' | 'shared';
+export type RecipeLanguage = 'fr' | 'en';
 
 export interface IngredientInput {
   name: string;
@@ -25,6 +26,7 @@ export interface Recipe {
   title: string;
   notes: string | null;
   instructions: string;
+  language: RecipeLanguage;
   sourceUrl: string | null;
   imageUrl: string | null;
   visibility: RecipeVisibility;
@@ -38,6 +40,7 @@ export interface RecipeInput {
   title: string;
   notes?: string;
   instructions: string;
+  language: RecipeLanguage;
   sourceUrl?: string;
   imageUrl?: string;
   visibility: RecipeVisibility;
