@@ -4,10 +4,13 @@
 
 set -euo pipefail
 
+BRANCH="main"
+export DOCKER_TAG="main"
+
 branch="$(git rev-parse --abbrev-ref HEAD)"
-if [ "$branch" != "main" ]; then
+if [ "$branch" != "$BRANCH" ]; then
   exit 0
 fi
 
 repo_root="$(git rev-parse --show-toplevel)"
-"$repo_root/docker/build-and-push.sh"
+"$repo_root/.build-tools/build-and-push.sh"
