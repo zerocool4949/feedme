@@ -1,2 +1,0 @@
-feedme-backend backend
-feedme-frontend frontend
