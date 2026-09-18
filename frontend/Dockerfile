@@ -1,8 +1,9 @@
 FROM node:22-alpine AS build
 WORKDIR /app
-COPY package*.json ./
+RUN corepack enable
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY frontend/package.json ./frontend/
-RUN npm install --workspace frontend
+RUN pnpm install --filter frontend... --frozen-lockfile
 COPY frontend ./frontend
 WORKDIR /app/frontend
 RUN npm run build

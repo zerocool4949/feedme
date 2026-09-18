@@ -2,14 +2,11 @@
   "name": "feedme",
   "version": "1.0.2",
   "private": true,
-  "workspaces": [
-    "backend",
-    "frontend"
-  ],
+  "packageManager": "pnpm@11.24.0",
   "scripts": {
-    "build": "npm run build --workspace backend && npm run build --workspace frontend",
-    "lint": "npm run lint --workspace backend && npm run lint --workspace frontend",
-    "android:sync": "npm run build:android --workspace frontend && cap sync android",
+    "build": "pnpm --filter backend run build && pnpm --filter frontend run build",
+    "lint": "pnpm --filter backend run lint && pnpm --filter frontend run lint",
+    "android:sync": "pnpm --filter frontend run build:android && cap sync android",
     "db:backup": "./scripts/backup-db.sh"
   },
   "dependencies": {
