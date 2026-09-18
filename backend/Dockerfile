@@ -9,6 +9,7 @@ FROM node:22-alpine AS build
 WORKDIR /app
 RUN corepack enable
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/backend/node_modules ./backend/node_modules
 COPY backend ./backend
 WORKDIR /app/backend
 RUN npx prisma generate
