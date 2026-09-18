@@ -1,78 +1,8 @@
 # AGENTS.md
 
-## General Principles
+## Working instructions
 
-* Build the simplest working solution first.
-* Prefer clarity over cleverness.
-* Prefer maintainability over optimization.
-* Do not build features that were not requested.
-* Avoid speculative architecture.
-
----
-
-# Think Before Coding
-
-Before implementing:
-
-1. Read the full request.
-2. Identify assumptions.
-3. Explain tradeoffs when multiple approaches exist.
-4. Choose the simplest solution that satisfies the requirements.
-
-Do not guess requirements.
-
----
-
-# Large Changes
-
-For any task involving:
-
-* architecture changes
-* database redesign
-* major refactoring
-* new services
-
-First provide:
-
-* implementation plan
-* files to modify
-* risks
-* alternatives
-
-Then wait for approval.
-
----
-
-# Simplicity First
-
-Prefer:
-
-* simple components
-* simple APIs
-* simple database structures
-* simple Docker configurations
-
-Avoid:
-
-* microservices
-* plugin systems
-* event buses
-* premature optimization
-* unnecessary abstractions
-
----
-
-# Surgical Changes
-
-When modifying code:
-
-* change only what is necessary
-* avoid unrelated refactoring
-* avoid unnecessary renaming
-* avoid formatting unrelated files
-* keep commits focused
-
----
+Follow the global `~/.codex/AGENTS.md` for general workflow, scope, communication, maintenance, design, and verification rules. This file adds project-specific context only; it does not override the global rules. Commands below are references, not authorization to run builds, services, full tests, deployments, commits, pushes, or publishing.
 
 # Architecture
 
@@ -228,45 +158,9 @@ Avoid:
 
 ---
 
-# Validation Before Completion
+# Verification and reporting
 
-Before declaring a task complete:
-
-* build succeeds
-* lint succeeds
-* tests succeed if present
-* migrations succeed
-* Docker containers start
-* API endpoints function
-* UI functions
-
-Do not claim success without verification.
-
----
-
-# Deliverables
-
-After each completed task provide:
-
-## Summary
-
-What was implemented.
-
-## Files Changed
-
-List all created and modified files.
-
-## Database Changes
-
-List migrations and schema changes.
-
-## Verification
-
-Explain what was tested.
-
-## Known Limitations
-
-List remaining issues or future improvements.
+Follow the global verification limits and concise reporting format. Use cheap, focused checks only; builds, full tests, migration execution, containers, services, and runtime validation require an explicit request. Report only changes, checks actually performed, and remaining limitations.
 
 ---
 
