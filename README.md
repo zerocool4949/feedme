@@ -1,5 +1,7 @@
 # FeedMe
 
+<img src="assets/branding/icon-512.png" alt="FeedMe icon" width="96" height="96">
+
 Self-hosted recipe management and meal inspiration app.
 
 ---

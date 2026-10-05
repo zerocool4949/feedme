@@ -1,5 +1,7 @@
 # AGENTS.md
 
+Branding assets live in `assets/branding/` (master icon, 512px dashboard icon, GitHub social preview and usage notes). Browser icons are served from `frontend/public/project-*`; keep favicon and touch-icon links aligned with those exports.
+
 ## Working instructions
 
 Follow the global `~/.codex/AGENTS.md` for general workflow, scope, communication, maintenance, design, and verification rules. This file adds project-specific context only; it does not override the global rules. Commands below are references, not authorization to run builds, services, full tests, deployments, commits, pushes, or publishing.
